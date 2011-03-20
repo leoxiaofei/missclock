@@ -16,6 +16,7 @@
 					<Add option="-g" />
 					<Add option="-D__WXDEBUG__" />
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
+					<Add directory="$(#tinyxml)\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
@@ -26,7 +27,9 @@
 					<Add library="libwxpngd.a" />
 					<Add library="libwxzlibd.a" />
 					<Add library="libwxmsw28ud_adv.a" />
+					<Add library="libtinyxml.a" />
 					<Add directory="$(#wx)\lib\gcc_dll" />
+					<Add directory="$(#tinyxml)\lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -38,6 +41,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
+					<Add directory="$(#tinyxml)\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
@@ -49,7 +53,9 @@
 					<Add library="libwxpng.a" />
 					<Add library="libwxzlib.a" />
 					<Add library="libwxmsw28u_adv.a" />
+					<Add library="libtinyxml.a" />
 					<Add directory="$(#wx)\lib\gcc_dll" />
+					<Add directory="$(#tinyxml)\lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -67,6 +73,7 @@
 			<Add directory="$(#wx)\include" />
 			<Add directory="$(#wx)\contrib\include" />
 			<Add directory="$(#boost)" />
+			<Add directory="$(#miss)\hpp" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="$(#wx)\include" />
@@ -75,12 +82,20 @@
 			<Add option="-mthreads" />
 			<Add library="libgdi32.a" />
 		</Linker>
+		<Unit filename="Data\MissConfig.cpp" />
+		<Unit filename="Data\MissConfig.h" />
+		<Unit filename="Data\MissSkin.cpp" />
+		<Unit filename="Data\MissSkin.h" />
+		<Unit filename="Data\MissXML.cpp" />
+		<Unit filename="Data\MissXML.h" />
 		<Unit filename="Generated\GUIFrame.cpp" />
 		<Unit filename="Generated\GUIFrame.h" />
 		<Unit filename="Main\MissClockApp.cpp" />
 		<Unit filename="Main\MissClockApp.h" />
 		<Unit filename="Main\MissClockMain.cpp" />
 		<Unit filename="Main\MissClockMain.h" />
+		<Unit filename="Main\MissOption.cpp" />
+		<Unit filename="Main\MissOption.h" />
 		<Unit filename="Main\MissTaskBarIcon.cpp" />
 		<Unit filename="Main\MissTaskBarIcon.h" />
 		<Unit filename="StdAfx.h">

@@ -3,7 +3,6 @@
 
 #include <wx/taskbar.h>
 
-
 class MissTaskBarIcon : public wxTaskBarIcon
 {
     public:
