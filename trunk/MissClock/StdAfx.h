@@ -12,5 +12,6 @@
 #include <wx/timer.h>
 #include <boost/signals2.hpp>
 
+using std::tr1::shared_ptr;
 
 #endif // STDAFX_H

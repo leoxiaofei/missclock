@@ -15,7 +15,8 @@
 #include <wingdi.h>
 
 class MissTaskBarIcon;
-using std::tr1::shared_ptr;
+class MissSkin;
+class MissConfig;
 
 class MissClockFrame: public GUIFrame
 {
@@ -27,22 +28,29 @@ class MissClockFrame: public GUIFrame
     protected:
         void InitUI();
         void InitEvent();
+        void InitMenu();
+        void ChangeSize();
         void UpdateClock();
         void CheckTast();
         void CheckAudioChimer();
 
     private:
         void OnTimer(wxTimerEvent& event);
+        void OnTaskBarIconLeftUP(wxEvent& event);
+        void OnmimTopSelected(wxCommandEvent& event);
+        void OnmimOptionSelected(wxCommandEvent& event);
+        void OnAbout(wxCommandEvent& event);
 
     private:
         virtual void OnClose(wxCloseEvent& event);
-        virtual void OnQuit(wxCommandEvent& event);
-        virtual void OnAbout(wxCommandEvent& event);
         virtual void OnLeftDown( wxMouseEvent& event );
+        virtual void OnRightUp( wxMouseEvent& event );
 
     private:
         shared_ptr<MissTaskBarIcon> m_pTaskBarIcon;
         shared_ptr<wxTimer> m_pMainTimer;
+        shared_ptr<MissSkin> m_pSkin;
+        shared_ptr<MissConfig> m_pConfig;
         OnTimeUp sg_SecUp;
         OnTimeUp sg_MinUp;
         HWND m_hWnd;
@@ -50,6 +58,38 @@ class MissClockFrame: public GUIFrame
         SIZE m_SizeWindow;
         struct tm *m_tmNow;
         time_t m_ttNow;
+        wxBitmap m_bpUI;
+        unsigned int *m_pBitmap;
+        int m_nPixCount;
+
+    private:
+        //菜单
+        shared_ptr<wxMenu> m_pMainMenu;
+        wxMenuItem* m_pmimAbout;
+        wxMenuItem* m_pmimCopyDate;
+        wxMenuItem* m_pmimSetTime;
+        wxMenuItem* m_pmimRemind;
+        wxMenuItem* m_pmimExit;
+        wxMenuItem* m_pmimTop;
+        wxMenuItem* m_pmimShow;
+        wxMenuItem* m_pmimCopyTime;
+        wxMenuItem* m_pmimPin;
+        wxMenuItem* m_pmimShadow;
+        wxMenuItem* m_pmimOption;
+        //
+
+        static const long ID_TIMER_MAIN;
+        static const long ID_MENUITEM_PIN;
+        static const long ID_MENUITEM_SHADOW;
+        static const long ID_MENUITEM_TOP;
+        static const long ID_MENUITEM_SHOW;
+        static const long ID_MENUITEM_OPTION;
+        static const long ID_MENUITEM_REMIND;
+        static const long ID_MENUITEM_COPYDATE;
+        static const long ID_MENUITEM_COPYTIME;
+        static const long ID_MENUITEM_SETTIME;
+        static const long ID_MENUITEM_ABOUT;
+        static const long ID_MENUITEM_EXIT;
 };
 
 #endif // MISSCLOCKMAIN_H

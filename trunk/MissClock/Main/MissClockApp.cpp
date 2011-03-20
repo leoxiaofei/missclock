@@ -17,11 +17,14 @@
 
 #include "MissClockApp.h"
 #include "MissClockMain.h"
+#include <mSystem.hpp>
 
 IMPLEMENT_APP(MissClockApp);
 
 bool MissClockApp::OnInit()
 {
+    wxSetWorkingDirectory(Miss::GetAppExePath());
+    wxImage::AddHandler( new wxPNGHandler );
     MissClockFrame* frame = new MissClockFrame(0L);
     frame->SetIcon(wxICON(RC_CLOCK_ICON)); // To Set App Icon
     frame->Show();
