@@ -10,6 +10,7 @@ public:
     MissConfigImpl():
         m_ConfigName(wxT("MissConfig.ini"))
     {};
+
 public:
     int m_Pin;                                 //是否固定位置
     int m_Top;                                 //是否置顶
@@ -24,6 +25,7 @@ public:
     wxString m_ConfigName;                     //配置文件名
     shared_ptr<wxFileInputStream> m_pIStream;  //文件流
     shared_ptr<wxFileConfig> m_pConfigFile;    //配置文件读写器
+
 };
 
 MissConfig::MissConfig():
@@ -39,6 +41,7 @@ MissConfig::MissConfig():
     m_pImpl->m_pIStream = shared_ptr<wxFileInputStream>(new wxFileInputStream(m_pImpl->m_ConfigName));
     m_pImpl->m_pConfigFile = shared_ptr<wxFileConfig>(new wxFileConfig(*m_pImpl->m_pIStream));
     LoadIniFile();
+
 }
 
 MissConfig::~MissConfig()
@@ -57,14 +60,15 @@ void MissConfig::LoadIniFile()
     m_pImpl->m_Repeater  = m_pImpl->m_pConfigFile->Read(wxT("选项/整点报时"),1l);
     m_pImpl->m_SkinName  = m_pImpl->m_pConfigFile->Read(wxT("界面/主题"),wxT("Default"));
     m_pImpl->m_NTP       = m_pImpl->m_pConfigFile->Read(wxT("选项/NTP"),wxT("203.129.68.14"));
-
     m_pImpl->m_Opacity   = m_pImpl->m_pConfigFile->Read(wxT("界面/不透明度"),0xFFl);
+
     if( m_pImpl->m_Opacity < 50 || m_pImpl->m_Opacity > 255 )
     {
         m_pImpl->m_Opacity = 255;
     }
 
     m_pImpl->m_pConfigFile->Read(wxT("界面/缩放大小"),&m_pImpl->m_Zoom,1.0);
+
     if( m_pImpl->m_Zoom < 0.5 || m_pImpl->m_Zoom > 2.0 )
     {
         m_pImpl->m_Zoom = 1.0;

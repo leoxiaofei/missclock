@@ -69,8 +69,8 @@ const long MissClockFrame::ID_MENUITEM_SETTIME = wxNewId();
 const long MissClockFrame::ID_MENUITEM_ABOUT = wxNewId();
 const long MissClockFrame::ID_MENUITEM_EXIT = wxNewId();
 
-MissClockFrame::MissClockFrame(wxFrame *frame)
-    : GUIFrame(frame),
+MissClockFrame::MissClockFrame(wxFrame* frame):
+    GUIFrame(frame),
     m_pTaskBarIcon(new MissTaskBarIcon),
     m_pMainTimer(new wxTimer(this)),
     m_pSkin(new MissSkin),
@@ -83,7 +83,6 @@ MissClockFrame::MissClockFrame(wxFrame *frame)
     InitEvent();
     InitMenu();
     InitUI();
-
 }
 
 MissClockFrame::~MissClockFrame()
@@ -111,7 +110,7 @@ void MissClockFrame::InitEvent()
 {
     this->Connect(wxEVT_TIMER,wxTimerEventHandler(MissClockFrame::OnTimer));
     sg_SecUp.connect(&MissClockFrame::UpdateClock);
-    sg_MinUp.connect(&MissClockFrame::CheckTast);
+    sg_MinUp.connect(&MissClockFrame::CheckTask);
     sg_MinUp.connect(&MissClockFrame::CheckAudioChimer);
 
     //Connect(ID_MENUITEM_PIN,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimPinSelected);
@@ -141,7 +140,12 @@ void MissClockFrame::InitUI()
     m_Blend.AlphaFormat = AC_SRC_ALPHA; //该成员控制源和目标位图被解释的方式。
     m_Blend.SourceConstantAlpha = 255;  //指定用于整张源位图的Alpha透明度值。(0~255)
 
-    MissXML::LoadSkin(m_pSkin,m_pConfig->GetSkinName());
+    ChangeTheme(m_pConfig->GetSkinName());
+}
+
+void MissClockFrame::ChangeTheme(const wxString& strThemeName)
+{
+    MissXML::LoadSkin(m_pSkin,strThemeName);
     ChangeSize();
 }
 
@@ -195,16 +199,20 @@ void MissClockFrame::UpdateClock()
     static HDC s_hdcScreen = GetDC(m_hWnd);
     static POINT s_ptSrc={0,0};
 
-    int nPixCount= m_nPixCount;
-    unsigned int *pBitmap = m_pBitmap;
-    int nColor = 0x01000000;
+    static int nPixCount;
+    static unsigned int *pBitmap;
+
+    nPixCount = m_nPixCount;
+    pBitmap = m_pBitmap;
+
     while( --nPixCount )
     {
-        memcpy(pBitmap,&nColor,4);
+        *pBitmap = 0x01000000;
         ++pBitmap;
     }
 
     wxMemoryDC memdc(m_bpUI);
+    memdc.SetUserScale(m_pConfig->GetZoom(),m_pConfig->GetZoom());
     m_pSkin->DrawSkin(memdc, m_tmNow);
 
     nPixCount = m_nPixCount;
@@ -214,10 +222,11 @@ void MissClockFrame::UpdateClock()
         *pBitmap -= 0x01000000;
         ++pBitmap;
     }
-    ::UpdateLayeredWindow(m_hWnd,s_hdcScreen,NULL,&m_SizeWindow,(HDC)memdc.GetHDC(),&s_ptSrc,0,&m_Blend,ULW_ALPHA);
+    ::UpdateLayeredWindow(m_hWnd,s_hdcScreen,NULL,&m_SizeWindow,static_cast<HDC>(memdc.GetHDC()),
+                          &s_ptSrc,0,&m_Blend,ULW_ALPHA);
 }
 
-void MissClockFrame::CheckTast()
+void MissClockFrame::CheckTask()
 {
 }
 
@@ -253,7 +262,17 @@ void MissClockFrame::OnmimTopSelected(wxCommandEvent& event)
 void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 {
     MissOption OptionDlg(this);
-    OptionDlg.ShowModal();
+    OptionDlg.SetDataSrc(m_pConfig, m_pSkin);
+    Connect(wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissClockFrame::OnThemeChange ), NULL, this);
+    if(OptionDlg.ShowModal() == wxID_OK)
+    {
 
+    }
 
+}
+
+void MissClockFrame::OnThemeChange(wxCommandEvent& event)
+{
+    ChangeTheme(event.GetString());
+    UpdateClock();
 }

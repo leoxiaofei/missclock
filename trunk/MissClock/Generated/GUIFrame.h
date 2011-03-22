@@ -16,21 +16,22 @@
 #include <wx/settings.h>
 #include <wx/stattext.h>
 #include <wx/choice.h>
-#include <wx/sizer.h>
 #include <wx/button.h>
+#include <wx/sizer.h>
 #include <wx/statbox.h>
+#include <wx/textctrl.h>
+#include <wx/combobox.h>
+#include <wx/listctrl.h>
 #include <wx/checkbox.h>
 #include <wx/slider.h>
+#include <wx/spinctrl.h>
 #include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/combobox.h>
+#include <wx/notebook.h>
 #include <wx/listbook.h>
-#include <wx/listctrl.h>
 #include <wx/dialog.h>
-#include <wx/textctrl.h>
-#include <wx/spinctrl.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -65,56 +66,12 @@ class MissOptionBase : public wxDialog
 	
 	protected:
 		wxListbook* m_lsbOption;
-		wxPanel* m_panUI;
-		wxStaticText* m_lblChoiceSkin;
-		wxChoice* m_choSkin;
-		wxButton* m_btnModifySkin;
-		wxCheckBox* m_cbtnAllowZoom;
-		wxStaticText* m_lblZoomOut;
-		wxSlider* m_sldZoom;
-		wxStaticText* m_lblZoomIn;
-		wxStaticText* m_lblTransparency;
-		wxSlider* m_sldTransparency;
-		wxStaticText* m_lblOpacity;
-		wxPanel* m_panSys;
-		wxCheckBox* m_cbtnAutoRun;
-		wxCheckBox* m_cbtnShadow;
-		wxCheckBox* m_cbtnAudioChimer;
-		wxCheckBox* m_cbtnShowClock;
-		wxStaticText* m_lblNTP;
-		wxComboBox* m_cobNTP;
-		wxButton* m_btnNTP;
-		wxStdDialogButtonSizer* m_sdbSizer2;
-		wxButton* m_sdbSizer2OK;
-		wxButton* m_sdbSizer2Cancel;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnInitDialog( wxInitDialogEvent& event ) { event.Skip(); }
-		virtual void OnSkinChoChange( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnModifySkinBtnClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnZoomCbtnClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnZoomSldChanged( wxScrollEvent& event ) { event.Skip(); }
-		virtual void OnTransSldChanged( wxScrollEvent& event ) { event.Skip(); }
-		virtual void OnNtpBtnClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
-		
-	
-	public:
-		
-		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 376,367 ), long style = wxDEFAULT_DIALOG_STYLE );
-		~MissOptionBase();
-	
-};
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class ModifySkinBase
-///////////////////////////////////////////////////////////////////////////////
-class ModifySkinBase : public wxDialog 
-{
-	private:
-	
-	protected:
+		wxPanel* m_panTheme;
+		wxStaticText* m_lblChoiceTheme;
+		wxChoice* m_choTheme;
+		wxButton* m_btnModifyTheme;
+		wxNotebook* m_nbTheme;
+		wxPanel* m_panSkin;
 		wxStaticText* m_lblBGPath;
 		wxTextCtrl* m_edtBGPath;
 		wxButton* m_btnBGPath;
@@ -139,14 +96,72 @@ class ModifySkinBase : public wxDialog
 		wxSpinCtrl* m_spX;
 		wxStaticText* m_lblY;
 		wxSpinCtrl* m_spY;
-		wxStdDialogButtonSizer* m_sdbModify;
-		wxButton* m_sdbModifyOK;
-		wxButton* m_sdbModifyCancel;
+		wxPanel* m_panUI;
+		wxCheckBox* m_cbtnAllowZoom;
+		wxStaticText* m_lblZoomOut;
+		wxSlider* m_sldZoom;
+		wxStaticText* m_lblZoomIn;
+		wxStaticText* m_lblTransparency;
+		wxSlider* m_sldTransparency;
+		wxStaticText* m_lblOpacity;
+		wxPanel* m_panSys;
+		wxCheckBox* m_cbtnAutoRun;
+		wxCheckBox* m_cbtnShadow;
+		wxCheckBox* m_cbtnAudioChimer;
+		wxCheckBox* m_cbtnShowClock;
+		wxStaticText* m_lblNTP;
+		wxComboBox* m_cobNTP;
+		wxButton* m_btnNTP;
+		wxStdDialogButtonSizer* m_sdbSizer2;
+		wxButton* m_sdbSizer2OK;
+		wxButton* m_sdbSizer2Cancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnInitDialog( wxInitDialogEvent& event ) { event.Skip(); }
+		virtual void OnThemeChoChange( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnModifyThemeBtnClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBtnBGPathClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCobLocaleSelect( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnlstItemDeselect( wxListEvent& event ) { event.Skip(); }
+		virtual void OnlstItemSelect( wxListEvent& event ) { event.Skip(); }
+		virtual void OnBtnAddItem( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBtnDeleteItem( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnEdtNameKillFocus( wxFocusEvent& event ) { event.Skip(); }
+		virtual void OnCbtnShowClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnEdtContentKillFocus( wxFocusEvent& event ) { event.Skip(); }
+		virtual void OnBtnFont( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBtnColor( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSldAlignScrollThumbRelease( wxScrollEvent& event ) { event.Skip(); }
+		virtual void OnSpXChange( wxSpinEvent& event ) { event.Skip(); }
+		virtual void OnSpYChange( wxSpinEvent& event ) { event.Skip(); }
+		virtual void OnZoomCbtnClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnZoomSldChanged( wxScrollEvent& event ) { event.Skip(); }
+		virtual void OnTransSldChanged( wxScrollEvent& event ) { event.Skip(); }
+		virtual void OnNtpBtnClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
-		ModifySkinBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("修改时钟主题"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 401,409 ), long style = wxDEFAULT_DIALOG_STYLE );
-		~ModifySkinBase();
+		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 448,493 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~MissOptionBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class ModifySkinPanelBase
+///////////////////////////////////////////////////////////////////////////////
+class ModifySkinPanelBase : public wxPanel 
+{
+	private:
+	
+	protected:
+	
+	public:
+		
+		ModifySkinPanelBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
+		~ModifySkinPanelBase();
 	
 };
 

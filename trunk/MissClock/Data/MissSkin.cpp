@@ -19,7 +19,7 @@ MissSkin::MissSkin():
     m_pImpl(new MissSkinImpl)
 {
     //ctor
-    _wsetlocale(LC_TIME,wxT("chs"));
+    wxSetlocale(LC_TIME,wxT("chs"));
 }
 
 MissSkin::~MissSkin()
@@ -29,35 +29,24 @@ MissSkin::~MissSkin()
 
 void MissSkin::DrawSkin(wxDC& dc, struct tm *tmNow)
 {
+    static char str[100];
+    static wxCoord width;
+    static wxString strOut;
     dc.DrawBitmap(m_pImpl->m_ClockBGPic,0,0);
-    static wchar_t str[100];
-    wchar_t *str1 = L"心情";
-    std::wstring str2 = L"测试";
-    const wchar_t *str3 = str2.c_str();
-    wxStrftime (str,100,wxT("%A"),tmNow);
-    dc.SetFont(wxFont(12,wxFONTFAMILY_SWISS ,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL ));
-    dc.DrawText(str2,10,10);
-    std::wcout<<str1<<std::endl;
-    std::wcout<<str2<<std::endl;
-    std::wcout<<str3<<std::endl;
-    std::wcout<<str<<std::endl;
-    /*
+
     for (size_t ix = 0;ix != m_pImpl->m_Element.size(); ++ix)
     {
         if (m_pImpl->m_Element[ix].m_Show)
         {
             dc.SetFont(m_pImpl->m_Element[ix].m_Font);
             dc.SetTextForeground(m_pImpl->m_Element[ix].m_Colour);
-            static wchar_t str[100];
-            wxStrftime (str,100,m_pImpl->m_Element[ix].m_Content,tmNow);
-            //std::wcout<<m_pImpl->m_Element[ix].m_Content<<"<->"<<str<<std::endl;
-            static wxCoord width;
-            wxString strOut (str,wxConvLocal);
+            strftime (str,100, m_pImpl->m_Element[ix].m_Content.c_str(),tmNow);
+
+            strOut = wxString(str,wxConvLocal);
             dc.GetTextExtent(strOut,&width,NULL,NULL,NULL,NULL);
             dc.DrawText(strOut,m_pImpl->m_Element[ix].m_X-width*m_pImpl->m_Element[ix].m_Alignment, m_pImpl->m_Element[ix].m_Y);
         }
     }
-    */
 }
 
 MissElement& MissSkin::GetElement(int nIndex)

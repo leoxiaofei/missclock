@@ -37,7 +37,7 @@ bool MissXML::SaveSkin(const shared_ptr<MissSkin>& pSkin)
         elem->SetAttribute("对齐",wxString::Format(wxT("%.1f"),pSkin->GetElement(ix).m_Alignment).utf8_str());
         elem->SetAttribute("X",pSkin->GetElement(ix).m_X);
         elem->SetAttribute("Y",pSkin->GetElement(ix).m_Y);
-        TiXmlText *elemText = new TiXmlText(pSkin->GetElement(ix).m_Content.utf8_str());
+        TiXmlText *elemText = new TiXmlText(pSkin->GetElement(ix).m_Content);
         elem->LinkEndChild(elemText);
         elemShow->LinkEndChild(elem);
     }
@@ -116,7 +116,7 @@ void MissXML::LoadSkin(const shared_ptr<MissSkin>& pSkin, const wxString& SkinNa
             elem.m_Y = atoi(CurStr);
 
             CurStr = CurElement->GetText();
-            elem.m_Content=wxString(CurStr, wxConvUTF8);
+            elem.m_Content = wxString(CurStr, wxConvUTF8).mb_str();
 
             pSkin->AddElement(elem);
             CurElement=CurElement->NextSiblingElement();
