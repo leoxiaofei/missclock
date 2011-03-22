@@ -3,14 +3,14 @@
 
 struct MissElement
 {
-    wxString  m_Name;
-    wxString  m_Content;
-    wxFont    m_Font;
-    wxColour  m_Colour;
-    double    m_Alignment;
-    int       m_X;
-    int       m_Y;
-    bool      m_Show;
+    wxString      m_Name;
+    std::string   m_Content;
+    wxFont        m_Font;
+    wxColour      m_Colour;
+    double        m_Alignment;
+    int           m_X;
+    int           m_Y;
+    bool          m_Show;
 };
 
 class MissSkin

@@ -15,8 +15,8 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-D__WXDEBUG__" />
-					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
-					<Add directory="$(#tinyxml)\include" />
+					<Add directory="E:\GccStudio\ThirdParty\wxWidgets\2_8_11\lib\gcc_dll\mswu" />
+					<Add directory="E:\GccStudio\ThirdParty\tinyxml\2_6_1\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
@@ -40,8 +40,8 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
-					<Add directory="$(#tinyxml)\include" />
+					<Add directory="E:\GccStudio\ThirdParty\wxWidgets\2_8_11\lib\gcc_dll\mswu" />
+					<Add directory="E:\GccStudio\ThirdParty\tinyxml\2_6_1\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
@@ -70,10 +70,10 @@
 			<Add option="-D__WXMSW__" />
 			<Add option="-DWXUSINGDLL" />
 			<Add option="-DwxUSE_UNICODE" />
-			<Add directory="$(#wx)\include" />
-			<Add directory="$(#wx)\contrib\include" />
-			<Add directory="$(#boost)" />
-			<Add directory="$(#miss)\hpp" />
+			<Add directory="E:\GccStudio\ThirdParty\wxWidgets\2_8_11\include" />
+			<Add directory="E:\GccStudio\ThirdParty\wxWidgets\2_8_11\contrib\include" />
+			<Add directory="E:\GccStudio\ThirdParty\Boost\1_46_1" />
+			<Add directory="E:\GccStudio\ThirdParty\MissLibrary\hpp" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="$(#wx)\include" />
