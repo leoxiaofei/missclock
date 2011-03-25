@@ -266,7 +266,7 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 {
     MissOption OptionDlg(this);
     OptionDlg.SetDataSrc(m_pConfig, m_pSkin);
-    Connect(wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(MissClockFrame::OnThemeChange), NULL, this);
+    OptionDlg.Connect(wxEVT_MCUI_EVENT, wxCommandEventHandler(MissClockFrame::OnOptionUiEvent), NULL, this);
     if (OptionDlg.ShowModal() == wxID_OK)
     {
 
@@ -274,8 +274,32 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 
 }
 
-void MissClockFrame::OnThemeChange(wxCommandEvent& event)
+void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
 {
-    ChangeTheme(event.GetString());
-    UpdateClock();
+    switch(event.GetInt())
+    {
+    case MissOption::UE_UPDATE:
+        {
+            UpdateClock();
+        }
+        break;
+    case MissOption::UE_CHANGETHEME:
+        {
+            ChangeTheme(event.GetString());
+            UpdateClock();
+        }
+        break;
+    case MissOption::UE_SAVETHEME:
+        {
+            MissXML::SaveSkin(m_pSkin);
+        }
+        break;
+    case MissOption::UE_RELOADTHEME:
+        {
+            ChangeTheme(m_pSkin->GetSkinName());
+            UpdateClock();
+        }
+        break;
+    }
+
 }

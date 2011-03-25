@@ -51,25 +51,24 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticBoxSizer* sbSizerTheme;
-	sbSizerTheme = new wxStaticBoxSizer( new wxStaticBox( m_panTheme, wxID_ANY, wxT("主题") ), wxVERTICAL );
-	
-	wxBoxSizer* bSizer3;
-	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+	sbSizerTheme = new wxStaticBoxSizer( new wxStaticBox( m_panTheme, wxID_ANY, wxT("主题") ), wxHORIZONTAL );
 	
 	m_lblChoiceTheme = new wxStaticText( m_panTheme, wxID_ANY, wxT("选择主题:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_lblChoiceTheme->Wrap( -1 );
-	bSizer3->Add( m_lblChoiceTheme, 1, wxALIGN_CENTER|wxALL, 5 );
+	sbSizerTheme->Add( m_lblChoiceTheme, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	wxArrayString m_choThemeChoices;
-	m_choTheme = new wxChoice( m_panTheme, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choThemeChoices, 0 );
+	m_choTheme = new wxChoice( m_panTheme, wxID_ANY, wxDefaultPosition, wxSize( 150,-1 ), m_choThemeChoices, 0 );
 	m_choTheme->SetSelection( 0 );
-	bSizer3->Add( m_choTheme, 3, wxALL, 5 );
+	sbSizerTheme->Add( m_choTheme, 0, wxALL, 5 );
 	
 	m_btnModifyTheme = new wxButton( m_panTheme, wxID_ANY, wxT("修改主题"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_btnModifyTheme, 0, wxALL, 5 );
+	sbSizerTheme->Add( m_btnModifyTheme, 0, wxALL, 5 );
 	
-	sbSizerTheme->Add( bSizer3, 1, wxALIGN_CENTER, 5 );
+	m_btnUnDoSaveTheme = new wxButton( m_panTheme, wxID_ANY, wxT("撤销"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_btnUnDoSaveTheme->Hide();
+	
+	sbSizerTheme->Add( m_btnUnDoSaveTheme, 0, wxALL, 5 );
 	
 	bSizer5->Add( sbSizerTheme, 0, wxALL|wxEXPAND, 5 );
 	
@@ -88,10 +87,14 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_lblBGPath->Wrap( -1 );
 	bSizer7->Add( m_lblBGPath, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_edtBGPath = new wxTextCtrl( m_panSkin, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_edtBGPath = new wxTextCtrl( m_panSkin, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_edtBGPath->Enable( false );
+	
 	bSizer7->Add( m_edtBGPath, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_btnBGPath = new wxButton( m_panSkin, wxID_ANY, wxT("..."), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	m_btnBGPath->Enable( false );
+	
 	bSizer7->Add( m_btnBGPath, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_lblLocale = new wxStaticText( m_panSkin, wxID_ANY, wxT("区域代码:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -103,6 +106,8 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_cobLocale->Append( wxT("cht") );
 	m_cobLocale->Append( wxT("ja") );
 	m_cobLocale->Append( wxT("us") );
+	m_cobLocale->Enable( false );
+	
 	bSizer7->Add( m_cobLocale, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	sbSizerBasicSet->Add( bSizer7, 0, wxEXPAND, 5 );
@@ -121,15 +126,21 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	sbSizerItemView = new wxStaticBoxSizer( new wxStaticBox( m_panSkin, wxID_ANY, wxT("项目显示") ), wxVERTICAL );
 	
 	m_lstItem = new wxListCtrl( m_panSkin, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT );
+	m_lstItem->Enable( false );
+	
 	sbSizerItemView->Add( m_lstItem, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer18;
 	bSizer18 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_btnAddItem = new wxButton( m_panSkin, wxID_ANY, wxT("添加"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_btnAddItem->Enable( false );
+	
 	bSizer18->Add( m_btnAddItem, 0, wxALL, 5 );
 	
 	m_btnDeleteItem = new wxButton( m_panSkin, wxID_ANY, wxT("删除"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_btnDeleteItem->Enable( false );
+	
 	bSizer18->Add( m_btnDeleteItem, 0, wxALL, 5 );
 	
 	sbSizerItemView->Add( bSizer18, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -147,6 +158,8 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer14->Add( m_lblName, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_edtName = new wxTextCtrl( m_panSkin, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_edtName->Enable( false );
+	
 	bSizer14->Add( m_edtName, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	sbSizerItemSet->Add( bSizer14, 1, wxEXPAND, 5 );
@@ -159,6 +172,8 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer13->Add( m_lblShow, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_cbtnShow = new wxCheckBox( m_panSkin, wxID_ANY, wxT("显示"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_cbtnShow->Enable( false );
+	
 	bSizer13->Add( m_cbtnShow, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	sbSizerItemSet->Add( bSizer13, 1, wxEXPAND, 5 );
@@ -171,6 +186,8 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer12->Add( m_lblContent, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_edtContent = new wxTextCtrl( m_panSkin, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_edtContent->Enable( false );
+	
 	bSizer12->Add( m_edtContent, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	sbSizerItemSet->Add( bSizer12, 1, wxEXPAND, 5 );
@@ -179,9 +196,13 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer11 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_btnFont = new wxButton( m_panSkin, wxID_ANY, wxT("字体"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_btnFont->Enable( false );
+	
 	bSizer11->Add( m_btnFont, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_btnColor = new wxButton( m_panSkin, wxID_ANY, wxT("颜色"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_btnColor->Enable( false );
+	
 	bSizer11->Add( m_btnColor, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	sbSizerItemSet->Add( bSizer11, 1, wxEXPAND, 5 );
@@ -194,9 +215,13 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer10->Add( m_lblAlign, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_edtAlign = new wxTextCtrl( m_panSkin, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_edtAlign->Enable( false );
+	
 	bSizer10->Add( m_edtAlign, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_sldAlign = new wxSlider( m_panSkin, wxID_ANY, 1, 0, 2, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	m_sldAlign->Enable( false );
+	
 	bSizer10->Add( m_sldAlign, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	sbSizerItemSet->Add( bSizer10, 1, wxEXPAND, 5 );
@@ -213,6 +238,8 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer9->Add( m_lblX, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_spX = new wxSpinCtrl( m_panSkin, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
+	m_spX->Enable( false );
+	
 	bSizer9->Add( m_spX, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_lblY = new wxStaticText( m_panSkin, wxID_ANY, wxT("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -220,6 +247,8 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer9->Add( m_lblY, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_spY = new wxSpinCtrl( m_panSkin, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
+	m_spY->Enable( false );
+	
 	bSizer9->Add( m_spY, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	sbSizerItemSet->Add( bSizer9, 1, wxEXPAND, 5 );
@@ -364,6 +393,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	this->Connect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( MissOptionBase::OnInitDialog ) );
 	m_choTheme->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissOptionBase::OnThemeChoChange ), NULL, this );
 	m_btnModifyTheme->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnModifyThemeBtnClick ), NULL, this );
+	m_btnUnDoSaveTheme->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnUnDoSaveThemeClick ), NULL, this );
 	m_btnBGPath->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnBGPathClick ), NULL, this );
 	m_cobLocale->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( MissOptionBase::OnCobLocaleSelect ), NULL, this );
 	m_lstItem->Connect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( MissOptionBase::OnlstItemDeselect ), NULL, this );
@@ -392,6 +422,7 @@ MissOptionBase::~MissOptionBase()
 	this->Disconnect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( MissOptionBase::OnInitDialog ) );
 	m_choTheme->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissOptionBase::OnThemeChoChange ), NULL, this );
 	m_btnModifyTheme->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnModifyThemeBtnClick ), NULL, this );
+	m_btnUnDoSaveTheme->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnUnDoSaveThemeClick ), NULL, this );
 	m_btnBGPath->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnBGPathClick ), NULL, this );
 	m_cobLocale->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( MissOptionBase::OnCobLocaleSelect ), NULL, this );
 	m_lstItem->Disconnect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( MissOptionBase::OnlstItemDeselect ), NULL, this );
