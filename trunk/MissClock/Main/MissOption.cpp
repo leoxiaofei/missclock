@@ -7,6 +7,8 @@
 #include <wx/colordlg.h>
 #include <wx/filedlg.h>
 
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_MCUI_EVENT);
+//wxDEFINE_EVENT(wxEVT_MCUI_EVENT, wxCommandEvent);
 
 MissOption::MissOption(wxWindow* parent)
     :
@@ -29,7 +31,7 @@ void MissOption::OnInitDialog(wxInitDialogEvent& event)
     m_choTheme->SetStringSelection(m_pConfig->GetSkinName());
     m_lstItem->InsertColumn(0, _T("ID"), wxLIST_FORMAT_LEFT, 40);
     m_lstItem->InsertColumn(1, _T("名称"), wxLIST_FORMAT_LEFT, 120);
-    EnableItemSet(false);
+    //EnableItemSet(false);
     LoadThemeOption();
 }
 
@@ -75,8 +77,10 @@ void MissOption::OnThemeChoChange(wxCommandEvent& event)
      *ProcessEvent是同步处理一个事件，该事件被处理完才结束；
      *wxPostEvent(AddPendingEvent)是异步处理一个事件，将事件加入到对应事件句柄的事件待处理队列，
     */
-    //wxCommandEvent event();
-    GetParent()->GetEventHandler()->ProcessEvent(event);
+    wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
+    send.SetInt(UE_CHANGETHEME);
+    send.SetString(event.GetString());
+    GetEventHandler()->ProcessEvent(send);
     LoadThemeOption();
 }
 
@@ -99,9 +103,49 @@ void MissOption::LoadThemeOption()
 void MissOption::OnModifyThemeBtnClick(wxCommandEvent& event)
 {
 // TODO: Implement OnModifySkinBtnClick
+
+    //如果当前是修改主题状态
+    if(m_bThemeModify)
+    {
+        long item = -1;
+        item = m_lstItem->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+        if ( item != -1 )
+        {
+            //取消选中状态
+            m_lstItem->SetItemState(item, 0, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED);
+
+            /*
+            选中Item
+            wxListCtrl->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+            */
+        }
+        //保存主题设置
+        wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
+        send.SetInt(UE_SAVETHEME);
+        GetEventHandler()->ProcessEvent(send);
+    }
+
     m_sdbSizerOK->Enable(m_bThemeModify);
     m_sdbSizerCancel->Enable(m_bThemeModify);
+    m_choTheme->Enable(m_bThemeModify);
     m_bThemeModify = !m_bThemeModify;
+    m_btnModifyTheme->SetLabel(m_bThemeModify?wxT("保存主题"):wxT("修改主题"));
+    m_btnUnDoSaveTheme->Show(m_bThemeModify);
+    sbSizerTheme->RecalcSizes();
+    m_edtBGPath->Enable(m_bThemeModify);
+    m_btnBGPath->Enable(m_bThemeModify);
+    m_cobLocale->Enable(m_bThemeModify);
+    m_lstItem->Enable(m_bThemeModify);
+    m_btnAddItem->Enable(m_bThemeModify);
+}
+
+void MissOption::OnBtnUnDoSaveThemeClick(wxCommandEvent& event)
+{
+    wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
+    send.SetInt(UE_RELOADTHEME);
+    GetEventHandler()->ProcessEvent(send);
+    LoadThemeOption();
+
 }
 
 void MissOption::OnZoomCbtnClick(wxCommandEvent& event)
@@ -186,6 +230,7 @@ void MissOption::OnBtnBGPathClick(wxCommandEvent& event)
             }
         }
         //更新主界面
+        SendUpdateEvent();
     }
 }
 
@@ -271,6 +316,7 @@ void MissOption::OnBtnDeleteItem(wxCommandEvent& event)
         m_lstItem->SetItem(ix,0,wxString::Format(wxT("%d"),ix));
     }
     //更新界面
+    SendUpdateEvent();
 }
 
 void MissOption::OnEdtNameKillFocus(wxFocusEvent& event)
@@ -283,12 +329,14 @@ void MissOption::OnCbtnShowClick(wxCommandEvent& event)
 {
     m_pSkin->GetElement(m_nThemeItem).m_Show = m_cbtnShow->GetValue();
     //更新主界面
+    SendUpdateEvent();
 }
 
 void MissOption::OnEdtContentKillFocus(wxFocusEvent& event)
 {
     m_pSkin->GetElement(m_nThemeItem).m_Content = m_edtContent->GetValue().ToAscii();
     //更新主界面
+    SendUpdateEvent();
 }
 
 void MissOption::OnBtnFont(wxCommandEvent& event)
@@ -301,6 +349,7 @@ void MissOption::OnBtnFont(wxCommandEvent& event)
     {
         m_pSkin->GetElement(m_nThemeItem).m_Font = dialog.GetFontData().GetChosenFont();
         //更新主界面
+        SendUpdateEvent();
     }
 }
 
@@ -315,7 +364,7 @@ void MissOption::OnBtnColor(wxCommandEvent& event)
     {
         m_pSkin->GetElement(m_nThemeItem).m_Colour = dialog.GetColourData().GetColour();
         //更新主界面
-
+        SendUpdateEvent();
     }
 }
 
@@ -324,16 +373,26 @@ void MissOption::OnSldAlignScrollThumbRelease(wxScrollEvent& event)
     UpdateEdtAlignText();
     m_pSkin->GetElement(m_nThemeItem).m_Alignment = m_sldAlign->GetValue() / 2.0;
     //更新主界面
+    SendUpdateEvent();
 }
 
 void MissOption::OnSpXChange(wxSpinEvent& event)
 {
     m_pSkin->GetElement(m_nThemeItem).m_X = m_spX->GetValue();
     //更新主界面
+    SendUpdateEvent();
 }
 
 void MissOption::OnSpYChange(wxSpinEvent& event)
 {
     m_pSkin->GetElement(m_nThemeItem).m_Y = m_spY->GetValue();
     //更新主界面
+    SendUpdateEvent();
+}
+
+void MissOption::SendUpdateEvent()
+{
+    wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
+    send.SetInt(UE_UPDATE);
+    GetEventHandler()->ProcessEvent(send);
 }

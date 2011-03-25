@@ -67,9 +67,11 @@ class MissOptionBase : public wxDialog
 	protected:
 		wxListbook* m_lsbOption;
 		wxPanel* m_panTheme;
+		wxStaticBoxSizer* sbSizerTheme;
 		wxStaticText* m_lblChoiceTheme;
 		wxChoice* m_choTheme;
 		wxButton* m_btnModifyTheme;
+		wxButton* m_btnUnDoSaveTheme;
 		wxNotebook* m_nbTheme;
 		wxPanel* m_panSkin;
 		wxStaticText* m_lblBGPath;
@@ -120,6 +122,7 @@ class MissOptionBase : public wxDialog
 		virtual void OnInitDialog( wxInitDialogEvent& event ) { event.Skip(); }
 		virtual void OnThemeChoChange( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnModifyThemeBtnClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBtnUnDoSaveThemeClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnBGPathClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCobLocaleSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnlstItemDeselect( wxListEvent& event ) { event.Skip(); }
@@ -144,7 +147,7 @@ class MissOptionBase : public wxDialog
 	
 	public:
 		
-		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 448,493 ), long style = wxDEFAULT_DIALOG_STYLE );
+		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 469,493 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~MissOptionBase();
 	
 };

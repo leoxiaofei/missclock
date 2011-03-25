@@ -21,6 +21,7 @@ class MissOption : public MissOptionBase
 		void OnInitDialog( wxInitDialogEvent& event );
 		void OnThemeChoChange( wxCommandEvent& event );
 		void OnModifyThemeBtnClick( wxCommandEvent& event );
+        void OnBtnUnDoSaveThemeClick( wxCommandEvent& event );
 		void OnZoomCbtnClick( wxCommandEvent& event );
 		void OnZoomSldChanged( wxScrollEvent& event );
 		void OnTransSldChanged( wxScrollEvent& event );
@@ -42,17 +43,21 @@ class MissOption : public MissOptionBase
 		void OnSldAlignScrollThumbRelease( wxScrollEvent& event );
 		void OnSpXChange( wxSpinEvent& event );
 		void OnSpYChange( wxSpinEvent& event );
+
 	public:
 		/** Constructor */
 		MissOption( wxWindow* parent );
-
         void SetDataSrc(shared_ptr<MissConfig>& pConfig, shared_ptr<MissSkin>& pSkin);
+
+        enum EUiEvent{UE_UPDATE, UE_CHANGETHEME, UE_SAVETHEME, UE_RELOADTHEME};
 
     protected:
         wxArrayString GetSkinsName();
         void LoadThemeOption();
         void UpdateEdtAlignText();
         void EnableItemSet(bool bEnable);
+        void SendUpdateEvent();
+
     private:
 		shared_ptr<MissConfig> m_pConfig;
 		shared_ptr<MissSkin> m_pSkin;
@@ -62,4 +67,8 @@ class MissOption : public MissOptionBase
 
 };
 
+BEGIN_DECLARE_EVENT_TYPES()
+    DECLARE_LOCAL_EVENT_TYPE(wxEVT_MCUI_EVENT, -1)
+END_DECLARE_EVENT_TYPES()
+//wxDECLARE_EVENT(wxEVT_SELECTED_CHANGED, wxCommandEvent)
 #endif // __MissOption__
