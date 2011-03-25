@@ -19,7 +19,6 @@ MissSkin::MissSkin():
     m_pImpl(new MissSkinImpl)
 {
     //ctor
-    wxSetlocale(LC_TIME,wxT("chs"));
 }
 
 MissSkin::~MissSkin()
@@ -62,11 +61,23 @@ void MissSkin::SetSkinName(const wxString& strName)
 void MissSkin::SetBGPicPath(const wxString& strPicPath)
 {
     m_pImpl->m_BGPicPath = strPicPath;
+    LoadBGPic();
+}
+
+void MissSkin::DelElement(unsigned int nIndex)
+{
+    if(nIndex < m_pImpl->m_Element.size())
+    {
+        std::vector<MissElement>::iterator itor = m_pImpl->m_Element.begin();
+        itor = itor + nIndex;
+        m_pImpl->m_Element.erase(itor);
+    }
 }
 
 void MissSkin::SetLocale(const wxString& strLocale)
 {
     m_pImpl->m_Locale = strLocale;
+    wxSetlocale(LC_TIME,strLocale);
 }
 
 void MissSkin::AddElement(const MissElement& element)

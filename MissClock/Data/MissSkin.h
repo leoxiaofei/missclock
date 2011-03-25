@@ -30,6 +30,7 @@ public:
     void SetBGPicPath(const wxString& strPicPath);
     void SetLocale(const wxString& strLocale);
     void AddElement(const MissElement& element);
+    void DelElement(unsigned int nIndex);
     void ClearElement();
     void LoadBGPic();
 

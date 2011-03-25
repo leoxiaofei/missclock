@@ -9,20 +9,20 @@ class MissConfig
         virtual ~MissConfig();
 
     public:
-        void SaveOption();
-        void SetPos(wxPoint & ptPos);
+        void            SaveOption();
+        void            SetPos(wxPoint & ptPos);
 
     public:
-        wxPoint&  GetPos();
-        bool      GetPin();
-        bool      GetTop();
-        bool      GetShowClock();
-        bool      GetShadow();
-        bool      GetRepeater();
-        wxString& GetSkinName();
-        wxString& GetNTP();
-        int       GetOpacity();
-        double    GetZoom();
+        const wxPoint&  GetPos();
+        bool            GetPin();
+        bool            GetTop();
+        bool            GetShowClock();
+        bool            GetShadow();
+        bool            GetRepeater();
+        const wxString& GetSkinName();
+        const wxString& GetNTP();
+        int             GetOpacity();
+        double          GetZoom();
 
     protected:
         void LoadIniFile();

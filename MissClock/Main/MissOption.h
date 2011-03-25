@@ -57,6 +57,7 @@ class MissOption : public MissOptionBase
 		shared_ptr<MissConfig> m_pConfig;
 		shared_ptr<MissSkin> m_pSkin;
 		int m_nThemeItem;
+		bool m_bThemeModify;
 	//// end generated class members
 
 };

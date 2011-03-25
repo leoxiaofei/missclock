@@ -5,12 +5,14 @@
 #include "../Data/MissSkin.h"
 #include <wx/fontdlg.h>
 #include <wx/colordlg.h>
+#include <wx/filedlg.h>
 
 
 MissOption::MissOption(wxWindow* parent)
     :
     MissOptionBase(parent),
-    m_nThemeItem(0)
+    m_nThemeItem(0),
+    m_bThemeModify(false)
 {
 
 }
@@ -97,7 +99,9 @@ void MissOption::LoadThemeOption()
 void MissOption::OnModifyThemeBtnClick(wxCommandEvent& event)
 {
 // TODO: Implement OnModifySkinBtnClick
-
+    m_sdbSizerOK->Enable(m_bThemeModify);
+    m_sdbSizerCancel->Enable(m_bThemeModify);
+    m_bThemeModify = !m_bThemeModify;
 }
 
 void MissOption::OnZoomCbtnClick(wxCommandEvent& event)
@@ -131,8 +135,58 @@ void MissOption::OnOK(wxCommandEvent& event)
 // TODO: Implement OnOK
     EndModal(wxID_OK);
 }
+
 void MissOption::OnBtnBGPathClick(wxCommandEvent& event)
 {
+    wxFileDialog fdgBGPic(this, _("Select file"), wxEmptyString, wxEmptyString,
+                          _("PNG Files(*.png)|*.png"), wxFD_DEFAULT_STYLE, wxDefaultPosition,
+                          wxDefaultSize, _T("wxFileDialog"));
+    if ( fdgBGPic.ShowModal() == wxID_OK )
+    {
+        wxString bgPicAddr = wxString::Format(wxT("%s\\Skin\\%s\\"),wxGetCwd().c_str(),
+                                              m_pConfig->GetSkinName().c_str());
+
+        bgPicAddr<<fdgBGPic.GetFilename();
+
+        if(!fdgBGPic.GetFilename().Upper().EndsWith(wxT(".PNG")))
+        {
+            wxMessageBox(wxT("抱歉，暂时只支持PNG格式的图片。"));
+            return;
+        }
+
+        if (bgPicAddr == fdgBGPic.GetPath())
+        {
+            m_pSkin->SetBGPicPath(fdgBGPic.GetFilename());
+            m_edtBGPath->SetValue(fdgBGPic.GetFilename());
+        }
+        else
+        {
+            wxString tip = wxString::Format(
+            wxT("是否将其图片复制到主题文件夹中？\n该主题文件夹位于：\n%s\n这将会覆盖同名文件。"),
+                                            bgPicAddr.c_str());
+            if ( wxYES == wxMessageBox(tip,wxT("提示："),wxYES_NO|wxYES_DEFAULT) )
+            {
+
+                if (wxCopyFile( fdgBGPic.GetPath(),bgPicAddr ))
+                {
+                    m_pSkin->SetBGPicPath(fdgBGPic.GetFilename());
+                    m_edtBGPath->SetValue(fdgBGPic.GetFilename());
+                }
+                else
+                {
+                    wxMessageBox(wxT("复制文件失败！我只好放弃复制文件。"));
+                    m_pSkin->SetBGPicPath(fdgBGPic.GetPath());
+                    m_edtBGPath->SetValue(fdgBGPic.GetPath());
+                }
+            }
+            else
+            {
+                m_pSkin->SetBGPicPath(fdgBGPic.GetPath());
+                m_edtBGPath->SetValue(fdgBGPic.GetPath());
+            }
+        }
+        //更新主界面
+    }
 }
 
 void MissOption::OnCobLocaleSelect(wxCommandEvent& event)
@@ -191,15 +245,38 @@ void MissOption::UpdateEdtAlignText()
 
 void MissOption::OnBtnAddItem(wxCommandEvent& event)
 {
+    MissElement newEment;
+    newEment.m_Name = wxT("新建");
+    newEment.m_Show = true;
+    newEment.m_X = 0;
+    newEment.m_Y = 0;
+    newEment.m_Alignment = 0;
+    newEment.m_Font = wxFont(12,wxFONTFAMILY_DEFAULT,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL );
+    newEment.m_Colour = wxColor(0xFF,0xFF,0xFF);
+
+    m_pSkin->AddElement(newEment);
+
+    int nItemcount = m_lstItem->GetItemCount();
+    m_lstItem->InsertItem(nItemcount, wxEmptyString);
+    m_lstItem->SetItem(nItemcount,0,wxString::Format(wxT("%d"),nItemcount));
+    m_lstItem->SetItem(nItemcount,1,newEment.m_Name);
 }
 
 void MissOption::OnBtnDeleteItem(wxCommandEvent& event)
 {
-
+    m_pSkin->DelElement(m_nThemeItem);
+    m_lstItem->DeleteItem(m_nThemeItem);
+    for ( int ix=0; ix < m_lstItem->GetItemCount(); ++ix )
+    {
+        m_lstItem->SetItem(ix,0,wxString::Format(wxT("%d"),ix));
+    }
+    //更新界面
 }
 
 void MissOption::OnEdtNameKillFocus(wxFocusEvent& event)
 {
+    m_pSkin->GetElement(m_nThemeItem).m_Name = m_edtName->GetValue();
+    m_lstItem->SetItem(m_nThemeItem,1,m_edtName->GetValue());
 }
 
 void MissOption::OnCbtnShowClick(wxCommandEvent& event)
@@ -210,6 +287,8 @@ void MissOption::OnCbtnShowClick(wxCommandEvent& event)
 
 void MissOption::OnEdtContentKillFocus(wxFocusEvent& event)
 {
+    m_pSkin->GetElement(m_nThemeItem).m_Content = m_edtContent->GetValue().ToAscii();
+    //更新主界面
 }
 
 void MissOption::OnBtnFont(wxCommandEvent& event)
