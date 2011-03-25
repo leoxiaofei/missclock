@@ -86,7 +86,7 @@ void MissConfig::SetPos(wxPoint& ptPos)
     m_pImpl->m_Pos = ptPos;
 }
 
-wxPoint& MissConfig::GetPos()
+const wxPoint& MissConfig::GetPos()
 {
     return m_pImpl->m_Pos;
 }
@@ -116,12 +116,12 @@ bool MissConfig::GetRepeater()
     return m_pImpl->m_Repeater;
 }
 
-wxString& MissConfig::GetSkinName()
+const wxString& MissConfig::GetSkinName()
 {
     return m_pImpl->m_SkinName;
 }
 
-wxString& MissConfig::GetNTP()
+const wxString& MissConfig::GetNTP()
 {
     return m_pImpl->m_NTP;
 }

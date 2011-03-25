@@ -122,5 +122,4 @@ void MissXML::LoadSkin(const shared_ptr<MissSkin>& pSkin, const wxString& SkinNa
             CurElement=CurElement->NextSiblingElement();
         }
     }
-    pSkin->LoadBGPic();
 }

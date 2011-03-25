@@ -30,14 +30,16 @@
 
 #include "windows.h"
 //helper functions
-enum wxbuildinfoformat {
-    short_f, long_f };
+enum wxbuildinfoformat
+{
+    short_f, long_f
+};
 
 wxString wxbuildinfo(wxbuildinfoformat format)
 {
     wxString wxbuild(wxVERSION_STRING);
 
-    if (format == long_f )
+    if (format == long_f)
     {
 #if defined(__WXMSW__)
         wxbuild << _T("-Windows");
@@ -69,7 +71,8 @@ const long MissClockFrame::ID_MENUITEM_SETTIME = wxNewId();
 const long MissClockFrame::ID_MENUITEM_ABOUT = wxNewId();
 const long MissClockFrame::ID_MENUITEM_EXIT = wxNewId();
 
-MissClockFrame::MissClockFrame(wxFrame* frame):
+MissClockFrame::MissClockFrame(wxFrame* frame)
+    :
     GUIFrame(frame),
     m_pTaskBarIcon(new MissTaskBarIcon),
     m_pMainTimer(new wxTimer(this)),
@@ -78,7 +81,7 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     m_pMainMenu(new wxMenu)
 {
     m_hWnd = static_cast<HWND>(GetHandle());
-    m_pTaskBarIcon->SetIcon(wxICON(RC_CLOCK_ICON),wxT("迷失日历时钟"));
+    m_pTaskBarIcon->SetIcon(wxICON(RC_CLOCK_ICON), wxT("迷失日历时钟"));
     m_pMainTimer->Start(1000);
     InitEvent();
     InitMenu();
@@ -88,7 +91,7 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
 MissClockFrame::~MissClockFrame()
 {
     std::cout << "~MissClockFrame()";
-    this->Disconnect(wxEVT_TIMER,wxTimerEventHandler(MissClockFrame::OnTimer));
+    this->Disconnect(wxEVT_TIMER, wxTimerEventHandler(MissClockFrame::OnTimer));
 }
 
 void MissClockFrame::InitMenu()
@@ -108,25 +111,25 @@ void MissClockFrame::InitMenu()
 
 void MissClockFrame::InitEvent()
 {
-    this->Connect(wxEVT_TIMER,wxTimerEventHandler(MissClockFrame::OnTimer));
+    this->Connect(wxEVT_TIMER, wxTimerEventHandler(MissClockFrame::OnTimer));
     sg_SecUp.connect(&MissClockFrame::UpdateClock);
     sg_MinUp.connect(&MissClockFrame::CheckTask);
     sg_MinUp.connect(&MissClockFrame::CheckAudioChimer);
 
     //Connect(ID_MENUITEM_PIN,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimPinSelected);
     //Connect(ID_MENUITEM_SHADOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShadowSelected);
-    Connect(ID_MENUITEM_TOP,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimTopSelected);
+    Connect(ID_MENUITEM_TOP, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnmimTopSelected);
     //Connect(ID_MENUITEM_SHOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShowSelected);
-    Connect(ID_MENUITEM_OPTION,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimOptionSelected);
+    Connect(ID_MENUITEM_OPTION, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnmimOptionSelected);
     //Connect(ID_MENUITEM_REMIND,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimRemindSelected);
     //Connect(ID_MENUITEM_COPYDATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimCopyDateSelected);
     //Connect(ID_MENUITEM_COPYTIME,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimCopyTimeSelected);
     //Connect(ID_MENUITEM_SETTIME,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimSetTimeSelected);
-    this->Connect(ID_MENUITEM_ABOUT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnAbout);
-    this->Connect(ID_MENUITEM_EXIT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnClose);
+    this->Connect(ID_MENUITEM_ABOUT, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnAbout);
+    this->Connect(ID_MENUITEM_EXIT, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnClose);
 
-    m_pTaskBarIcon->Connect(wxEVT_TASKBAR_RIGHT_UP,(wxObjectEventFunction)&MissClockFrame::OnRightUp,NULL,this);
-    m_pTaskBarIcon->Connect(wxEVT_TASKBAR_LEFT_UP,(wxObjectEventFunction)&MissClockFrame::OnTaskBarIconLeftUP,NULL,this);
+    m_pTaskBarIcon->Connect(wxEVT_TASKBAR_RIGHT_UP, (wxObjectEventFunction)&MissClockFrame::OnRightUp, NULL, this);
+    m_pTaskBarIcon->Connect(wxEVT_TASKBAR_LEFT_UP, (wxObjectEventFunction)&MissClockFrame::OnTaskBarIconLeftUP, NULL, this);
 }
 
 void MissClockFrame::InitUI()
@@ -145,7 +148,7 @@ void MissClockFrame::InitUI()
 
 void MissClockFrame::ChangeTheme(const wxString& strThemeName)
 {
-    MissXML::LoadSkin(m_pSkin,strThemeName);
+    MissXML::LoadSkin(m_pSkin, strThemeName);
     ChangeSize();
 }
 
@@ -154,11 +157,11 @@ void MissClockFrame::OnTimer(wxTimerEvent& event)
     boost::progress_timer t;
     std::cout << "OnTimer" << std::endl;
 
-    m_ttNow=time(NULL);
-    m_tmNow=localtime(&m_ttNow);
+    m_ttNow = time(NULL);
+    m_tmNow = localtime(&m_ttNow);
     static int s_savemin = m_tmNow->tm_min;
     sg_SecUp(this);
-    if(s_savemin != m_tmNow->tm_min )
+    if (s_savemin != m_tmNow->tm_min)
     {
         sg_MinUp(this);
         s_savemin = m_tmNow->tm_min;
@@ -168,7 +171,7 @@ void MissClockFrame::OnTimer(wxTimerEvent& event)
 void MissClockFrame::OnLeftDown(wxMouseEvent& event)
 {
     //移动窗口 Windows API
-    ::PostMessage(m_hWnd,WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(event.GetX(),event.GetY()));
+    ::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(event.GetX(), event.GetY()));
 }
 
 void MissClockFrame::OnRightUp(wxMouseEvent& event)
@@ -185,45 +188,45 @@ void MissClockFrame::OnTaskBarIconLeftUP(wxEvent& event)
 
 void MissClockFrame::ChangeSize()
 {
-    m_SizeWindow.cx = static_cast<int>(m_pSkin->GetBGBitmap().GetWidth()*m_pConfig->GetZoom());
-    m_SizeWindow.cy = static_cast<int>(m_pSkin->GetBGBitmap().GetHeight()*m_pConfig->GetZoom());
-    m_bpUI = wxBitmap(m_SizeWindow.cx,m_SizeWindow.cy,32);
+    m_SizeWindow.cx = static_cast<int>(m_pSkin->GetBGBitmap().GetWidth() * m_pConfig->GetZoom());
+    m_SizeWindow.cy = static_cast<int>(m_pSkin->GetBGBitmap().GetHeight() * m_pConfig->GetZoom());
+    m_bpUI = wxBitmap(m_SizeWindow.cx, m_SizeWindow.cy, 32);
     BITMAP bm;
     ::GetObject(static_cast<HBITMAP>(m_bpUI.GetHBITMAP()), sizeof(bm), &bm);
     m_nPixCount = bm.bmWidth * bm.bmHeight;
-    m_pBitmap = static_cast<unsigned int *>(bm.bmBits);
+    m_pBitmap = static_cast<unsigned int*>(bm.bmBits);
 }
 
 void MissClockFrame::UpdateClock()
 {
     static HDC s_hdcScreen = GetDC(m_hWnd);
-    static POINT s_ptSrc={0,0};
+    static POINT s_ptSrc = {0, 0};
 
     static int nPixCount;
-    static unsigned int *pBitmap;
+    static unsigned int* pBitmap;
 
     nPixCount = m_nPixCount;
     pBitmap = m_pBitmap;
 
-    while( --nPixCount )
+    while (--nPixCount)
     {
         *pBitmap = 0x01000000;
         ++pBitmap;
     }
 
     wxMemoryDC memdc(m_bpUI);
-    memdc.SetUserScale(m_pConfig->GetZoom(),m_pConfig->GetZoom());
+    memdc.SetUserScale(m_pConfig->GetZoom(), m_pConfig->GetZoom());
     m_pSkin->DrawSkin(memdc, m_tmNow);
 
     nPixCount = m_nPixCount;
     pBitmap = m_pBitmap;
-    while( --nPixCount )
+    while (--nPixCount)
     {
         *pBitmap -= 0x01000000;
         ++pBitmap;
     }
-    ::UpdateLayeredWindow(m_hWnd,s_hdcScreen,NULL,&m_SizeWindow,static_cast<HDC>(memdc.GetHDC()),
-                          &s_ptSrc,0,&m_Blend,ULW_ALPHA);
+    ::UpdateLayeredWindow(m_hWnd, s_hdcScreen, NULL, &m_SizeWindow, static_cast<HDC>(memdc.GetHDC()),
+                          &s_ptSrc, 0, &m_Blend, ULW_ALPHA);
 }
 
 void MissClockFrame::CheckTask()
@@ -234,12 +237,12 @@ void MissClockFrame::CheckAudioChimer()
 {
 }
 
-void MissClockFrame::OnClose(wxCloseEvent &event)
+void MissClockFrame::OnClose(wxCloseEvent& event)
 {
     Destroy();
 }
 
-void MissClockFrame::OnAbout(wxCommandEvent &event)
+void MissClockFrame::OnAbout(wxCommandEvent& event)
 {
     wxString msg = wxbuildinfo(long_f);
     wxMessageBox(msg, _("Welcome to..."));
@@ -248,7 +251,7 @@ void MissClockFrame::OnAbout(wxCommandEvent &event)
 void MissClockFrame::OnmimTopSelected(wxCommandEvent& event)
 {
     long lStyle = GetWindowStyleFlag();
-    if(lStyle & wxSTAY_ON_TOP)
+    if (lStyle & wxSTAY_ON_TOP)
     {
         lStyle &= ~wxSTAY_ON_TOP;
     }
@@ -263,8 +266,8 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 {
     MissOption OptionDlg(this);
     OptionDlg.SetDataSrc(m_pConfig, m_pSkin);
-    Connect(wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissClockFrame::OnThemeChange ), NULL, this);
-    if(OptionDlg.ShowModal() == wxID_OK)
+    Connect(wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(MissClockFrame::OnThemeChange), NULL, this);
+    if (OptionDlg.ShowModal() == wxID_OK)
     {
 
     }
