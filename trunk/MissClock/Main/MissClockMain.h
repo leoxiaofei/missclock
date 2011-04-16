@@ -31,9 +31,9 @@ class MissClockFrame: public GUIFrame
         void InitUI();
         void InitEvent();
         void InitMenu();
-        void ChangeSize();
-        void ChangeAlpha();
-        void ChangeTheme(const wxString& strThemeName);
+        void UpdateSize();
+        void UpdateAlpha();
+        void UpdateTheme();
         void UpdateClock();
         void CheckTask();
         void CheckAudioChimer();
@@ -46,6 +46,7 @@ class MissClockFrame: public GUIFrame
         void OnTaskBarIconLeftUP(wxEvent& event);
         void OnmimTopSelected(wxCommandEvent& event);
         void OnmimOptionSelected(wxCommandEvent& event);
+        void OnmimShowSelected(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
         void OnOptionUiEvent(wxCommandEvent& event);
 

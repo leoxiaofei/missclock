@@ -26,7 +26,7 @@ class MissOption : public MissOptionBase
 		void OnZoomSldChanged( wxScrollEvent& event );
 		void OnTransSldChanged( wxScrollEvent& event );
 		void OnNtpBtnClick( wxCommandEvent& event );
-		void OnCancel( wxCommandEvent& event );
+		//void OnCancel( wxCommandEvent& event );
 		void OnOK( wxCommandEvent& event );
 
 		void OnBtnBGPathClick( wxCommandEvent& event );
@@ -49,7 +49,7 @@ class MissOption : public MissOptionBase
 		MissOption( wxWindow* parent );
         void SetDataSrc(shared_ptr<MissConfig>& pConfig, shared_ptr<MissSkin>& pSkin);
 
-        enum EUiEvent{UE_UPDATE, UE_CHANGETHEME, UE_SAVETHEME, UE_RELOADTHEME, UE_ZOOMCHANGE, UE_ALPHACHANGE};
+        enum EUiEvent{UE_UPDATE, UE_UPDATETHEME, UE_SAVETHEME, UE_ZOOMCHANGE, UE_ALPHACHANGE};
 
     protected:
         wxArrayString GetSkinsName();

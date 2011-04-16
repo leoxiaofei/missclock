@@ -27,6 +27,7 @@
 #include "../Data/MissSkin.h"
 #include "../Data/MissXML.h"
 #include "MissSoundThread.h"
+#include <algorithm>
 
 #include "windows.h"
 //helper functions
@@ -90,7 +91,7 @@ MissClockFrame::MissClockFrame(wxFrame* frame)
 
 MissClockFrame::~MissClockFrame()
 {
-    std::cout << "~MissClockFrame()";
+    std::cout << "~MissClockFrame()" << std::endl;
     this->Disconnect(wxEVT_TIMER, wxTimerEventHandler(MissClockFrame::OnTimer));
 }
 
@@ -107,21 +108,22 @@ void MissClockFrame::InitMenu()
     m_pmimSetTime = m_pMainMenu->Append(ID_MENUITEM_SETTIME, _("校时(&S)"), wxEmptyString, wxITEM_NORMAL);
     m_pmimAbout = m_pMainMenu->Append(ID_MENUITEM_ABOUT, _("关于(&A)..."), wxEmptyString, wxITEM_NORMAL);
     m_pmimExit = m_pMainMenu->Append(ID_MENUITEM_EXIT, _("退出(&x)"), wxEmptyString, wxITEM_NORMAL);
+
+    m_pmimShow->Check(m_pConfig->GetShowClock());
 }
 
 void MissClockFrame::InitEvent()
 {
     this->Connect(wxEVT_TIMER, wxTimerEventHandler(MissClockFrame::OnTimer));
     //sg_SecUp.connect(&MissClockFrame::UpdateClock);
-    //ConnectSlot(sg_MinUp,&MissClockFrame::CheckTask);
-    sg_MinUp.push_back(&MissClockFrame::CheckTask);
-    //sg_MinUp.connect(&MissClockFrame::CheckTask);
-    //sg_MinUp.connect(&MissClockFrame::CheckAudioChimer);
+
+    ConnectSlot(sg_MinUp,&MissClockFrame::CheckTask);
+    ConnectSlot(sg_MinUp,&MissClockFrame::CheckAudioChimer);
 
     //Connect(ID_MENUITEM_PIN,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimPinSelected);
     //Connect(ID_MENUITEM_SHADOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShadowSelected);
     Connect(ID_MENUITEM_TOP, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnmimTopSelected);
-    //Connect(ID_MENUITEM_SHOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShowSelected);
+    Connect(ID_MENUITEM_SHOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShowSelected);
     Connect(ID_MENUITEM_OPTION, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnmimOptionSelected);
     //Connect(ID_MENUITEM_REMIND,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimRemindSelected);
     //Connect(ID_MENUITEM_COPYDATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimCopyDateSelected);
@@ -143,20 +145,22 @@ void MissClockFrame::InitUI()
     m_Blend.BlendOp = AC_SRC_OVER;      //指定源混合操作。目前，唯一的源和目标混合操作被定义为 AC_SRC_OVER。 详情，请参阅下面的备注部分。
     m_Blend.BlendFlags = 0;             //必须为 0
     m_Blend.AlphaFormat = AC_SRC_ALPHA; //该成员控制源和目标位图被解释的方式。
-    ChangeAlpha();
+    UpdateAlpha();
+    UpdateTheme();
 
-    ChangeTheme(m_pConfig->GetSkinName());
+    //设置时钟位置
+    Move(m_pConfig->GetPos());
 }
 
-void MissClockFrame::ChangeAlpha()
+void MissClockFrame::UpdateAlpha()
 {
     m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();  //指定用于整张源位图的Alpha透明度值。(0~255)
 }
 
-void MissClockFrame::ChangeTheme(const wxString& strThemeName)
+void MissClockFrame::UpdateTheme()
 {
-    MissXML::LoadSkin(m_pSkin, strThemeName);
-    ChangeSize();
+    MissXML::LoadSkin(m_pSkin, m_pConfig->GetSkinName());
+    UpdateSize();
 }
 
 void MissClockFrame::OnTimer(wxTimerEvent& event)
@@ -168,7 +172,7 @@ void MissClockFrame::OnTimer(wxTimerEvent& event)
     static int s_savemin = m_tmNow->tm_min;
 
     //如果要显示时钟，那么每秒钟刷新界面
-    if(1)
+    if(m_pConfig->GetShowClock())
     {
         UpdateClock();
     }
@@ -198,7 +202,7 @@ void MissClockFrame::OnTaskBarIconLeftUP(wxEvent& event)
     Raise();
 }
 
-void MissClockFrame::ChangeSize()
+void MissClockFrame::UpdateSize()
 {
     m_SizeWindow.cx = static_cast<int>(m_pSkin->GetBGBitmap().GetWidth() * m_pConfig->GetZoom());
     m_SizeWindow.cy = static_cast<int>(m_pSkin->GetBGBitmap().GetHeight() * m_pConfig->GetZoom());
@@ -247,7 +251,7 @@ void MissClockFrame::CheckTask()
 
 void MissClockFrame::CheckAudioChimer()
 {
-    if ( m_tmNow->tm_min == 0 )
+    //if ( m_tmNow->tm_min == 0 )
     {
         MissSoundThread *thread = new MissSoundThread(m_tmNow->tm_hour);
         if (thread->Create() == wxTHREAD_NO_ERROR)
@@ -263,6 +267,8 @@ void MissClockFrame::CheckAudioChimer()
 
 void MissClockFrame::OnClose(wxCloseEvent& event)
 {
+    m_pConfig->SetPos(GetPosition());
+    m_pConfig->SavePos();
     Destroy();
 }
 
@@ -295,7 +301,30 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
     {
 
     }
+    else
+    {
+        m_pConfig->LoadIniFile();
+        UpdateTheme();
+        m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
+        UpdateClock();
+    }
+}
 
+void MissClockFrame::OnmimShowSelected(wxCommandEvent& event)
+{
+    m_pConfig->SetShowClock(!m_pConfig->GetShowClock());
+
+    if (m_pConfig->GetShowClock())
+    {
+        //m_pImpl->m_Icon.ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
+        Show(true);
+    }
+    else
+    {
+        Show(false);
+    }
+
+    m_pConfig->SaveShowClock();
 }
 
 void MissClockFrame::OnMinUp()
@@ -308,23 +337,20 @@ void MissClockFrame::OnMinUp()
 
 void MissClockFrame::ConnectSlot(Slots& slots, FrameFunc func)
 {
-    //Slots::iterator itor =
-    std::find(slots.begin(),slots.end(),func);
-    //if(itor == slots.end())
+    Slots::iterator itor = std::find(slots.begin(),slots.end(),func);
+    if(itor == slots.end())
     {
         slots.push_back(func);
     }
-
 }
 
 void MissClockFrame::DisConnectSlot(Slots& slots, FrameFunc func)
 {
-    //Slots::iterator itor = std::find(slots.begin(),slots.end(),func);
-    //if(itor != slots.end())
-    //{
-    //    slots.erase(itor);
-    //}
-
+    Slots::iterator itor = std::find(slots.begin(),slots.end(),func);
+    if(itor != slots.end())
+    {
+        slots.erase(itor);
+    }
 }
 
 void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
@@ -336,9 +362,9 @@ void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
             UpdateClock();
         }
         break;
-    case MissOption::UE_CHANGETHEME:
+    case MissOption::UE_UPDATETHEME:
         {
-            ChangeTheme(event.GetString());
+            UpdateTheme();
             UpdateClock();
         }
         break;
@@ -347,21 +373,15 @@ void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
             MissXML::SaveSkin(m_pSkin);
         }
         break;
-    case MissOption::UE_RELOADTHEME:
-        {
-            ChangeTheme(m_pSkin->GetSkinName());
-            UpdateClock();
-        }
-        break;
     case MissOption::UE_ZOOMCHANGE:
         {
-            ChangeSize();
+            UpdateSize();
             UpdateClock();
         }
         break;
     case MissOption::UE_ALPHACHANGE:
         {
-            ChangeAlpha();
+            UpdateAlpha();
             UpdateClock();
         }
         break;

@@ -8,6 +8,12 @@ MissSoundThread::MissSoundThread(int hour)
 {
     //ctor
 }
+#ifdef __WXDEBUG__
+MissSoundThread::~MissSoundThread()
+{
+    std::cout << "~MissClockFrame()" << std::endl;
+}
+#endif
 
 void *MissSoundThread::Entry ()
 {
