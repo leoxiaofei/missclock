@@ -81,7 +81,7 @@ void MissConfig::SaveConfig()
     m_pImpl->m_pConfigFile->Save(oStream);
 }
 
-void MissConfig::SetPos(wxPoint& ptPos)
+void MissConfig::SetPos(const wxPoint& ptPos)
 {
     m_pImpl->m_Pos = ptPos;
 }
@@ -134,4 +134,14 @@ int MissConfig::GetOpacity()
 double MissConfig::GetZoom()
 {
     return m_pImpl->m_Zoom;
+}
+
+void MissConfig::SetZoom(const double& dZoom)
+{
+    m_pImpl->m_Zoom = dZoom;
+}
+
+void MissConfig::SetOpacity(int nOpacity)
+{
+    m_pImpl->m_Opacity = nOpacity;
 }

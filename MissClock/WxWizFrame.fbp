@@ -2232,16 +2232,16 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxBoxSizer" expanded="0">
+                                <object class="wxBoxSizer" expanded="1">
                                     <property name="minimum_size"></property>
                                     <property name="name">bSizer2</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
-                                    <object class="sizeritem" expanded="0">
+                                    <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
                                         <property name="flag">wxEXPAND|wxALL</property>
                                         <property name="proportion">0</property>
-                                        <object class="wxStaticBoxSizer" expanded="0">
+                                        <object class="wxStaticBoxSizer" expanded="1">
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">缩放</property>
                                             <property name="minimum_size"></property>
@@ -2395,9 +2395,9 @@
                                                             <property name="font"></property>
                                                             <property name="hidden">0</property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="maxValue">100</property>
+                                                            <property name="maxValue">200</property>
                                                             <property name="maximum_size"></property>
-                                                            <property name="minValue">0</property>
+                                                            <property name="minValue">50</property>
                                                             <property name="minimum_size"></property>
                                                             <property name="name">m_sldZoom</property>
                                                             <property name="permission">protected</property>
@@ -2410,7 +2410,7 @@
                                                             <property name="validator_style">wxFILTER_NONE</property>
                                                             <property name="validator_type">wxDefaultValidator</property>
                                                             <property name="validator_variable"></property>
-                                                            <property name="value">50</property>
+                                                            <property name="value">100</property>
                                                             <property name="window_extra_style"></property>
                                                             <property name="window_name"></property>
                                                             <property name="window_style"></property>
@@ -2600,11 +2600,11 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="maxValue">100</property>
+                                                    <property name="maxValue">255</property>
                                                     <property name="maximum_size"></property>
-                                                    <property name="minValue">0</property>
+                                                    <property name="minValue">50</property>
                                                     <property name="minimum_size"></property>
-                                                    <property name="name">m_sldTransparency</property>
+                                                    <property name="name">m_sldOpacity</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
                                                     <property name="size"></property>
@@ -2615,7 +2615,7 @@
                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                     <property name="validator_type">wxDefaultValidator</property>
                                                     <property name="validator_variable"></property>
-                                                    <property name="value">50</property>
+                                                    <property name="value">255</property>
                                                     <property name="window_extra_style"></property>
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>

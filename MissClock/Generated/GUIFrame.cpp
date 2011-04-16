@@ -291,7 +291,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_lblZoomOut->Wrap( -1 );
 	bSizer16->Add( m_lblZoomOut, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_sldZoom = new wxSlider( m_panUI, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	m_sldZoom = new wxSlider( m_panUI, wxID_ANY, 100, 50, 200, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer16->Add( m_sldZoom, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_lblZoomIn = new wxStaticText( m_panUI, wxID_ANY, wxT("x2"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -309,8 +309,8 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_lblTransparency->Wrap( -1 );
 	sbSizerTransparency->Add( m_lblTransparency, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_sldTransparency = new wxSlider( m_panUI, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	sbSizerTransparency->Add( m_sldTransparency, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_sldOpacity = new wxSlider( m_panUI, wxID_ANY, 255, 50, 255, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	sbSizerTransparency->Add( m_sldOpacity, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_lblOpacity = new wxStaticText( m_panUI, wxID_ANY, wxT("0%"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_lblOpacity->Wrap( -1 );
@@ -410,7 +410,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_spY->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MissOptionBase::OnSpYChange ), NULL, this );
 	m_cbtnAllowZoom->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MissOptionBase::OnZoomCbtnClick ), NULL, this );
 	m_sldZoom->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnZoomSldChanged ), NULL, this );
-	m_sldTransparency->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnTransSldChanged ), NULL, this );
+	m_sldOpacity->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnTransSldChanged ), NULL, this );
 	m_btnNTP->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnNtpBtnClick ), NULL, this );
 	m_sdbSizerCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnCancel ), NULL, this );
 	m_sdbSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnOK ), NULL, this );
@@ -439,7 +439,7 @@ MissOptionBase::~MissOptionBase()
 	m_spY->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MissOptionBase::OnSpYChange ), NULL, this );
 	m_cbtnAllowZoom->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MissOptionBase::OnZoomCbtnClick ), NULL, this );
 	m_sldZoom->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnZoomSldChanged ), NULL, this );
-	m_sldTransparency->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnTransSldChanged ), NULL, this );
+	m_sldOpacity->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnTransSldChanged ), NULL, this );
 	m_btnNTP->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnNtpBtnClick ), NULL, this );
 	m_sdbSizerCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnCancel ), NULL, this );
 	m_sdbSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnOK ), NULL, this );

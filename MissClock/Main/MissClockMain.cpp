@@ -26,7 +26,7 @@
 #include "MissOption.h"
 #include "../Data/MissSkin.h"
 #include "../Data/MissXML.h"
-
+#include "MissSoundThread.h"
 
 #include "windows.h"
 //helper functions
@@ -112,9 +112,11 @@ void MissClockFrame::InitMenu()
 void MissClockFrame::InitEvent()
 {
     this->Connect(wxEVT_TIMER, wxTimerEventHandler(MissClockFrame::OnTimer));
-    sg_SecUp.connect(&MissClockFrame::UpdateClock);
-    sg_MinUp.connect(&MissClockFrame::CheckTask);
-    sg_MinUp.connect(&MissClockFrame::CheckAudioChimer);
+    //sg_SecUp.connect(&MissClockFrame::UpdateClock);
+    //ConnectSlot(sg_MinUp,&MissClockFrame::CheckTask);
+    sg_MinUp.push_back(&MissClockFrame::CheckTask);
+    //sg_MinUp.connect(&MissClockFrame::CheckTask);
+    //sg_MinUp.connect(&MissClockFrame::CheckAudioChimer);
 
     //Connect(ID_MENUITEM_PIN,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimPinSelected);
     //Connect(ID_MENUITEM_SHADOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShadowSelected);
@@ -141,9 +143,14 @@ void MissClockFrame::InitUI()
     m_Blend.BlendOp = AC_SRC_OVER;      //指定源混合操作。目前，唯一的源和目标混合操作被定义为 AC_SRC_OVER。 详情，请参阅下面的备注部分。
     m_Blend.BlendFlags = 0;             //必须为 0
     m_Blend.AlphaFormat = AC_SRC_ALPHA; //该成员控制源和目标位图被解释的方式。
-    m_Blend.SourceConstantAlpha = 255;  //指定用于整张源位图的Alpha透明度值。(0~255)
+    ChangeAlpha();
 
     ChangeTheme(m_pConfig->GetSkinName());
+}
+
+void MissClockFrame::ChangeAlpha()
+{
+    m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();  //指定用于整张源位图的Alpha透明度值。(0~255)
 }
 
 void MissClockFrame::ChangeTheme(const wxString& strThemeName)
@@ -155,15 +162,20 @@ void MissClockFrame::ChangeTheme(const wxString& strThemeName)
 void MissClockFrame::OnTimer(wxTimerEvent& event)
 {
     boost::progress_timer t;
-    std::cout << "OnTimer" << std::endl;
 
     m_ttNow = time(NULL);
     m_tmNow = localtime(&m_ttNow);
     static int s_savemin = m_tmNow->tm_min;
-    sg_SecUp(this);
+
+    //如果要显示时钟，那么每秒钟刷新界面
+    if(1)
+    {
+        UpdateClock();
+    }
+
     if (s_savemin != m_tmNow->tm_min)
     {
-        sg_MinUp(this);
+        OnMinUp();
         s_savemin = m_tmNow->tm_min;
     }
 }
@@ -235,6 +247,18 @@ void MissClockFrame::CheckTask()
 
 void MissClockFrame::CheckAudioChimer()
 {
+    if ( m_tmNow->tm_min == 0 )
+    {
+        MissSoundThread *thread = new MissSoundThread(m_tmNow->tm_hour);
+        if (thread->Create() == wxTHREAD_NO_ERROR)
+        {
+            thread->Run();
+        }
+        else
+        {
+             wxMessageBox( wxT(" Can't create thread !" ));
+        }
+    }
 }
 
 void MissClockFrame::OnClose(wxCloseEvent& event)
@@ -274,6 +298,35 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 
 }
 
+void MissClockFrame::OnMinUp()
+{
+    for(Slots::iterator itor = sg_MinUp.begin(); itor != sg_MinUp.end(); ++itor)
+    {
+        (this->*(*itor))();
+    }
+}
+
+void MissClockFrame::ConnectSlot(Slots& slots, FrameFunc func)
+{
+    //Slots::iterator itor =
+    std::find(slots.begin(),slots.end(),func);
+    //if(itor == slots.end())
+    {
+        slots.push_back(func);
+    }
+
+}
+
+void MissClockFrame::DisConnectSlot(Slots& slots, FrameFunc func)
+{
+    //Slots::iterator itor = std::find(slots.begin(),slots.end(),func);
+    //if(itor != slots.end())
+    //{
+    //    slots.erase(itor);
+    //}
+
+}
+
 void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
 {
     switch(event.GetInt())
@@ -297,6 +350,18 @@ void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
     case MissOption::UE_RELOADTHEME:
         {
             ChangeTheme(m_pSkin->GetSkinName());
+            UpdateClock();
+        }
+        break;
+    case MissOption::UE_ZOOMCHANGE:
+        {
+            ChangeSize();
+            UpdateClock();
+        }
+        break;
+    case MissOption::UE_ALPHACHANGE:
+        {
+            ChangeAlpha();
             UpdateClock();
         }
         break;

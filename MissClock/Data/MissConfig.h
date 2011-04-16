@@ -10,8 +10,9 @@ class MissConfig
 
     public:
         void            SaveOption();
-        void            SetPos(wxPoint & ptPos);
-
+        void            SetPos(const wxPoint & ptPos);
+        void            SetZoom(const double & dZoom);
+        void            SetOpacity(int nOpacity);
     public:
         const wxPoint&  GetPos();
         bool            GetPin();
