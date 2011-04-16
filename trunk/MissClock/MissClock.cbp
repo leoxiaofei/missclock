@@ -84,6 +84,8 @@
 		</Linker>
 		<Unit filename="Data\MissConfig.cpp" />
 		<Unit filename="Data\MissConfig.h" />
+		<Unit filename="Data\MissRes.cpp" />
+		<Unit filename="Data\MissRes.h" />
 		<Unit filename="Data\MissSkin.cpp" />
 		<Unit filename="Data\MissSkin.h" />
 		<Unit filename="Data\MissXML.cpp" />
@@ -96,6 +98,8 @@
 		<Unit filename="Main\MissClockMain.h" />
 		<Unit filename="Main\MissOption.cpp" />
 		<Unit filename="Main\MissOption.h" />
+		<Unit filename="Main\MissSoundThread.cpp" />
+		<Unit filename="Main\MissSoundThread.h" />
 		<Unit filename="Main\MissTaskBarIcon.cpp" />
 		<Unit filename="Main\MissTaskBarIcon.h" />
 		<Unit filename="StdAfx.h">

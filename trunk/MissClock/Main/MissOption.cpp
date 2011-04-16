@@ -16,7 +16,7 @@ MissOption::MissOption(wxWindow* parent)
     m_nThemeItem(0),
     m_bThemeModify(false)
 {
-
+    CentreOnScreen();
 }
 
 void MissOption::SetDataSrc(shared_ptr<MissConfig>& pConfig, shared_ptr<MissSkin>& pSkin)
@@ -31,8 +31,21 @@ void MissOption::OnInitDialog(wxInitDialogEvent& event)
     m_choTheme->SetStringSelection(m_pConfig->GetSkinName());
     m_lstItem->InsertColumn(0, _T("ID"), wxLIST_FORMAT_LEFT, 40);
     m_lstItem->InsertColumn(1, _T("名称"), wxLIST_FORMAT_LEFT, 120);
-    //EnableItemSet(false);
+
     LoadThemeOption();
+
+    m_cbtnAllowZoom->SetValue(m_pConfig->GetZoom() != 1.0);
+    m_sldZoom->SetValue(static_cast<int>(m_pConfig->GetZoom() * 100));
+    SetZoomState(m_cbtnAllowZoom->GetValue());
+}
+
+void MissOption::SetZoomState(bool bEnable)
+{
+    m_sldZoom->Enable(bEnable);
+    if(!bEnable)
+    {
+        m_sldZoom->SetValue(100);
+    }
 }
 
 void MissOption::EnableItemSet(bool bEnable)
@@ -125,6 +138,11 @@ void MissOption::OnModifyThemeBtnClick(wxCommandEvent& event)
         GetEventHandler()->ProcessEvent(send);
     }
 
+    ChangeModifyState();
+}
+
+void MissOption::ChangeModifyState()
+{
     m_sdbSizerOK->Enable(m_bThemeModify);
     m_sdbSizerCancel->Enable(m_bThemeModify);
     m_choTheme->Enable(m_bThemeModify);
@@ -145,22 +163,38 @@ void MissOption::OnBtnUnDoSaveThemeClick(wxCommandEvent& event)
     send.SetInt(UE_RELOADTHEME);
     GetEventHandler()->ProcessEvent(send);
     LoadThemeOption();
-
+    ChangeModifyState();
 }
 
 void MissOption::OnZoomCbtnClick(wxCommandEvent& event)
 {
 // TODO: Implement OnZoomCbtnClick
+    SetZoomState(m_cbtnAllowZoom->GetValue());
+    if(!m_cbtnAllowZoom->GetValue())
+    {
+        m_pConfig->SetZoom(1.0);
+        wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
+        send.SetInt(UE_ZOOMCHANGE);
+        GetEventHandler()->ProcessEvent(send);
+    }
 }
 
 void MissOption::OnZoomSldChanged(wxScrollEvent& event)
 {
 // TODO: Implement OnZoomSldChanged
+    m_pConfig->SetZoom(m_sldZoom->GetValue() * 0.01);
+    wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
+    send.SetInt(UE_ZOOMCHANGE);
+    GetEventHandler()->ProcessEvent(send);
 }
 
 void MissOption::OnTransSldChanged(wxScrollEvent& event)
 {
 // TODO: Implement OnTransSldChanged
+    m_pConfig->SetOpacity(m_sldOpacity->GetValue());
+    wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
+    send.SetInt(UE_ALPHACHANGE);
+    GetEventHandler()->ProcessEvent(send);
 }
 
 void MissOption::OnNtpBtnClick(wxCommandEvent& event)
@@ -334,7 +368,7 @@ void MissOption::OnCbtnShowClick(wxCommandEvent& event)
 
 void MissOption::OnEdtContentKillFocus(wxFocusEvent& event)
 {
-    m_pSkin->GetElement(m_nThemeItem).m_Content = m_edtContent->GetValue().ToAscii();
+    m_pSkin->GetElement(m_nThemeItem).m_Content = m_edtContent->GetValue().mb_str();
     //更新主界面
     SendUpdateEvent();
 }

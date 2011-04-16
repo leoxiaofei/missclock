@@ -20,7 +20,9 @@ class MissConfig;
 
 class MissClockFrame: public GUIFrame
 {
-    typedef boost::signals2::signal<void (MissClockFrame*)> OnTimeUp;
+    //typedef boost::signals2::signal<void (MissClockFrame*)> OnTimeUp;
+    typedef void (MissClockFrame::*FrameFunc)(void) ;
+    typedef std::vector<FrameFunc> Slots;
     public:
         MissClockFrame(wxFrame *frame);
         ~MissClockFrame();
@@ -30,10 +32,14 @@ class MissClockFrame: public GUIFrame
         void InitEvent();
         void InitMenu();
         void ChangeSize();
+        void ChangeAlpha();
         void ChangeTheme(const wxString& strThemeName);
         void UpdateClock();
         void CheckTask();
         void CheckAudioChimer();
+        void OnMinUp();
+        void ConnectSlot(Slots& slots, FrameFunc func);
+        void DisConnectSlot(Slots& slots, FrameFunc func);
 
     private:
         void OnTimer(wxTimerEvent& event);
@@ -53,8 +59,8 @@ class MissClockFrame: public GUIFrame
         shared_ptr<wxTimer> m_pMainTimer;
         shared_ptr<MissSkin> m_pSkin;
         shared_ptr<MissConfig> m_pConfig;
-        OnTimeUp sg_SecUp;
-        OnTimeUp sg_MinUp;
+        Slots sg_SecUp;
+        Slots sg_MinUp;
         HWND m_hWnd;
         BLENDFUNCTION m_Blend;
         SIZE m_SizeWindow;

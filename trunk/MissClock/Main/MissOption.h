@@ -49,7 +49,7 @@ class MissOption : public MissOptionBase
 		MissOption( wxWindow* parent );
         void SetDataSrc(shared_ptr<MissConfig>& pConfig, shared_ptr<MissSkin>& pSkin);
 
-        enum EUiEvent{UE_UPDATE, UE_CHANGETHEME, UE_SAVETHEME, UE_RELOADTHEME};
+        enum EUiEvent{UE_UPDATE, UE_CHANGETHEME, UE_SAVETHEME, UE_RELOADTHEME, UE_ZOOMCHANGE, UE_ALPHACHANGE};
 
     protected:
         wxArrayString GetSkinsName();
@@ -57,6 +57,8 @@ class MissOption : public MissOptionBase
         void UpdateEdtAlignText();
         void EnableItemSet(bool bEnable);
         void SendUpdateEvent();
+        void SetZoomState(bool bEnable);
+        void ChangeModifyState();
 
     private:
 		shared_ptr<MissConfig> m_pConfig;

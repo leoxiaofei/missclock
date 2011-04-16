@@ -104,7 +104,7 @@ class MissOptionBase : public wxDialog
 		wxSlider* m_sldZoom;
 		wxStaticText* m_lblZoomIn;
 		wxStaticText* m_lblTransparency;
-		wxSlider* m_sldTransparency;
+		wxSlider* m_sldOpacity;
 		wxStaticText* m_lblOpacity;
 		wxPanel* m_panSys;
 		wxCheckBox* m_cbtnAutoRun;
