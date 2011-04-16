@@ -90,9 +90,9 @@ void MissOption::OnThemeChoChange(wxCommandEvent& event)
      *ProcessEvent是同步处理一个事件，该事件被处理完才结束；
      *wxPostEvent(AddPendingEvent)是异步处理一个事件，将事件加入到对应事件句柄的事件待处理队列，
     */
+    m_pConfig->SetSkinName(event.GetString());
     wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
-    send.SetInt(UE_CHANGETHEME);
-    send.SetString(event.GetString());
+    send.SetInt(UE_UPDATETHEME);
     GetEventHandler()->ProcessEvent(send);
     LoadThemeOption();
 }
@@ -160,7 +160,7 @@ void MissOption::ChangeModifyState()
 void MissOption::OnBtnUnDoSaveThemeClick(wxCommandEvent& event)
 {
     wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
-    send.SetInt(UE_RELOADTHEME);
+    send.SetInt(UE_UPDATETHEME);
     GetEventHandler()->ProcessEvent(send);
     LoadThemeOption();
     ChangeModifyState();
@@ -202,11 +202,13 @@ void MissOption::OnNtpBtnClick(wxCommandEvent& event)
 // TODO: Implement OnNtpBtnClick
 }
 
+/*
 void MissOption::OnCancel(wxCommandEvent& event)
 {
 // TODO: Implement OnCancel
     EndModal(wxID_CANCEL);
 }
+*/
 
 void MissOption::OnOK(wxCommandEvent& event)
 {

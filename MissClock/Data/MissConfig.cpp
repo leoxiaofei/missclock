@@ -81,9 +81,36 @@ void MissConfig::SaveConfig()
     m_pImpl->m_pConfigFile->Save(oStream);
 }
 
+void MissConfig::SavePos()
+{
+    m_pImpl->m_pConfigFile->Write(wxT("位置/X"), m_pImpl->m_Pos.x);
+    m_pImpl->m_pConfigFile->Write(wxT("位置/Y"), m_pImpl->m_Pos.y);
+    SaveConfig();
+}
+
+void MissConfig::SaveShowClock()
+{
+    m_pImpl->m_pConfigFile->Write(wxT("选项/显示时钟"), m_pImpl->m_ShowClock);
+    SaveConfig();
+}
+
+void MissConfig::SaveOption()
+{
+}
+
 void MissConfig::SetPos(const wxPoint& ptPos)
 {
     m_pImpl->m_Pos = ptPos;
+}
+
+void MissConfig::SetSkinName(const wxString& strName)
+{
+    m_pImpl->m_SkinName = strName;
+}
+
+void MissConfig::SetShowClock(bool bShow)
+{
+    m_pImpl->m_ShowClock = bShow;
 }
 
 const wxPoint& MissConfig::GetPos()

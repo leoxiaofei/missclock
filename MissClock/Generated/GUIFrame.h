@@ -141,7 +141,7 @@ class MissOptionBase : public wxDialog
 		virtual void OnZoomSldChanged( wxScrollEvent& event ) { event.Skip(); }
 		virtual void OnTransSldChanged( wxScrollEvent& event ) { event.Skip(); }
 		virtual void OnNtpBtnClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
 		
 	

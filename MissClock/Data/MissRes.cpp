@@ -65,5 +65,6 @@ bool MissRes::GetReswxSound(const wxString& strSoundName, wxSound& sound)
 		delete [] byDate;
 		return true;
 	}
+	std::cout<<"GetReswxSound Error."<<std::endl;
 	return false;
 }

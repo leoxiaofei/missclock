@@ -201,7 +201,7 @@
                         <object class="listbookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">主题&#x0A;设置</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -2728,7 +2728,7 @@
                         <object class="listbookpage" expanded="0">
                             <property name="bitmap"></property>
                             <property name="label">系统&#x0A;设置</property>
-                            <property name="select">0</property>
+                            <property name="select">1</property>
                             <object class="wxPanel" expanded="0">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -3245,7 +3245,7 @@
                         <property name="name">m_sdbSizer</property>
                         <property name="permission">protected</property>
                         <event name="OnApplyButtonClick"></event>
-                        <event name="OnCancelButtonClick">OnCancel</event>
+                        <event name="OnCancelButtonClick">OnClose</event>
                         <event name="OnContextHelpButtonClick"></event>
                         <event name="OnHelpButtonClick"></event>
                         <event name="OnNoButtonClick"></event>

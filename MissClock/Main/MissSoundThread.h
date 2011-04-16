@@ -11,6 +11,10 @@ class MissSoundThread : public wxThread
         virtual void *Entry();
         //virtual void OnExit();
 
+    #ifdef __WXDEBUG__
+        ~MissSoundThread();
+    #endif
+
     private:
         int m_Hour;
 };
