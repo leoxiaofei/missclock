@@ -47,6 +47,9 @@ class MissClockFrame: public GUIFrame
         void OnmimTopSelected(wxCommandEvent& event);
         void OnmimOptionSelected(wxCommandEvent& event);
         void OnmimShowSelected(wxCommandEvent& event);
+        void OnmimPinSelected(wxCommandEvent& event);
+        void OnmimShadowSelected(wxCommandEvent& event);
+
         void OnAbout(wxCommandEvent& event);
         void OnOptionUiEvent(wxCommandEvent& event);
 

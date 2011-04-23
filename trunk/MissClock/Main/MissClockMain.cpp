@@ -27,6 +27,7 @@
 #include "../Data/MissSkin.h"
 #include "../Data/MissXML.h"
 #include "MissSoundThread.h"
+#include "../Common/MissFrame.h"
 #include <algorithm>
 
 #include "windows.h"
@@ -87,6 +88,9 @@ MissClockFrame::MissClockFrame(wxFrame* frame)
     InitEvent();
     InitMenu();
     InitUI();
+
+    MissFrame *a = new MissFrame(this);
+    a->Show();
 }
 
 MissClockFrame::~MissClockFrame()
@@ -120,8 +124,8 @@ void MissClockFrame::InitEvent()
     ConnectSlot(sg_MinUp,&MissClockFrame::CheckTask);
     ConnectSlot(sg_MinUp,&MissClockFrame::CheckAudioChimer);
 
-    //Connect(ID_MENUITEM_PIN,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimPinSelected);
-    //Connect(ID_MENUITEM_SHADOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShadowSelected);
+    Connect(ID_MENUITEM_PIN,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimPinSelected);
+    Connect(ID_MENUITEM_SHADOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShadowSelected);
     Connect(ID_MENUITEM_TOP, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnmimTopSelected);
     Connect(ID_MENUITEM_SHOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShowSelected);
     Connect(ID_MENUITEM_OPTION, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnmimOptionSelected);
@@ -251,7 +255,7 @@ void MissClockFrame::CheckTask()
 
 void MissClockFrame::CheckAudioChimer()
 {
-    //if ( m_tmNow->tm_min == 0 )
+    if ( m_tmNow->tm_min == 0 )
     {
         MissSoundThread *thread = new MissSoundThread(m_tmNow->tm_hour);
         if (thread->Create() == wxTHREAD_NO_ERROR)
@@ -325,6 +329,13 @@ void MissClockFrame::OnmimShowSelected(wxCommandEvent& event)
     }
 
     m_pConfig->SaveShowClock();
+}
+void MissClockFrame::OnmimPinSelected(wxCommandEvent& event)
+{
+}
+
+void MissClockFrame::OnmimShadowSelected(wxCommandEvent& event)
+{
 }
 
 void MissClockFrame::OnMinUp()

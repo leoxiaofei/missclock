@@ -446,10 +446,48 @@ MissOptionBase::~MissOptionBase()
 	
 }
 
-ModifySkinPanelBase::ModifySkinPanelBase( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+MissFrameBase::MissFrameBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer18;
+	bSizer18 = new wxBoxSizer( wxVERTICAL );
+	
+	m_pTitle = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( -1,20 ), wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer19;
+	bSizer19 = new wxBoxSizer( wxHORIZONTAL );
+	
+	bSizer19->SetMinSize( wxSize( -1,20 ) ); 
+	
+	bSizer19->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_button9 = new wxButton( m_pTitle, wxID_ANY, wxT("×"), wxDefaultPosition, wxSize( 15,15 ), 0|wxTRANSPARENT_WINDOW );
+	bSizer19->Add( m_button9, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 3 );
+	
+	m_pTitle->SetSizer( bSizer19 );
+	m_pTitle->Layout();
+	bSizer18->Add( m_pTitle, 0, wxALL|wxEXPAND, 0 );
+	
+	m_staticText16 = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText16->Wrap( -1 );
+	bSizer18->Add( m_staticText16, 1, wxALL|wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer18 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	this->Connect( wxEVT_PAINT, wxPaintEventHandler( MissFrameBase::OnPaint ) );
+	m_pTitle->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MissFrameBase::OnPTitleLeftDown ), NULL, this );
+	m_pTitle->Connect( wxEVT_PAINT, wxPaintEventHandler( MissFrameBase::OnPTitleOnPaint ), NULL, this );
 }
 
-ModifySkinPanelBase::~ModifySkinPanelBase()
+MissFrameBase::~MissFrameBase()
 {
+	// Disconnect Events
+	this->Disconnect( wxEVT_PAINT, wxPaintEventHandler( MissFrameBase::OnPaint ) );
+	m_pTitle->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MissFrameBase::OnPTitleLeftDown ), NULL, this );
+	m_pTitle->Disconnect( wxEVT_PAINT, wxPaintEventHandler( MissFrameBase::OnPTitleOnPaint ), NULL, this );
+	
 }

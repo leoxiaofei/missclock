@@ -81,6 +81,8 @@
 			<Add option="-mthreads" />
 			<Add library="libgdi32.a" />
 		</Linker>
+		<Unit filename="Common\MissFrame.cpp" />
+		<Unit filename="Common\MissFrame.h" />
 		<Unit filename="Data\MissConfig.cpp" />
 		<Unit filename="Data\MissConfig.h" />
 		<Unit filename="Data\MissRes.cpp" />
