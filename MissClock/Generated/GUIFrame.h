@@ -153,18 +153,28 @@ class MissOptionBase : public wxDialog
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class ModifySkinPanelBase
+/// Class MissFrameBase
 ///////////////////////////////////////////////////////////////////////////////
-class ModifySkinPanelBase : public wxPanel 
+class MissFrameBase : public wxFrame 
 {
 	private:
 	
 	protected:
+		wxPanel* m_pTitle;
+		
+		wxButton* m_button9;
+		wxStaticText* m_staticText16;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnPaint( wxPaintEvent& event ) { event.Skip(); }
+		virtual void OnPTitleLeftDown( wxMouseEvent& event ) { event.Skip(); }
+		virtual void OnPTitleOnPaint( wxPaintEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
-		ModifySkinPanelBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
-		~ModifySkinPanelBase();
+		MissFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 253,176 ), long style = wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL );
+		~MissFrameBase();
 	
 };
 
