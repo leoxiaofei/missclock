@@ -15,14 +15,15 @@ class MissFrame : public MissFrameBase
 {
 	protected:
 		// Handlers for MissFrameBase events.
-		void OnPaint( wxPaintEvent& event );
+		//void OnPaint( wxPaintEvent& event );
+        void OnEraseBackground( wxEraseEvent& event );
         void OnPTitleLeftDown( wxMouseEvent& event );
         void OnPTitleOnPaint( wxPaintEvent& event );
 	public:
 		/** Constructor */
 		MissFrame( wxWindow* parent );
 	//// end generated class members
-
+        wxBitmap m_bmBackGround;
 };
 
 #endif // __MissFrame__

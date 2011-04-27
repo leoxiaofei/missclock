@@ -26,51 +26,31 @@ class MissOption : public MissOptionBase
 		void OnZoomSldChanged( wxScrollEvent& event );
 		void OnTransSldChanged( wxScrollEvent& event );
 		void OnNtpBtnClick( wxCommandEvent& event );
+        void OnBtnAddTaskClick( wxCommandEvent& event );
+		void OnBtnAdditionaClick( wxCommandEvent& event );
 		//void OnCancel( wxCommandEvent& event );
 		void OnOK( wxCommandEvent& event );
-
-		void OnBtnBGPathClick( wxCommandEvent& event );
-		void OnCobLocaleSelect( wxCommandEvent& event );
-		void OnlstItemDeselect( wxListEvent& event );
-		void OnlstItemSelect( wxListEvent& event );
-		void OnBtnAddItem( wxCommandEvent& event );
-		void OnBtnDeleteItem( wxCommandEvent& event );
-		void OnEdtNameKillFocus( wxFocusEvent& event );
-		void OnCbtnShowClick( wxCommandEvent& event );
-		void OnEdtContentKillFocus( wxFocusEvent& event );
-		void OnBtnFont( wxCommandEvent& event );
-		void OnBtnColor( wxCommandEvent& event );
-		void OnSldAlignScrollThumbRelease( wxScrollEvent& event );
-		void OnSpXChange( wxSpinEvent& event );
-		void OnSpYChange( wxSpinEvent& event );
 
 	public:
 		/** Constructor */
 		MissOption( wxWindow* parent );
         void SetDataSrc(shared_ptr<MissConfig>& pConfig, shared_ptr<MissSkin>& pSkin);
 
-        enum EUiEvent{UE_UPDATE, UE_UPDATETHEME, UE_SAVETHEME, UE_ZOOMCHANGE, UE_ALPHACHANGE};
+
 
     protected:
         wxArrayString GetSkinsName();
-        void LoadThemeOption();
-        void UpdateEdtAlignText();
-        void EnableItemSet(bool bEnable);
-        void SendUpdateEvent();
         void SetZoomState(bool bEnable);
-        void ChangeModifyState();
+        //void ChangeModifyState();
 
     private:
 		shared_ptr<MissConfig> m_pConfig;
 		shared_ptr<MissSkin> m_pSkin;
-		int m_nThemeItem;
-		bool m_bThemeModify;
+
 	//// end generated class members
 
 };
 
-BEGIN_DECLARE_EVENT_TYPES()
-    DECLARE_LOCAL_EVENT_TYPE(wxEVT_MCUI_EVENT, -1)
-END_DECLARE_EVENT_TYPES()
+
 //wxDECLARE_EVENT(wxEVT_SELECTED_CHANGED, wxCommandEvent)
 #endif // __MissOption__

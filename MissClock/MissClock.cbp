@@ -6,16 +6,17 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin\Debug\MissClock" prefix_auto="1" extension_auto="1" />
+				<Option output="..\bin\Debug\MissClock" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-D__WXDEBUG__" />
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
-					<Add directory="$(#tinyxml)\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
@@ -32,15 +33,14 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin\Release\MissClock" prefix_auto="1" extension_auto="1" />
+				<Option output="..\bin\Release\MissClock" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
-					<Add directory="$(#tinyxml)\include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
@@ -73,6 +73,7 @@
 			<Add directory="$(#wx)\contrib\include" />
 			<Add directory="$(#boost)" />
 			<Add directory="$(#miss)\hpp" />
+			<Add directory="$(#tinyxml)\include" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="$(#wx)\include" />
@@ -83,6 +84,8 @@
 		</Linker>
 		<Unit filename="Common\MissFrame.cpp" />
 		<Unit filename="Common\MissFrame.h" />
+		<Unit filename="Common\MissGlobal.cpp" />
+		<Unit filename="Common\MissGlobal.h" />
 		<Unit filename="Data\MissConfig.cpp" />
 		<Unit filename="Data\MissConfig.h" />
 		<Unit filename="Data\MissRes.cpp" />
@@ -99,10 +102,14 @@
 		<Unit filename="Main\MissClockMain.h" />
 		<Unit filename="Main\MissOption.cpp" />
 		<Unit filename="Main\MissOption.h" />
+		<Unit filename="Main\MissSetTimer.cpp" />
+		<Unit filename="Main\MissSetTimer.h" />
 		<Unit filename="Main\MissSoundThread.cpp" />
 		<Unit filename="Main\MissSoundThread.h" />
 		<Unit filename="Main\MissTaskBarIcon.cpp" />
 		<Unit filename="Main\MissTaskBarIcon.h" />
+		<Unit filename="Main\MissTheme.cpp" />
+		<Unit filename="Main\MissTheme.h" />
 		<Unit filename="StdAfx.h">
 			<Option compile="1" />
 			<Option weight="0" />

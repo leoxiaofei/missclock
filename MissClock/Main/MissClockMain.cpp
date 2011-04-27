@@ -28,6 +28,7 @@
 #include "../Data/MissXML.h"
 #include "MissSoundThread.h"
 #include "../Common/MissFrame.h"
+#include "../Common/MissGlobal.h"
 #include <algorithm>
 
 #include "windows.h"
@@ -368,29 +369,29 @@ void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
 {
     switch(event.GetInt())
     {
-    case MissOption::UE_UPDATE:
+    case MissGlobal::UE_UPDATE:
         {
             UpdateClock();
         }
         break;
-    case MissOption::UE_UPDATETHEME:
+    case MissGlobal::UE_UPDATETHEME:
         {
             UpdateTheme();
             UpdateClock();
         }
         break;
-    case MissOption::UE_SAVETHEME:
+    case MissGlobal::UE_SAVETHEME:
         {
             MissXML::SaveSkin(m_pSkin);
         }
         break;
-    case MissOption::UE_ZOOMCHANGE:
+    case MissGlobal::UE_ZOOMCHANGE:
         {
             UpdateSize();
             UpdateClock();
         }
         break;
-    case MissOption::UE_ALPHACHANGE:
+    case MissGlobal::UE_ALPHACHANGE:
         {
             UpdateAlpha();
             UpdateClock();
