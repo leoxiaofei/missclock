@@ -250,7 +250,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panTask->SetSizer( bSizer222 );
 	m_panTask->Layout();
 	bSizer222->Fit( m_panTask );
-	m_nbTimerSetting->AddPage( m_panTask, wxT("计划任务"), false );
+	m_nbTimerSetting->AddPage( m_panTask, wxT("定时程序"), false );
 	m_panOverdue = new wxPanel( m_nbTimerSetting, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer223;
 	bSizer223 = new wxBoxSizer( wxVERTICAL );
@@ -350,7 +350,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_panel13->SetSizer( bSizer28 );
 	m_panel13->Layout();
 	bSizer28->Fit( m_panel13 );
-	m_choicebook2->AddPage( m_panel13, wxT("指定"), false );
+	m_choicebook2->AddPage( m_panel13, wxT("指定"), true );
 	m_panel14 = new wxPanel( m_choicebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_choicebook2->AddPage( m_panel14, wxT("按天"), false );
 	m_panel15 = new wxPanel( m_choicebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
@@ -390,7 +390,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_panel15->SetSizer( fgSizer2 );
 	m_panel15->Layout();
 	fgSizer2->Fit( m_panel15 );
-	m_choicebook2->AddPage( m_panel15, wxT("按星期"), true );
+	m_choicebook2->AddPage( m_panel15, wxT("按星期"), false );
 	m_panel17 = new wxPanel( m_choicebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer30;
 	bSizer30 = new wxBoxSizer( wxHORIZONTAL );
@@ -438,24 +438,24 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	m_radioBtn5 = new wxRadioButton( this, wxID_ANY, wxT("准确时间:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_radioBtn5, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer1->Add( m_radioBtn5, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
 	wxBoxSizer* bSizer25;
 	bSizer25 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_spinCtrl3 = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 0 );
-	bSizer25->Add( m_spinCtrl3, 1, wxALL, 5 );
+	bSizer25->Add( m_spinCtrl3, 1, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_staticText17 = new wxStaticText( this, wxID_ANY, wxT("时"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText17->Wrap( -1 );
-	bSizer25->Add( m_staticText17, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	bSizer25->Add( m_staticText17, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
 	
 	m_spinCtrl4 = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 0 );
-	bSizer25->Add( m_spinCtrl4, 1, wxALL, 5 );
+	bSizer25->Add( m_spinCtrl4, 1, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_staticText18 = new wxStaticText( this, wxID_ANY, wxT("分"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText18->Wrap( -1 );
-	bSizer25->Add( m_staticText18, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	bSizer25->Add( m_staticText18, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
 	
 	fgSizer1->Add( bSizer25, 1, wxEXPAND, 5 );
 	
@@ -466,7 +466,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_spinCtrl6 = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 0 );
-	bSizer26->Add( m_spinCtrl6, 0, wxALL, 5 );
+	bSizer26->Add( m_spinCtrl6, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_staticText19 = new wxStaticText( this, wxID_ANY, wxT("分"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText19->Wrap( -1 );
@@ -477,7 +477,25 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	
 	fgSizer1->Add( bSizer26, 1, wxEXPAND, 5 );
 	
-	m_radioBtn7 = new wxRadioButton( this, wxID_ANY, wxT("不弹出提醒:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_radioBtn8 = new wxRadioButton( this, wxID_ANY, wxT("本程序启动时"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_radioBtn8, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer35;
+	bSizer35 = new wxBoxSizer( wxVERTICAL );
+	
+	fgSizer1->Add( bSizer35, 1, wxEXPAND, 5 );
+	
+	m_radioBtn9 = new wxRadioButton( this, wxID_ANY, wxT("本程序关闭时"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_radioBtn9->SetToolTip( wxT("强制关闭除外") );
+	
+	fgSizer1->Add( m_radioBtn9, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer36;
+	bSizer36 = new wxBoxSizer( wxVERTICAL );
+	
+	fgSizer1->Add( bSizer36, 1, wxEXPAND, 5 );
+	
+	m_radioBtn7 = new wxRadioButton( this, wxID_ANY, wxT("不弹出提醒"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer1->Add( m_radioBtn7, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxBoxSizer* bSizer27;
@@ -487,7 +505,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	bSizer27->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	m_checkBox7 = new wxCheckBox( this, wxID_ANY, wxT("在当天计划任务中列出"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer27->Add( m_checkBox7, 0, wxALL, 5 );
+	bSizer27->Add( m_checkBox7, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	fgSizer1->Add( bSizer27, 1, wxEXPAND, 5 );
 	
@@ -824,7 +842,7 @@ MyPanel2::MyPanel2( wxWindow* parent, wxWindowID id, const wxPoint& pos, const w
 	m_staticText25->Wrap( -1 );
 	bSizer34->Add( m_staticText25, 0, wxALL, 5 );
 	
-	m_filePicker1 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	m_filePicker1 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST|wxFLP_OPEN );
 	bSizer34->Add( m_filePicker1, 0, wxALL, 5 );
 	
 	this->SetSizer( bSizer34 );

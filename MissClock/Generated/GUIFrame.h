@@ -176,6 +176,8 @@ class MissSetTimerBase : public wxDialog
 		wxSpinCtrl* m_spinCtrl6;
 		wxStaticText* m_staticText19;
 		
+		wxRadioButton* m_radioBtn8;
+		wxRadioButton* m_radioBtn9;
 		wxRadioButton* m_radioBtn7;
 		
 		wxCheckBox* m_checkBox7;
@@ -186,7 +188,7 @@ class MissSetTimerBase : public wxDialog
 	
 	public:
 		
-		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 441,503 ), long style = wxDEFAULT_DIALOG_STYLE );
+		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 441,493 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~MissSetTimerBase();
 	
 };

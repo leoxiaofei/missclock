@@ -28,8 +28,8 @@
 					<Add library="libwxzlibd.a" />
 					<Add library="libwxmsw28ud_adv.a" />
 					<Add library="libtinyxml.a" />
+					<Add library="libwxcode_msw28ud_wxsqlite3" />
 					<Add directory="$(#wx)\lib\gcc_dll" />
-					<Add directory="$(#tinyxml)\lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -53,8 +53,8 @@
 					<Add library="libwxzlib.a" />
 					<Add library="libwxmsw28u_adv.a" />
 					<Add library="libtinyxml.a" />
+					<Add library="libwxcode_msw28u_wxsqlite3" />
 					<Add directory="$(#wx)\lib\gcc_dll" />
-					<Add directory="$(#tinyxml)\lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -74,6 +74,7 @@
 			<Add directory="$(#boost)" />
 			<Add directory="$(#miss)\hpp" />
 			<Add directory="$(#tinyxml)\include" />
+			<Add directory="$(#wxsqlite3)\include" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="$(#wx)\include" />
@@ -81,6 +82,8 @@
 		<Linker>
 			<Add option="-mthreads" />
 			<Add library="libgdi32.a" />
+			<Add directory="$(#tinyxml)\lib" />
+			<Add directory="$(#wxsqlite3)\lib\gcc_dll" />
 		</Linker>
 		<Unit filename="Common\MissFrame.cpp" />
 		<Unit filename="Common\MissFrame.h" />
@@ -92,6 +95,8 @@
 		<Unit filename="Data\MissRes.h" />
 		<Unit filename="Data\MissSkin.cpp" />
 		<Unit filename="Data\MissSkin.h" />
+		<Unit filename="Data\MissWxSQLite3.cpp" />
+		<Unit filename="Data\MissWxSQLite3.h" />
 		<Unit filename="Data\MissXML.cpp" />
 		<Unit filename="Data\MissXML.h" />
 		<Unit filename="Generated\GUIFrame.cpp" />
