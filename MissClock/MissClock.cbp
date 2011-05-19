@@ -28,8 +28,9 @@
 					<Add library="libwxzlibd.a" />
 					<Add library="libwxmsw28ud_adv.a" />
 					<Add library="libtinyxml.a" />
-					<Add library="libwxcode_msw28ud_wxsqlite3" />
+					<Add library="libwxcode_msw28ud_wxsqlite3.a" />
 					<Add directory="$(#wx)\lib\gcc_dll" />
+					<Add directory="C:\Users\leoxiaofei\Desktop\irrKlang-1.3.0\lib\Win32-gcc" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -53,7 +54,7 @@
 					<Add library="libwxzlib.a" />
 					<Add library="libwxmsw28u_adv.a" />
 					<Add library="libtinyxml.a" />
-					<Add library="libwxcode_msw28u_wxsqlite3" />
+					<Add library="libwxcode_msw28u_wxsqlite3.a" />
 					<Add directory="$(#wx)\lib\gcc_dll" />
 				</Linker>
 			</Target>

@@ -22,8 +22,10 @@ class MissFrame : public MissFrameBase
 	public:
 		/** Constructor */
 		MissFrame( wxWindow* parent );
+		~MissFrame();
 	//// end generated class members
         wxBitmap m_bmBackGround;
+
 };
 
 #endif // __MissFrame__
