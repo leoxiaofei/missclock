@@ -1,18 +1,23 @@
 ﻿#include "MissFrame.h"
 #include <wx/dcclient.h>
 #include <wx/effects.h>
-#include "../Data/MissWxSQLite3.h"
 
 #include "windows.h"
+
+
 MissFrame::MissFrame( wxWindow* parent )
     :
     MissFrameBase( parent )
     //m_bmBackGround(wxT("mm_mid.png"),wxBITMAP_TYPE_PNG)
 {
-    SetWindowStyleFlag(wxFRAME_TOOL_WINDOW | wxFRAME_NO_TASKBAR | wxNO_BORDER);
-    MissWxSQLite3 a;
+    //SetWindowStyleFlag(wxFRAME_TOOL_WINDOW | wxFRAME_NO_TASKBAR | wxNO_BORDER);
 
 }
+
+MissFrame::~MissFrame()
+{
+}
+
 /*
 void MissFrame::OnPaint( wxPaintEvent& event )
 {

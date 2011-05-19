@@ -279,8 +279,8 @@ void MissClockFrame::OnClose(wxCloseEvent& event)
 
 void MissClockFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Welcome to..."));
+    wxString msgb = wxbuildinfo(long_f);
+    wxMessageBox(msgb, _("Welcome to..."));
 }
 
 void MissClockFrame::OnmimTopSelected(wxCommandEvent& event)

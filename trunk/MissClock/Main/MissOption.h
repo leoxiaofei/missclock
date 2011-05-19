@@ -30,6 +30,7 @@ class MissOption : public MissOptionBase
 		void OnBtnAdditionaClick( wxCommandEvent& event );
 		//void OnCancel( wxCommandEvent& event );
 		void OnOK( wxCommandEvent& event );
+        void OnNPTimerSettingChanged( wxNotebookEvent& event );
 
 	public:
 		/** Constructor */

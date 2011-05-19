@@ -34,9 +34,12 @@
 #include <wx/datectrl.h>
 #include <wx/dateevt.h>
 #include <wx/spinctrl.h>
+#include <wx/hyperlink.h>
 #include <wx/choicebk.h>
 #include <wx/radiobut.h>
 #include <wx/toolbook.h>
+class TextPanel;
+class ProgramPanel;
 #include <wx/textctrl.h>
 #include <wx/filepicker.h>
 
@@ -102,15 +105,15 @@ class MissOptionBase : public wxDialog
 		wxButton* m_btnDeleteTask;
 		wxNotebook* m_nbTimerSetting;
 		wxPanel* m_panRemind;
-		wxListCtrl* m_listCtrl2;
+		wxListCtrl* m_listRemind;
 		wxPanel* m_panMemorialDay;
-		wxListCtrl* m_listCtrl21;
+		wxListCtrl* m_listMemorialDay;
 		wxPanel* m_panBacklog;
-		wxListCtrl* m_listCtrl7;
+		wxListCtrl* m_listBacklog;
 		wxPanel* m_panTask;
-		wxListCtrl* m_listCtrl22;
+		wxListCtrl* m_listTask;
 		wxPanel* m_panOverdue;
-		wxListCtrl* m_listCtrl23;
+		wxListCtrl* m_listOverdue;
 		wxStdDialogButtonSizer* m_sdbSizer;
 		wxButton* m_sdbSizerOK;
 		wxButton* m_sdbSizerCancel;
@@ -126,6 +129,9 @@ class MissOptionBase : public wxDialog
 		virtual void OnNtpBtnClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnAddTaskClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnAdditionaClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBtnModifyTaskClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBtnDeleteTaskClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnNPTimerSettingChanged( wxNotebookEvent& event ) { event.Skip(); }
 		virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
 		
@@ -145,50 +151,63 @@ class MissSetTimerBase : public wxDialog
 	private:
 	
 	protected:
-		wxChoicebook* m_choicebook2;
-		wxPanel* m_panel13;
-		wxStaticText* m_staticText20;
-		wxDatePickerCtrl* m_datePicker1;
-		wxPanel* m_panel14;
-		wxPanel* m_panel15;
-		wxStaticText* m_staticText21;
-		wxCheckBox* m_checkBox8;
-		wxCheckBox* m_checkBox9;
-		wxCheckBox* m_checkBox10;
-		wxCheckBox* m_checkBox11;
+		wxChoicebook* m_cbookDate;
+		wxPanel* m_panAppoint;
+		wxStaticText* m_lblAppoint;
+		wxDatePickerCtrl* m_dpAppoint;
+		wxPanel* m_panEDay;
+		wxStaticText* m_lblStartDate;
+		wxDatePickerCtrl* m_dpEDay;
+		wxStaticText* m_lblE;
+		wxSpinCtrl* m_spEDay;
+		wxStaticText* m_lblEDay;
+		wxPanel* m_panWeek;
+		wxStaticText* m_lblEWeek;
+		wxCheckBox* m_cbtnMon;
+		wxCheckBox* m_cbtnTues;
+		wxCheckBox* m_cbtnWed;
+		wxCheckBox* m_cbtnThurs;
 		
-		wxCheckBox* m_checkBox12;
-		wxCheckBox* m_checkBox13;
-		wxCheckBox* m_checkBox14;
-		wxPanel* m_panel17;
-		wxStaticText* m_staticText22;
-		wxSpinCtrl* m_spinCtrl7;
-		wxStaticText* m_staticText23;
-		wxPanel* m_panel18;
-		wxStaticText* m_staticText24;
-		wxDatePickerCtrl* m_datePicker2;
-		wxRadioButton* m_radioBtn5;
-		wxSpinCtrl* m_spinCtrl3;
-		wxStaticText* m_staticText17;
-		wxSpinCtrl* m_spinCtrl4;
-		wxStaticText* m_staticText18;
-		wxRadioButton* m_radioBtn6;
-		wxSpinCtrl* m_spinCtrl6;
-		wxStaticText* m_staticText19;
+		wxCheckBox* m_cbtnFri;
+		wxCheckBox* m_cbtnSar;
+		wxCheckBox* m_cbtnSun;
+		wxHyperlinkCtrl* m_hlWorkDay;
+		wxPanel* m_panMonth;
+		wxStaticText* m_lblEMonth;
+		wxSpinCtrl* m_spMonth;
+		wxStaticText* m_lblMonth;
+		wxPanel* m_panYear;
+		wxStaticText* m_lblYear;
+		wxSpinCtrl* m_spYMonth;
+		wxStaticText* m_lblYMonth;
+		wxSpinCtrl* m_spYDay;
+		wxStaticText* m_lblYDay;
+		wxRadioButton* m_rbtnAppoint;
+		wxSpinCtrl* m_spHour;
+		wxStaticText* m_lblHour;
+		wxSpinCtrl* m_spMin;
+		wxStaticText* m_lblMin;
+		wxCheckBox* m_cbtnRemindType;
 		
-		wxRadioButton* m_radioBtn8;
-		wxRadioButton* m_radioBtn9;
-		wxRadioButton* m_radioBtn7;
-		
-		wxCheckBox* m_checkBox7;
+		wxRadioButton* m_rbtnPStart;
+		wxRadioButton* m_rbtnPClose;
+		wxRadioButton* m_rbtnNothing;
 		wxToolbook* m_tbRun;
+		TextPanel* m_panTextRemind;
+		ProgramPanel* m_panProgRemind;
 		wxStdDialogButtonSizer* m_sdbSizer3;
 		wxButton* m_sdbSizer3OK;
 		wxButton* m_sdbSizer3Cancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnInitDialog( wxInitDialogEvent& event ) { event.Skip(); }
+		virtual void OnHLWorkDayClick( wxHyperlinkEvent& event ) { event.Skip(); }
+		virtual void OnRbtnNothingClick( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
-		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 441,493 ), long style = wxDEFAULT_DIALOG_STYLE );
+		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 388,406 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~MissSetTimerBase();
 	
 };
@@ -265,7 +284,6 @@ class MissFrameBase : public wxFrame
 	
 	protected:
 		wxPanel* m_pTitle;
-		wxStaticText* m_staticText18;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnEraseBackground( wxEraseEvent& event ) { event.Skip(); }
@@ -275,43 +293,45 @@ class MissFrameBase : public wxFrame
 	
 	public:
 		
-		MissFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 253,176 ), long style = wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL|wxTRANSPARENT_WINDOW );
+		MissFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 253,176 ), long style = wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL|wxTRANSPARENT_WINDOW );
 		~MissFrameBase();
 	
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class MyPanel1
+/// Class TextPanel
 ///////////////////////////////////////////////////////////////////////////////
-class MyPanel1 : public wxPanel 
+class TextPanel : public wxPanel 
 {
 	private:
 	
 	protected:
-		wxTextCtrl* m_textCtrl6;
 	
 	public:
+		wxTextCtrl* m_edtContent;
 		
-		MyPanel1( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
-		~MyPanel1();
+		TextPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		~TextPanel();
 	
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class MyPanel2
+/// Class ProgramPanel
 ///////////////////////////////////////////////////////////////////////////////
-class MyPanel2 : public wxPanel 
+class ProgramPanel : public wxPanel 
 {
 	private:
 	
 	protected:
-		wxStaticText* m_staticText25;
-		wxFilePickerCtrl* m_filePicker1;
+		wxStaticText* m_lblProgram;
+		wxStaticText* m_lblParameter;
 	
 	public:
+		wxFilePickerCtrl* m_fpProgram;
+		wxTextCtrl* m_edtParameter;
 		
-		MyPanel2( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
-		~MyPanel2();
+		ProgramPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+		~ProgramPanel();
 	
 };
 

@@ -4,6 +4,17 @@
 namespace MissGlobal
 {
     enum EUiEvent{UE_UPDATE, UE_UPDATETHEME, UE_SAVETHEME, UE_ZOOMCHANGE, UE_ALPHACHANGE};
+    struct TaskData
+    {
+        int      nDateType;
+        int      nTimeType;
+        int      nRemindType;
+        int      nEvery;
+        int      nTaskType;
+        wxString strTaskDate;
+        wxString strTaskTime;
+        wxString strTaskContent;
+    };
     //extern
 };
 
