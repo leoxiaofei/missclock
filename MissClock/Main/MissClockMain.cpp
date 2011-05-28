@@ -27,7 +27,7 @@
 #include "../Data/MissSkin.h"
 #include "../Data/MissXML.h"
 #include "MissSoundThread.h"
-#include "../Common/MissFrame.h"
+//#include "../Common/MissFrame.h"
 #include "../Common/MissGlobal.h"
 #include <algorithm>
 
@@ -90,8 +90,8 @@ MissClockFrame::MissClockFrame(wxFrame* frame)
     InitMenu();
     InitUI();
 
-    MissFrame *a = new MissFrame(this);
-    a->Show();
+    //MissFrame *a = new MissFrame(this);
+    //a->Show();
 }
 
 MissClockFrame::~MissClockFrame()
@@ -272,6 +272,18 @@ void MissClockFrame::CheckAudioChimer()
 
 void MissClockFrame::OnClose(wxCloseEvent& event)
 {
+    /*
+    wxWindowList&list = GetChildren();
+    for (wxWindowList::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        if(dynamic_cast<wxDialog *>(*iter) != NULL)
+        {
+            (*iter)->Close();
+        }
+    }
+    */
+
+
     m_pConfig->SetPos(GetPosition());
     m_pConfig->SavePos();
     Destroy();
@@ -308,10 +320,10 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
     }
     else
     {
-        m_pConfig->LoadIniFile();
-        UpdateTheme();
-        m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
-        UpdateClock();
+        //m_pConfig->LoadIniFile();
+        //UpdateTheme();
+        //m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
+        //UpdateClock();
     }
 }
 

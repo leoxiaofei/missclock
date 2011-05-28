@@ -131,7 +131,7 @@ class MissOptionBase : public wxDialog
 		virtual void OnBtnAdditionaClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnModifyTaskClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnDeleteTaskClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnNPTimerSettingChanged( wxNotebookEvent& event ) { event.Skip(); }
+		virtual void OnNBTimerSettingChanged( wxNotebookEvent& event ) { event.Skip(); }
 		virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
 		
