@@ -90,8 +90,12 @@
 		<Unit filename="Common\MissFrame.h" />
 		<Unit filename="Common\MissGlobal.cpp" />
 		<Unit filename="Common\MissGlobal.h" />
+		<Unit filename="Common\MissTools.cpp" />
+		<Unit filename="Common\MissTools.h" />
 		<Unit filename="Data\MissConfig.cpp" />
 		<Unit filename="Data\MissConfig.h" />
+		<Unit filename="Data\MissDBL.cpp" />
+		<Unit filename="Data\MissDBL.h" />
 		<Unit filename="Data\MissRes.cpp" />
 		<Unit filename="Data\MissRes.h" />
 		<Unit filename="Data\MissSkin.cpp" />

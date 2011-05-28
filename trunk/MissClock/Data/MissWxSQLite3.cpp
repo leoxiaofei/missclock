@@ -65,6 +65,58 @@ void MissWxSQLite3::DeleteTaskData(int nID)
     query.ExecuteUpdate();
 }
 
+void MissWxSQLite3::QuestTaskData(int nType, std::vector<std::pair<int,MissGlobal::TaskData> >& mapData)
+{
+    assert(nType >= MissGlobal::QT_REMIND && nType <= MissGlobal::QT_ALL);
+
+    wxSQLite3Statement query;
+    wxSQLite3ResultSet result;
+
+    switch(static_cast<MissGlobal::EQuestType>(nType))
+    {
+    /*
+    case MissGlobal::QT_TASK:
+        query = m_pDB->PrepareStatement(s_strQuestTaskData + wxT(""));
+        result = query.ExecuteQuery();
+        break;
+    case MissGlobal::QT_REMIND:
+
+        break;
+    case MissGlobal::QT_MEMORIAL_DAY:
+        break;
+    case MissGlobal::QT_BACKLOG:
+        break;
+
+    case MissGlobal::QT_OVERDUE:
+        break;
+    */
+    default:
+        query = m_pDB->PrepareStatement(s_strQuestTaskData);
+        result = query.ExecuteQuery();
+        break;
+    }
+
+    if(result.IsOk())
+    {
+        MissGlobal::TaskData data;
+        do
+        {
+            data.nDateType      = result.GetInt(wxT("DateType"));
+            data.strTaskDate    = result.GetString(wxT("TaskDate"));
+            data.nRemindType    = result.GetInt(wxT("RemindType"));
+            data.nTimeType      = result.GetInt(wxT("TimeType"));
+            data.strTaskTime    = result.GetString(wxT("TaskTime"));
+            data.nEvery         = result.GetInt(wxT("Every"));
+            data.nTaskType      = result.GetInt(wxT("TaskType"));
+            data.strTaskContent = result.GetString(wxT("TaskContent"));
+            mapData.push_back(std::make_pair(result.GetInt(wxT("ID")),data));
+        }
+        while(result.NextRow());
+    }
+
+    result.Finalize();
+}
+
 const wxString MissWxSQLite3::s_strCreateTaskTable = wxT(
 "CREATE TABLE \"TaskData\" (\
 \"ID\"  INTEGER PRIMARY KEY NOT NULL,\
@@ -75,8 +127,8 @@ const wxString MissWxSQLite3::s_strCreateTaskTable = wxT(
 \"TaskTime\"  TEXT,\
 \"Every\"  INTEGER,\
 \"TaskType\"  INTEGER,\
-\"TaskContent\"  TEXT\
-);");
+\"TaskContent\"  TEXT);"
+);
 
 const wxString MissWxSQLite3::s_strInsertTaskData = wxT(
 "INSERT INTO TaskData VALUES (\
@@ -88,7 +140,8 @@ $TimeType, \
 $TaskTime, \
 $Every, \
 $TaskType, \
-$TaskContent);");
+$TaskContent);"
+);
 
 const wxString MissWxSQLite3::s_strUpdateTaskData = wxT(
 "UPDATE TaskData SET \
@@ -105,4 +158,8 @@ WHERE ID = $ID;"
 
 const wxString MissWxSQLite3::s_strDeleteTaskData= wxT(
 "DELETE FROM TaskData WHERE ID = $ID;"
+);
+
+const wxString MissWxSQLite3::s_strQuestTaskData= wxT(
+"SELECT * FROM TaskData"
 );

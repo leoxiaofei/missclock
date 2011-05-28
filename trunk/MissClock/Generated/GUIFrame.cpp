@@ -121,7 +121,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panUI->SetSizer( bSizer2 );
 	m_panUI->Layout();
 	bSizer2->Fit( m_panUI );
-	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), false );
+	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), true );
 	m_panSys = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer17;
 	bSizer17 = new wxBoxSizer( wxVERTICAL );
@@ -268,7 +268,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panTmr->SetSizer( bSizer20 );
 	m_panTmr->Layout();
 	bSizer20->Fit( m_panTmr );
-	m_lsbOption->AddPage( m_panTmr, wxT("定时设置"), true );
+	m_lsbOption->AddPage( m_panTmr, wxT("定时设置"), false );
 	#ifndef __WXGTK__ // Small icon style not supported in GTK
 	wxListView* m_lsbOptionListView = m_lsbOption->GetListView();
 	long m_lsbOptionFlags = m_lsbOptionListView->GetWindowStyleFlag();
@@ -304,7 +304,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_btnAdditional->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAdditionaClick ), NULL, this );
 	m_btnModifyTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnModifyTaskClick ), NULL, this );
 	m_btnDeleteTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDeleteTaskClick ), NULL, this );
-	m_nbTimerSetting->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNPTimerSettingChanged ), NULL, this );
+	m_nbTimerSetting->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNBTimerSettingChanged ), NULL, this );
 	m_sdbSizerCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnClose ), NULL, this );
 	m_sdbSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnOK ), NULL, this );
 }
@@ -324,7 +324,7 @@ MissOptionBase::~MissOptionBase()
 	m_btnAdditional->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAdditionaClick ), NULL, this );
 	m_btnModifyTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnModifyTaskClick ), NULL, this );
 	m_btnDeleteTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDeleteTaskClick ), NULL, this );
-	m_nbTimerSetting->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNPTimerSettingChanged ), NULL, this );
+	m_nbTimerSetting->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNBTimerSettingChanged ), NULL, this );
 	m_sdbSizerCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnClose ), NULL, this );
 	m_sdbSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnOK ), NULL, this );
 	
@@ -772,7 +772,7 @@ MissThemeBase::MissThemeBase( wxWindow* parent, wxWindowID id, const wxString& t
 	m_sdbSizerCancel = new wxButton( this, wxID_CANCEL );
 	m_sdbSizer->AddButton( m_sdbSizerCancel );
 	m_sdbSizer->Realize();
-	bSizer19->Add( m_sdbSizer, 0, wxEXPAND, 5 );
+	bSizer19->Add( m_sdbSizer, 0, wxEXPAND|wxALL, 5 );
 	
 	this->SetSizer( bSizer19 );
 	this->Layout();

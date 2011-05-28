@@ -6,6 +6,7 @@
 #include "MissTheme.h"
 #include "MissSetTimer.h"
 #include "../Data/MissWxSQLite3.h"
+#include "../Common/MissTools.h"
 
 //wxDEFINE_EVENT(wxEVT_MCUI_EVENT, wxCommandEvent);
 
@@ -109,6 +110,8 @@ void MissOption::OnThemeChoChange(wxCommandEvent& event)
 void MissOption::OnModifyThemeBtnClick(wxCommandEvent& event)
 {
 // TODO: Implement OnModifySkinBtnClick
+    MissTools::AutoHideWindow HideWin(this);
+    //this->SetTransparent(0);
     MissTheme ThemeDlg(this);
     ThemeDlg.SetDataSrc(m_pSkin);
     if(ThemeDlg.ShowModal() == wxID_OK)
@@ -118,7 +121,6 @@ void MissOption::OnModifyThemeBtnClick(wxCommandEvent& event)
         send.SetInt(MissGlobal::UE_SAVETHEME);
         GetEventHandler()->ProcessEvent(send);
     }
-
     /*
     if(m_bThemeModify)
     {
@@ -213,13 +215,25 @@ void MissOption::OnOK(wxCommandEvent& event)
 
 void MissOption::OnBtnAddTaskClick(wxCommandEvent& event)
 {
+    MissTools::AutoHideWindow HideWin(this);
     MissSetTimer SetTimerDlg(this);
     if(SetTimerDlg.ShowModal() == wxID_OK)
     {
         MissGlobal::TaskData data;
         SetTimerDlg.GetTaskData(data);
-        MissWxSQLite3 sql;
-        sql.InsertTaskData(data);
+        try
+        {
+            MissWxSQLite3 sql;
+            sql.InsertTaskData(data);
+        }
+        //catch(wxSQLite3Exception& e)
+        //{
+        //    std::cerr << e.GetErrorCode() << ":" << (const char*)(e.GetMessage().mb_str()) << std::endl;
+        //}
+        catch(...)
+        {
+
+        }
     }
 }
 
@@ -228,7 +242,7 @@ void MissOption::OnBtnAdditionaClick(wxCommandEvent& event)
     m_btnAddTask->PopupMenu( m_mnuAdditional, wxPoint(0,m_btnAddTask->GetSize().GetHeight()));
 }
 
-void MissOption::OnNPTimerSettingChanged(wxNotebookEvent& event)
+void MissOption::OnNBTimerSettingChanged(wxNotebookEvent& event)
 {
     int nIndex = event.GetSelection();
     if(nIndex > -1)
@@ -237,7 +251,6 @@ void MissOption::OnNPTimerSettingChanged(wxNotebookEvent& event)
         {
         case 1:
             {
-                MissWxSQLite3 aaa;
 
             }
             break;
