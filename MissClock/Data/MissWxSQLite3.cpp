@@ -19,7 +19,7 @@ wxSQLite3Database* MissWxSQLite3::InitDB()
 {
     wxString strDBName = wxGetCwd() + wxT("/TaskDB.db3");
     wxSQLite3Database* db = new wxSQLite3Database();
-    db->Open(strDBName);
+    db->Open(strDBName,wxEmptyString);
     if(!db->TableExists(wxT("TaskData")))
     {
         db->ExecuteUpdate(s_strCreateTaskTable);
@@ -71,25 +71,29 @@ void MissWxSQLite3::QuestTaskData(int nType, std::vector<std::pair<int,MissGloba
 
     wxSQLite3Statement query;
     wxSQLite3ResultSet result;
-
+    wxString strSql;
     switch(static_cast<MissGlobal::EQuestType>(nType))
     {
-    /*
-    case MissGlobal::QT_TASK:
-        query = m_pDB->PrepareStatement(s_strQuestTaskData + wxT(""));
+    case MissGlobal::QT_REMIND:
+        query = m_pDB->PrepareStatement(s_strQuestTaskData + wxT(" WHERE TaskType = 0 AND DateType <> 4 AND (DateType <> 0 OR (DateType = 0 AND DATETIME(TaskDate || ' ' || TaskTime) > DATETIME('NOW')))"));
         result = query.ExecuteQuery();
         break;
-    case MissGlobal::QT_REMIND:
-
-        break;
     case MissGlobal::QT_MEMORIAL_DAY:
+        query = m_pDB->PrepareStatement(s_strQuestTaskData + wxT(" WHERE TaskType = 0 AND DateType = 4"));
+        result = query.ExecuteQuery();
         break;
     case MissGlobal::QT_BACKLOG:
+        query = m_pDB->PrepareStatement(s_strQuestTaskData + wxT(" WHERE TaskType = 0 AND RemindType <> 0 AND (DateType <> 0 OR (DateType = 0 AND DATETIME(TaskDate || ' ' || TaskTime) > DATETIME('NOW')))"));
+        result = query.ExecuteQuery();
         break;
-
+    case MissGlobal::QT_TASK:
+        query = m_pDB->PrepareStatement(s_strQuestTaskData + wxT(" WHERE TaskType <> 0 AND (DateType <> 0 OR (DateType = 0 AND DATETIME(TaskDate || ' ' || TaskTime) > DATETIME('NOW')))"));
+        result = query.ExecuteQuery();
+        break;
     case MissGlobal::QT_OVERDUE:
+        query = m_pDB->PrepareStatement(s_strQuestTaskData + wxT(" WHERE DateType = 0 AND DATETIME(TaskDate || ' ' || TaskTime) <= DATETIME('NOW')"));
+        result = query.ExecuteQuery();
         break;
-    */
     default:
         query = m_pDB->PrepareStatement(s_strQuestTaskData);
         result = query.ExecuteQuery();
@@ -99,7 +103,7 @@ void MissWxSQLite3::QuestTaskData(int nType, std::vector<std::pair<int,MissGloba
     if(result.IsOk())
     {
         MissGlobal::TaskData data;
-        do
+        while(result.NextRow())
         {
             data.nDateType      = result.GetInt(wxT("DateType"));
             data.strTaskDate    = result.GetString(wxT("TaskDate"));
@@ -111,10 +115,32 @@ void MissWxSQLite3::QuestTaskData(int nType, std::vector<std::pair<int,MissGloba
             data.strTaskContent = result.GetString(wxT("TaskContent"));
             mapData.push_back(std::make_pair(result.GetInt(wxT("ID")),data));
         }
-        while(result.NextRow());
     }
 
     result.Finalize();
+}
+
+bool MissWxSQLite3::GetTaskDataByID(int nID, MissGlobal::TaskData& data)
+{
+    wxSQLite3Statement query = m_pDB->PrepareStatement(s_strQuestTaskData + wxT(" WHERE ID = $ID"));
+    query.Bind(1,nID);
+    wxSQLite3ResultSet result = query.ExecuteQuery();
+    if(result.IsOk())
+    {
+        if(!result.Eof())
+        {
+            data.nDateType      = result.GetInt(wxT("DateType"));
+            data.strTaskDate    = result.GetString(wxT("TaskDate"));
+            data.nRemindType    = result.GetInt(wxT("RemindType"));
+            data.nTimeType      = result.GetInt(wxT("TimeType"));
+            data.strTaskTime    = result.GetString(wxT("TaskTime"));
+            data.nEvery         = result.GetInt(wxT("Every"));
+            data.nTaskType      = result.GetInt(wxT("TaskType"));
+            data.strTaskContent = result.GetString(wxT("TaskContent"));
+            return true;
+        }
+    }
+    return false;
 }
 
 const wxString MissWxSQLite3::s_strCreateTaskTable = wxT(

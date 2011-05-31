@@ -14,7 +14,18 @@ MissOption::MissOption(wxWindow* parent)
     :
     MissOptionBase(parent)
 {
+    m_pLists[MissGlobal::QT_REMIND] = m_listRemind;
+    m_pLists[MissGlobal::QT_MEMORIAL_DAY] = m_listMemorialDay;
+    m_pLists[MissGlobal::QT_BACKLOG] = m_listBacklog;
+    m_pLists[MissGlobal::QT_TASK] = m_listTask;
+    m_pLists[MissGlobal::QT_OVERDUE] = m_listOverdue;
+
     CentreOnScreen();
+}
+
+MissOption::~MissOption()
+{
+    std::cout << "~MissOption()" << std::endl;
 }
 
 void MissOption::SetDataSrc(shared_ptr<MissConfig>& pConfig, shared_ptr<MissSkin>& pSkin)
@@ -32,36 +43,14 @@ void MissOption::OnInitDialog(wxInitDialogEvent& event)
     m_sldZoom->SetValue(static_cast<int>(m_pConfig->GetZoom() * 100));
     SetZoomState(m_cbtnAllowZoom->GetValue());
 
-    //临时
-    m_listRemind->InsertColumn(0,_T("ID"),wxLIST_FORMAT_LEFT,0);
-    m_listRemind->InsertColumn(1,_T("编号"),wxLIST_FORMAT_LEFT,40);
-    m_listRemind->InsertColumn(2,_T("提醒日期"),wxLIST_FORMAT_LEFT,75);
-    m_listRemind->InsertColumn(3,_T("提醒时间"),wxLIST_FORMAT_LEFT,60);
-    m_listRemind->InsertColumn(4,_T("主题内容"),wxLIST_FORMAT_LEFT,250);
-
-    m_listMemorialDay->InsertColumn(0,_T("ID"),wxLIST_FORMAT_LEFT,0);
-    m_listMemorialDay->InsertColumn(1,_T("编号"),wxLIST_FORMAT_LEFT,40);
-    m_listMemorialDay->InsertColumn(2,_T("提醒日期"),wxLIST_FORMAT_LEFT,75);
-    m_listMemorialDay->InsertColumn(3,_T("提醒时间"),wxLIST_FORMAT_LEFT,60);
-    m_listMemorialDay->InsertColumn(4,_T("主题内容"),wxLIST_FORMAT_LEFT,250);
-
-    m_listBacklog->InsertColumn(0,_T("ID"),wxLIST_FORMAT_LEFT,0);
-    m_listBacklog->InsertColumn(1,_T("编号"),wxLIST_FORMAT_LEFT,40);
-    m_listBacklog->InsertColumn(2,_T("提醒日期"),wxLIST_FORMAT_LEFT,75);
-    m_listBacklog->InsertColumn(3,_T("提醒时间"),wxLIST_FORMAT_LEFT,60);
-    m_listBacklog->InsertColumn(4,_T("主题内容"),wxLIST_FORMAT_LEFT,250);
-
-    m_listTask->InsertColumn(0,_T("ID"),wxLIST_FORMAT_LEFT,0);
-    m_listTask->InsertColumn(1,_T("编号"),wxLIST_FORMAT_LEFT,40);
-    m_listTask->InsertColumn(2,_T("提醒日期"),wxLIST_FORMAT_LEFT,75);
-    m_listTask->InsertColumn(3,_T("提醒时间"),wxLIST_FORMAT_LEFT,60);
-    m_listTask->InsertColumn(4,_T("主题内容"),wxLIST_FORMAT_LEFT,250);
-
-    m_listOverdue->InsertColumn(0,_T("ID"),wxLIST_FORMAT_LEFT,0);
-    m_listOverdue->InsertColumn(1,_T("编号"),wxLIST_FORMAT_LEFT,40);
-    m_listOverdue->InsertColumn(2,_T("提醒日期"),wxLIST_FORMAT_LEFT,75);
-    m_listOverdue->InsertColumn(3,_T("提醒时间"),wxLIST_FORMAT_LEFT,60);
-    m_listOverdue->InsertColumn(4,_T("主题内容"),wxLIST_FORMAT_LEFT,250);
+    for(int e = MissGlobal::QT_REMIND; e < MissGlobal::QT_ALL; ++e )
+    {
+        m_pLists[e]->InsertColumn(0,_T("ID"),wxLIST_FORMAT_LEFT,0);
+        m_pLists[e]->InsertColumn(1,_T("编号"),wxLIST_FORMAT_LEFT,40);
+        m_pLists[e]->InsertColumn(2,_T("提醒日期"),wxLIST_FORMAT_LEFT,72);
+        m_pLists[e]->InsertColumn(3,_T("提醒时间"),wxLIST_FORMAT_LEFT,60);
+        m_pLists[e]->InsertColumn(4,_T("主题内容"),wxLIST_FORMAT_LEFT,220);
+    }
 }
 
 void MissOption::SetZoomState(bool bEnable)
@@ -116,7 +105,7 @@ void MissOption::OnModifyThemeBtnClick(wxCommandEvent& event)
     ThemeDlg.SetDataSrc(m_pSkin);
     if(ThemeDlg.ShowModal() == wxID_OK)
     {
-        //保存主题设置
+        ///保存主题设置
         wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
         send.SetInt(MissGlobal::UE_SAVETHEME);
         GetEventHandler()->ProcessEvent(send);
@@ -167,7 +156,7 @@ void MissOption::OnZoomCbtnClick(wxCommandEvent& event)
 {
 // TODO: Implement OnZoomCbtnClick
     SetZoomState(m_cbtnAllowZoom->GetValue());
-    if(!m_cbtnAllowZoom->GetValue())
+    if(!m_cbtnAllowZoom->GetValue() && m_pConfig->GetZoom() != 1.0)
     {
         m_pConfig->SetZoom(1.0);
         wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
@@ -212,7 +201,12 @@ void MissOption::OnOK(wxCommandEvent& event)
 // TODO: Implement OnOK
     EndModal(wxID_OK);
 }
-
+/*
+void MissOption::OnOptionClose(wxCloseEvent& event)
+{
+    EndModal(wxID_CANCEL);
+}
+*/
 void MissOption::OnBtnAddTaskClick(wxCommandEvent& event)
 {
     MissTools::AutoHideWindow HideWin(this);
@@ -226,10 +220,6 @@ void MissOption::OnBtnAddTaskClick(wxCommandEvent& event)
             MissWxSQLite3 sql;
             sql.InsertTaskData(data);
         }
-        //catch(wxSQLite3Exception& e)
-        //{
-        //    std::cerr << e.GetErrorCode() << ":" << (const char*)(e.GetMessage().mb_str()) << std::endl;
-        //}
         catch(...)
         {
 
@@ -242,24 +232,166 @@ void MissOption::OnBtnAdditionaClick(wxCommandEvent& event)
     m_btnAddTask->PopupMenu( m_mnuAdditional, wxPoint(0,m_btnAddTask->GetSize().GetHeight()));
 }
 
-void MissOption::OnNBTimerSettingChanged(wxNotebookEvent& event)
+void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
 {
-    int nIndex = event.GetSelection();
-    if(nIndex > -1)
+    int nList = m_nbTimerSetting->GetSelection();
+    long item = -1;
+    long nID( -1 );
+    std::vector<int> vecDelete;
+    while(1)
     {
-        switch(nIndex)
+        item = m_pLists[nList]->GetNextItem(item,
+                                     wxLIST_NEXT_ALL,
+                                     wxLIST_STATE_SELECTED);
+        if ( item == -1 )
+            break;
+        if(m_pLists[nList]->GetItemText(item).ToLong(&nID))
         {
-        case 1:
-            {
+            vecDelete.push_back(nID);
+            m_pLists[nList]->DeleteItem(item);
+        }
+    }
 
+    if(!vecDelete.empty())
+    {
+        try
+        {
+            MissWxSQLite3 sql;
+            for(std::vector<int>::iterator itor = vecDelete.begin(); itor != vecDelete.end(); ++itor)
+            {
+                sql.DeleteTaskData(*itor);
             }
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
+        }
+        catch(...)
+        {
+
+        }
+    }
+
+}
+
+void MissOption::OnBtnModifyTaskClick(wxCommandEvent& event)
+{
+    int nList = m_nbTimerSetting->GetSelection();
+    long nID( -1 );
+    if(nList != -1)
+    {
+        long item( -1 );
+        item = m_pLists[nList]->GetNextItem(item,
+                                     wxLIST_NEXT_ALL,
+                                     wxLIST_STATE_SELECTED);
+        if ( item != -1 && m_pLists[nList]->GetItemText(item).ToLong(&nID))
+        {
+            ModifyTaskData(nID);
         }
     }
 }
+
+void MissOption::OnListRemindItemActivated(wxListEvent& event)
+{
+    int nItemIndex = event.GetIndex();
+    int nList = m_nbTimerSetting->GetSelection();
+    long nID(-1);
+    if(nList != -1 && m_pLists[nList]->GetItemText(nItemIndex).ToLong(&nID))
+    {
+        ModifyTaskData(nID);
+    }
+}
+
+void MissOption::OnNBTimerSettingChanged(wxNotebookEvent& event)
+{
+    int nIndex = event.GetSelection();
+    std::cout<<nIndex<<std::endl;
+    if(nIndex > -1)
+    {
+        UpdataTimerSettingList(nIndex);
+    }
+    event.Skip();
+}
+
+void MissOption::OnLsbOptionPageChanged(wxListbookEvent& event)
+{
+    ///切换到“定时设置”选项卡的时候
+    if(event.GetSelection() == 2)
+    {
+        int nIndex = m_nbTimerSetting->GetSelection();
+        UpdataTimerSettingList(nIndex);
+    }
+}
+
+void MissOption::UpdataTimerSettingList(int nType, bool bClear /* = false*/)
+{
+    assert(nType >= MissGlobal::QT_REMIND && nType <= MissGlobal::QT_ALL);
+    ///如果是重新加载，先清空列表
+    if(bClear)
+    {
+        m_pLists[nType]->DeleteAllItems();
+    }
+    ///如果列表为空，读取数据库加载数据
+    if(m_pLists[nType]->GetItemCount() == 0)
+    {
+        std::vector<std::pair<int,MissGlobal::TaskData> > vecData;
+        try
+        {
+            MissWxSQLite3 sql;
+            sql.QuestTaskData(nType,vecData);
+        }
+        catch(...)
+        {
+            return;
+        }
+        for(std::vector<std::pair<int,MissGlobal::TaskData> >::size_type ix = 0;
+         ix != vecData.size(); ++ix)
+        {
+            InsertListData(m_pLists[nType],ix, vecData[ix]);
+        }
+    }
+}
+
+void MissOption::InsertListData(wxListCtrl* list, int nItemIndex,
+                                const std::pair<int, MissGlobal::TaskData>& item)
+{
+    list->InsertItem(nItemIndex, wxEmptyString);
+    list->SetItem(nItemIndex,0,wxString::Format(wxT("%d"),item.first));
+    list->SetItem(nItemIndex,1,wxString::Format(wxT("%d"),nItemIndex+1));
+    list->SetItem(nItemIndex,2,item.second.GetTDateDesc());
+    list->SetItem(nItemIndex,3,item.second.GetTTimeDesc());
+    list->SetItem(nItemIndex,4,item.second.GetTContentDesc());
+}
+
+void MissOption::ModifyTaskData(int nID)
+{
+    MissGlobal::TaskData data;
+    bool bSuccess(false);
+    try
+    {
+        MissWxSQLite3 sql;
+        bSuccess = sql.GetTaskDataByID(nID,data);
+    }
+    catch(...)
+    {
+        return;
+    }
+
+    if(bSuccess)
+    {
+        MissTools::AutoHideWindow HideWin(this);
+        MissSetTimer SetTimerDlg(this);
+        SetTimerDlg.ImportTaskDataToModify(data);
+        if(SetTimerDlg.ShowModal() == wxID_OK)
+        {
+            SetTimerDlg.GetTaskData(data);
+            try
+            {
+                MissWxSQLite3 sql;
+                sql.UpdateTaskData(nID,data);
+            }
+            catch(...)
+            {
+                return;
+            }
+        }
+    }
+}
+
+
