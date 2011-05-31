@@ -15,11 +15,15 @@ class MissConfig
         void            SetOpacity(int nOpacity);
         void            SetSkinName(const wxString& strName);
         void            SetShowClock(bool bShow);
+        void            SetTop(bool bTop);
+        void            SetPin(bool bPin);
 
 
         void            SaveOption();
         void            SavePos();
         void            SaveShowClock();
+        void            SaveTop();
+        void            SavePin();
 
     public:
         void            LoadIniFile();

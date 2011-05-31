@@ -54,28 +54,28 @@ void MissXML::LoadSkin(const shared_ptr<MissSkin>& pSkin, const wxString& SkinNa
     TiXmlDocument doc(SkinAddr.mb_str());
     doc.LoadFile();
     TiXmlElement* root = doc.FirstChildElement("ApplictionConfig");
-    if (root)//检测主节点ApplictionConfig是否存在
+    if (root)///检测主节点ApplictionConfig是否存在
     {
-        //背景图片节点
+        ///背景图片节点
         TiXmlElement * CurElement = root->FirstChildElement("背景图片");
-        //背景图片节点检测开始
+        ///背景图片节点检测开始
         if (CurElement)
         {
             const char* CurStr = CurElement->GetText();
             pSkin->SetBGPicPath(wxString(CurStr, wxConvUTF8));
             //wxMessageBox(BGS, _("背景图片节点检测"));
         }
-        //背景图片节点检测结束
+        ///背景图片节点检测结束
 
-        //区域格式节点
+        ///区域格式节点
         CurElement = root->FirstChildElement("区域代码");
         if (CurElement)
         {
             const char* CurStr = CurElement->GetText();
             pSkin->SetLocale( wxString(CurStr, wxConvUTF8) );
-            //wxMessageBox(BGS, _("区域格式节点检测"));
+            ///wxMessageBox(BGS, _("区域格式节点检测"));
         }
-        //区域格式节点检测结束
+        ///区域格式节点检测结束
         CurElement = root->FirstChildElement("显示条目");
         CurElement = CurElement->FirstChildElement();
         MissElement elem;

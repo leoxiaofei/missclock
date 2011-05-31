@@ -34,23 +34,27 @@ class MissClockFrame: public GUIFrame
         void UpdateSize();
         void UpdateAlpha();
         void UpdateTheme();
-        void UpdateClock();
+        bool UpdateClock();
         void CheckTask();
         void CheckAudioChimer();
         void OnMinUp();
         void ConnectSlot(Slots& slots, FrameFunc func);
         void DisConnectSlot(Slots& slots, FrameFunc func);
+        void ReloadSkin();
 
     private:
         void OnTimer(wxTimerEvent& event);
         void OnTaskBarIconLeftUP(wxEvent& event);
+
         void OnmimTopSelected(wxCommandEvent& event);
         void OnmimOptionSelected(wxCommandEvent& event);
+        void OnmimRemindSelected( wxCommandEvent& event );
         void OnmimShowSelected(wxCommandEvent& event);
         void OnmimPinSelected(wxCommandEvent& event);
         void OnmimShadowSelected(wxCommandEvent& event);
-
         void OnAbout(wxCommandEvent& event);
+        void OnExit( wxCommandEvent& event );
+
         void OnOptionUiEvent(wxCommandEvent& event);
 
     private:
@@ -73,35 +77,8 @@ class MissClockFrame: public GUIFrame
         wxBitmap m_bpUI;
         unsigned int *m_pBitmap;
         int m_nPixCount;
-
-    private:
-        //菜单
-        shared_ptr<wxMenu> m_pMainMenu;
-        wxMenuItem* m_pmimAbout;
-        wxMenuItem* m_pmimCopyDate;
-        wxMenuItem* m_pmimSetTime;
-        wxMenuItem* m_pmimRemind;
-        wxMenuItem* m_pmimExit;
-        wxMenuItem* m_pmimTop;
-        wxMenuItem* m_pmimShow;
-        wxMenuItem* m_pmimCopyTime;
-        wxMenuItem* m_pmimPin;
-        wxMenuItem* m_pmimShadow;
-        wxMenuItem* m_pmimOption;
-        //
-
-        static const long ID_TIMER_MAIN;
-        static const long ID_MENUITEM_PIN;
-        static const long ID_MENUITEM_SHADOW;
-        static const long ID_MENUITEM_TOP;
-        static const long ID_MENUITEM_SHOW;
-        static const long ID_MENUITEM_OPTION;
-        static const long ID_MENUITEM_REMIND;
-        static const long ID_MENUITEM_COPYDATE;
-        static const long ID_MENUITEM_COPYTIME;
-        static const long ID_MENUITEM_SETTIME;
-        static const long ID_MENUITEM_ABOUT;
-        static const long ID_MENUITEM_EXIT;
+        bool m_bRightMenu;
+        bool m_bReloadSkin;
 };
 
 #endif // MISSCLOCKMAIN_H

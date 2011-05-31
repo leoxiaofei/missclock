@@ -5,8 +5,9 @@ namespace MissGlobal
 {
     enum EUiEvent{UE_UPDATE, UE_UPDATETHEME, UE_SAVETHEME, UE_ZOOMCHANGE, UE_ALPHACHANGE};
     enum EQuestType{QT_REMIND, QT_MEMORIAL_DAY, QT_BACKLOG, QT_TASK, QT_OVERDUE, QT_ALL};
-
     enum ETaskType{TT_Text, TT_Program, TT_SHOTDOWN};
+    extern const wxString s_strSWeek[];
+
     struct TaskData
     {
         int      nDateType;
@@ -17,6 +18,10 @@ namespace MissGlobal
         wxString strTaskDate;
         wxString strTaskTime;
         wxString strTaskContent;
+
+        wxString GetTDateDesc() const;
+        wxString GetTTimeDesc() const;
+        wxString GetTContentDesc() const;
     };
     //extern
 };

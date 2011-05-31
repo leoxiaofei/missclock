@@ -12,19 +12,19 @@ public:
     {};
 
 public:
-    int m_Pin;                                 //是否固定位置
-    int m_Top;                                 //是否置顶
-    int m_Repeater;                            //是否整点报时
-    int m_ShowClock;                           //是否显示时钟
-    int m_Shadow;                              //是否有影无形
-    int m_Opacity;                             //不透明度
-    double m_Zoom;                             //缩放 1表示不缩放
-    wxPoint  m_Pos;                            //位置坐标
-    wxString m_NTP;                            //NTP的地址
-    wxString m_SkinName;                       //当前使用的皮肤名称
-    wxString m_ConfigName;                     //配置文件名
-    shared_ptr<wxFileInputStream> m_pIStream;  //文件流
-    shared_ptr<wxFileConfig> m_pConfigFile;    //配置文件读写器
+    int m_Pin;                                 ///是否固定位置
+    int m_Top;                                 ///是否置顶
+    int m_Repeater;                            ///是否整点报时
+    int m_ShowClock;                           ///是否显示时钟
+    int m_Shadow;                              ///是否有影无形
+    int m_Opacity;                             ///不透明度
+    double m_Zoom;                             ///缩放 1表示不缩放
+    wxPoint  m_Pos;                            ///位置坐标
+    wxString m_NTP;                            ///NTP的地址
+    wxString m_SkinName;                       ///当前使用的皮肤名称
+    wxString m_ConfigName;                     ///配置文件名
+    shared_ptr<wxFileInputStream> m_pIStream;  ///文件流
+    shared_ptr<wxFileConfig> m_pConfigFile;    ///配置文件读写器
 
 };
 
@@ -94,6 +94,18 @@ void MissConfig::SaveShowClock()
     SaveConfig();
 }
 
+void MissConfig::SaveTop()
+{
+    m_pImpl->m_pConfigFile->Write(wxT("选项/是否置顶"), m_pImpl->m_Top);
+    SaveConfig();
+}
+
+void MissConfig::SavePin()
+{
+    m_pImpl->m_pConfigFile->Write(wxT("选项/是否固定"), m_pImpl->m_Pin);
+    SaveConfig();
+}
+
 void MissConfig::SaveOption()
 {
 }
@@ -111,6 +123,16 @@ void MissConfig::SetSkinName(const wxString& strName)
 void MissConfig::SetShowClock(bool bShow)
 {
     m_pImpl->m_ShowClock = bShow;
+}
+
+void MissConfig::SetTop(bool bTop)
+{
+    m_pImpl->m_Top = bTop;
+}
+
+void MissConfig::SetPin(bool bPin)
+{
+    m_pImpl->m_Pin = bPin;
 }
 
 const wxPoint& MissConfig::GetPos()

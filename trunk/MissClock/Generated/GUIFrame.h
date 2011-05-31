@@ -9,6 +9,10 @@
 #define __GUIFrame__
 
 #include <wx/string.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
+#include <wx/menu.h>
 #include <wx/frame.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
@@ -22,11 +26,7 @@
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 #include <wx/panel.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/icon.h>
 #include <wx/combobox.h>
-#include <wx/menu.h>
 #include <wx/listctrl.h>
 #include <wx/notebook.h>
 #include <wx/listbook.h>
@@ -53,11 +53,26 @@ class GUIFrame : public wxFrame
 	private:
 	
 	protected:
+		wxMenu* m_pMainMenu;
+		wxMenuItem* m_pmimPin;
+		wxMenuItem* m_pmimShadow;
+		wxMenuItem* m_pmimTop;
+		wxMenuItem* m_pmimShow;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnRightUp( wxMouseEvent& event ) { event.Skip(); }
+		virtual void OnmimPinSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnmimShadowSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnmimTopSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnmimShowSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnmimOptionSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnmimRemindSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnmimCopyDateSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnmimCopyTimeSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnmimSetTimeSelected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -91,9 +106,11 @@ class MissOptionBase : public wxDialog
 		wxStaticText* m_lblOpacity;
 		wxPanel* m_panSys;
 		wxCheckBox* m_cbtnAutoRun;
-		wxCheckBox* m_cbtnShadow;
 		wxCheckBox* m_cbtnAudioChimer;
 		wxCheckBox* m_cbtnShowClock;
+		wxCheckBox* m_cbtnShadow;
+		wxCheckBox* m_cbtnTop;
+		wxCheckBox* m_cbtnPin;
 		wxStaticText* m_lblNTP;
 		wxComboBox* m_cobNTP;
 		wxButton* m_btnNTP;
@@ -120,6 +137,7 @@ class MissOptionBase : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnInitDialog( wxInitDialogEvent& event ) { event.Skip(); }
+		virtual void OnLsbOptionPageChanged( wxListbookEvent& event ) { event.Skip(); }
 		virtual void OnThemeChoChange( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnModifyThemeBtnClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnUnDoSaveThemeClick( wxCommandEvent& event ) { event.Skip(); }
@@ -132,13 +150,13 @@ class MissOptionBase : public wxDialog
 		virtual void OnBtnModifyTaskClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnDeleteTaskClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnNBTimerSettingChanged( wxNotebookEvent& event ) { event.Skip(); }
-		virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnListRemindItemActivated( wxListEvent& event ) { event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,419 ), long style = wxDEFAULT_DIALOG_STYLE );
+		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,419 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 		~MissOptionBase();
 	
 };

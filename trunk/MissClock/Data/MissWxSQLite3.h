@@ -16,6 +16,7 @@ class MissWxSQLite3: public MissDBL
         void InsertTaskData(const MissGlobal::TaskData &data);
         void DeleteTaskData(int nID);
         void QuestTaskData(int nType, std::vector<std::pair<int,MissGlobal::TaskData> > &mapData);
+        bool GetTaskDataByID(int nID, MissGlobal::TaskData& data);
         /*
         void SetCallBack(std::binder1st<DataFunc> & func)
         {

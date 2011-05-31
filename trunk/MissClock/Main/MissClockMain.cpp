@@ -62,34 +62,21 @@ wxString wxbuildinfo(wxbuildinfoformat format)
     return wxbuild;
 }
 
-const long MissClockFrame::ID_MENUITEM_PIN = wxNewId();
-const long MissClockFrame::ID_MENUITEM_SHADOW = wxNewId();
-const long MissClockFrame::ID_MENUITEM_TOP = wxNewId();
-const long MissClockFrame::ID_MENUITEM_SHOW = wxNewId();
-const long MissClockFrame::ID_MENUITEM_OPTION = wxNewId();
-const long MissClockFrame::ID_MENUITEM_REMIND = wxNewId();
-const long MissClockFrame::ID_MENUITEM_COPYDATE = wxNewId();
-const long MissClockFrame::ID_MENUITEM_COPYTIME = wxNewId();
-const long MissClockFrame::ID_MENUITEM_SETTIME = wxNewId();
-const long MissClockFrame::ID_MENUITEM_ABOUT = wxNewId();
-const long MissClockFrame::ID_MENUITEM_EXIT = wxNewId();
-
-MissClockFrame::MissClockFrame(wxFrame* frame)
-    :
+MissClockFrame::MissClockFrame(wxFrame* frame):
     GUIFrame(frame),
     m_pTaskBarIcon(new MissTaskBarIcon),
     m_pMainTimer(new wxTimer(this)),
     m_pSkin(new MissSkin),
     m_pConfig(new MissConfig),
-    m_pMainMenu(new wxMenu)
+    m_bRightMenu(true),
+    m_bReloadSkin(false)
 {
     m_hWnd = static_cast<HWND>(GetHandle());
     m_pTaskBarIcon->SetIcon(wxICON(RC_CLOCK_ICON), wxT("迷失日历时钟"));
     m_pMainTimer->Start(1000);
     InitEvent();
-    InitMenu();
     InitUI();
-
+    InitMenu();
     //MissFrame *a = new MissFrame(this);
     //a->Show();
 }
@@ -100,23 +87,6 @@ MissClockFrame::~MissClockFrame()
     this->Disconnect(wxEVT_TIMER, wxTimerEventHandler(MissClockFrame::OnTimer));
 }
 
-void MissClockFrame::InitMenu()
-{
-    m_pmimPin = m_pMainMenu->Append(ID_MENUITEM_PIN, _("固定位置(&P)"), wxEmptyString, wxITEM_CHECK);
-    m_pmimShadow = m_pMainMenu->Append(ID_MENUITEM_SHADOW, _("有影无形(&h)"), wxEmptyString, wxITEM_CHECK);
-    m_pmimTop = m_pMainMenu->Append(ID_MENUITEM_TOP, _("总在最前(&T)"), wxEmptyString, wxITEM_CHECK);
-    m_pmimShow = m_pMainMenu->Append(ID_MENUITEM_SHOW, _("显示时钟(&C)"), wxEmptyString, wxITEM_CHECK);
-    m_pmimOption = m_pMainMenu->Append(ID_MENUITEM_OPTION, _("选项(&O)"), wxEmptyString, wxITEM_NORMAL);
-    m_pmimRemind = m_pMainMenu->Append(ID_MENUITEM_REMIND, _("提醒管理(&R)"), wxEmptyString, wxITEM_NORMAL);
-    m_pmimCopyDate = m_pMainMenu->Append(ID_MENUITEM_COPYDATE, _("复制日期(&D)"), wxEmptyString, wxITEM_NORMAL);
-    m_pmimCopyTime = m_pMainMenu->Append(ID_MENUITEM_COPYTIME, _("复制时间(&i)"), wxEmptyString, wxITEM_NORMAL);
-    m_pmimSetTime = m_pMainMenu->Append(ID_MENUITEM_SETTIME, _("校时(&S)"), wxEmptyString, wxITEM_NORMAL);
-    m_pmimAbout = m_pMainMenu->Append(ID_MENUITEM_ABOUT, _("关于(&A)..."), wxEmptyString, wxITEM_NORMAL);
-    m_pmimExit = m_pMainMenu->Append(ID_MENUITEM_EXIT, _("退出(&x)"), wxEmptyString, wxITEM_NORMAL);
-
-    m_pmimShow->Check(m_pConfig->GetShowClock());
-}
-
 void MissClockFrame::InitEvent()
 {
     this->Connect(wxEVT_TIMER, wxTimerEventHandler(MissClockFrame::OnTimer));
@@ -124,18 +94,6 @@ void MissClockFrame::InitEvent()
 
     ConnectSlot(sg_MinUp,&MissClockFrame::CheckTask);
     ConnectSlot(sg_MinUp,&MissClockFrame::CheckAudioChimer);
-
-    Connect(ID_MENUITEM_PIN,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimPinSelected);
-    Connect(ID_MENUITEM_SHADOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShadowSelected);
-    Connect(ID_MENUITEM_TOP, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnmimTopSelected);
-    Connect(ID_MENUITEM_SHOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimShowSelected);
-    Connect(ID_MENUITEM_OPTION, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnmimOptionSelected);
-    //Connect(ID_MENUITEM_REMIND,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimRemindSelected);
-    //Connect(ID_MENUITEM_COPYDATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimCopyDateSelected);
-    //Connect(ID_MENUITEM_COPYTIME,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimCopyTimeSelected);
-    //Connect(ID_MENUITEM_SETTIME,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MissClockFrame::OnmimSetTimeSelected);
-    this->Connect(ID_MENUITEM_ABOUT, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnAbout);
-    this->Connect(ID_MENUITEM_EXIT, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&MissClockFrame::OnClose);
 
     m_pTaskBarIcon->Connect(wxEVT_TASKBAR_RIGHT_UP, (wxObjectEventFunction)&MissClockFrame::OnRightUp, NULL, this);
     m_pTaskBarIcon->Connect(wxEVT_TASKBAR_LEFT_UP, (wxObjectEventFunction)&MissClockFrame::OnTaskBarIconLeftUP, NULL, this);
@@ -147,9 +105,9 @@ void MissClockFrame::InitUI()
     exStyle |= WS_EX_LAYERED;
     ::SetWindowLong(m_hWnd, GWL_EXSTYLE, exStyle);
 
-    m_Blend.BlendOp = AC_SRC_OVER;      //指定源混合操作。目前，唯一的源和目标混合操作被定义为 AC_SRC_OVER。 详情，请参阅下面的备注部分。
-    m_Blend.BlendFlags = 0;             //必须为 0
-    m_Blend.AlphaFormat = AC_SRC_ALPHA; //该成员控制源和目标位图被解释的方式。
+    m_Blend.BlendOp = AC_SRC_OVER;      ///指定源混合操作。目前，唯一的源和目标混合操作被定义为 AC_SRC_OVER。 详情，请参阅下面的备注部分。
+    m_Blend.BlendFlags = 0;             ///必须为 0
+    m_Blend.AlphaFormat = AC_SRC_ALPHA; ///该成员控制源和目标位图被解释的方式。
     UpdateAlpha();
     UpdateTheme();
 
@@ -157,9 +115,19 @@ void MissClockFrame::InitUI()
     Move(m_pConfig->GetPos());
 }
 
+void MissClockFrame::InitMenu()
+{
+    m_pmimPin->Check(m_pConfig->GetPin());
+    m_pmimShadow->Check(m_pConfig->GetShadow());
+    m_pmimTop->Check(m_pConfig->GetTop());
+    m_pmimShow->Check(m_pConfig->GetShowClock());
+
+}
+
 void MissClockFrame::UpdateAlpha()
 {
-    m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();  //指定用于整张源位图的Alpha透明度值。(0~255)
+    ///指定用于整张源位图的Alpha透明度值。(0~255)
+    m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
 }
 
 void MissClockFrame::UpdateTheme()
@@ -176,7 +144,7 @@ void MissClockFrame::OnTimer(wxTimerEvent& event)
     m_tmNow = localtime(&m_ttNow);
     static int s_savemin = m_tmNow->tm_min;
 
-    //如果要显示时钟，那么每秒钟刷新界面
+    ///如果要显示时钟，那么每秒钟刷新界面
     if(m_pConfig->GetShowClock())
     {
         UpdateClock();
@@ -191,15 +159,19 @@ void MissClockFrame::OnTimer(wxTimerEvent& event)
 
 void MissClockFrame::OnLeftDown(wxMouseEvent& event)
 {
-    //移动窗口 Windows API
-    ::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(event.GetX(), event.GetY()));
+    if(!m_pConfig->GetPin())
+    {
+        ///移动窗口 Windows API
+        ::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(event.GetX(), event.GetY()));
+    }
 }
 
 void MissClockFrame::OnRightUp(wxMouseEvent& event)
 {
     //::SetForegroundWindow(m_hWnd);
     Raise();
-    PopupMenu(m_pMainMenu.get());
+    if(m_bRightMenu)
+        PopupMenu(m_pMainMenu);
 }
 
 void MissClockFrame::OnTaskBarIconLeftUP(wxEvent& event)
@@ -218,7 +190,7 @@ void MissClockFrame::UpdateSize()
     m_pBitmap = static_cast<unsigned int*>(bm.bmBits);
 }
 
-void MissClockFrame::UpdateClock()
+bool MissClockFrame::UpdateClock()
 {
     static HDC s_hdcScreen = GetDC(m_hWnd);
     static POINT s_ptSrc = {0, 0};
@@ -246,7 +218,7 @@ void MissClockFrame::UpdateClock()
         *pBitmap -= 0x01000000;
         ++pBitmap;
     }
-    ::UpdateLayeredWindow(m_hWnd, s_hdcScreen, NULL, &m_SizeWindow, static_cast<HDC>(memdc.GetHDC()),
+    return ::UpdateLayeredWindow(m_hWnd, s_hdcScreen, NULL, &m_SizeWindow, static_cast<HDC>(memdc.GetHDC()),
                           &s_ptSrc, 0, &m_Blend, ULW_ALPHA);
 }
 
@@ -270,6 +242,23 @@ void MissClockFrame::CheckAudioChimer()
     }
 }
 
+void MissClockFrame::OnExit(wxCommandEvent& event)
+{
+    wxCloseEvent send(wxEVT_CLOSE_WINDOW);
+    /**
+    ///关闭子对话框代码
+    wxWindowList&list = GetChildren();
+    for (wxWindowList::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        if(dynamic_cast<wxDialog *>(*iter) != NULL)
+        {
+            (*iter)->ProcessEvent(send);
+        }
+    }
+    */
+    AddPendingEvent(send);
+}
+
 void MissClockFrame::OnClose(wxCloseEvent& event)
 {
     /*
@@ -283,7 +272,7 @@ void MissClockFrame::OnClose(wxCloseEvent& event)
     }
     */
 
-
+    std::cout << "MissClockFrame::OnClose()" << std::endl;
     m_pConfig->SetPos(GetPosition());
     m_pConfig->SavePos();
     Destroy();
@@ -307,10 +296,13 @@ void MissClockFrame::OnmimTopSelected(wxCommandEvent& event)
         lStyle |= wxSTAY_ON_TOP;
     }
     SetWindowStyleFlag(lStyle);
+    m_pConfig->SetTop(lStyle & wxSTAY_ON_TOP);
+    m_pConfig->SaveTop();
 }
 
 void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 {
+    m_bRightMenu = false;
     MissOption OptionDlg(this);
     OptionDlg.SetDataSrc(m_pConfig, m_pSkin);
     OptionDlg.Connect(wxEVT_MCUI_EVENT, wxCommandEventHandler(MissClockFrame::OnOptionUiEvent), NULL, this);
@@ -320,11 +312,14 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
     }
     else
     {
-        //m_pConfig->LoadIniFile();
-        //UpdateTheme();
-        //m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
-        //UpdateClock();
+        ReloadSkin();
     }
+    m_bRightMenu = true;
+}
+
+void MissClockFrame::OnmimRemindSelected(wxCommandEvent& event)
+{
+
 }
 
 void MissClockFrame::OnmimShowSelected(wxCommandEvent& event)
@@ -333,18 +328,21 @@ void MissClockFrame::OnmimShowSelected(wxCommandEvent& event)
 
     if (m_pConfig->GetShowClock())
     {
-        //m_pImpl->m_Icon.ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
         Show(true);
     }
     else
     {
+        //m_pImpl->m_Icon.ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
         Show(false);
     }
 
     m_pConfig->SaveShowClock();
 }
+
 void MissClockFrame::OnmimPinSelected(wxCommandEvent& event)
 {
+    m_pConfig->SetPin(!m_pConfig->GetPin());
+    m_pConfig->SavePin();
 }
 
 void MissClockFrame::OnmimShadowSelected(wxCommandEvent& event)
@@ -410,5 +408,17 @@ void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
         }
         break;
     }
+    m_bReloadSkin = true;
+}
 
+void MissClockFrame::ReloadSkin()
+{
+    if(m_bReloadSkin)
+    {
+        m_pConfig->LoadIniFile();
+        UpdateTheme();
+        m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
+        UpdateClock();
+        m_bReloadSkin = false;
+    }
 }

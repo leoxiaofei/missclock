@@ -23,20 +23,83 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
+	m_pMainMenu = new wxMenu();
+	m_pmimPin = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("固定位置(&P)") ) , wxEmptyString, wxITEM_CHECK );
+	m_pMainMenu->Append( m_pmimPin );
+	
+	m_pmimShadow = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("有影无形(&h)") ) , wxEmptyString, wxITEM_CHECK );
+	m_pMainMenu->Append( m_pmimShadow );
+	
+	m_pmimTop = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("总在最前(&T)") ) , wxEmptyString, wxITEM_CHECK );
+	m_pMainMenu->Append( m_pmimTop );
+	
+	m_pmimShow = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("显示时钟(&C)") ) , wxEmptyString, wxITEM_CHECK );
+	m_pMainMenu->Append( m_pmimShow );
+	
+	wxMenuItem* m_pmimOption;
+	m_pmimOption = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("选项(&O)") ) , wxEmptyString, wxITEM_NORMAL );
+	m_pMainMenu->Append( m_pmimOption );
+	
+	wxMenuItem* m_pmimRemind;
+	m_pmimRemind = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("提醒管理(&R)") ) , wxEmptyString, wxITEM_NORMAL );
+	m_pMainMenu->Append( m_pmimRemind );
+	
+	wxMenuItem* m_pmimCopyDate;
+	m_pmimCopyDate = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("复制日期(&D)") ) , wxEmptyString, wxITEM_NORMAL );
+	m_pMainMenu->Append( m_pmimCopyDate );
+	
+	wxMenuItem* m_pmimCopyTime;
+	m_pmimCopyTime = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("复制时间(&i)") ) , wxEmptyString, wxITEM_NORMAL );
+	m_pMainMenu->Append( m_pmimCopyTime );
+	
+	wxMenuItem* m_pmimSetTime;
+	m_pmimSetTime = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("校时(&S)") ) , wxEmptyString, wxITEM_NORMAL );
+	m_pMainMenu->Append( m_pmimSetTime );
+	
+	wxMenuItem* m_pmimAbout;
+	m_pmimAbout = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("关于(&A)...") ) , wxEmptyString, wxITEM_NORMAL );
+	m_pMainMenu->Append( m_pmimAbout );
+	
+	wxMenuItem* m_pmimExit;
+	m_pmimExit = new wxMenuItem( m_pMainMenu, wxID_ANY, wxString( wxT("退出(&x)") ) , wxEmptyString, wxITEM_NORMAL );
+	m_pMainMenu->Append( m_pmimExit );
+	
+	
 	
 	// Connect Events
-	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( GUIFrame::OnClose ) );
 	this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GUIFrame::OnLeftDown ) );
 	this->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( GUIFrame::OnRightUp ) );
+	this->Connect( m_pmimPin->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimPinSelected ) );
+	this->Connect( m_pmimShadow->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimShadowSelected ) );
+	this->Connect( m_pmimTop->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimTopSelected ) );
+	this->Connect( m_pmimShow->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimShowSelected ) );
+	this->Connect( m_pmimOption->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimOptionSelected ) );
+	this->Connect( m_pmimRemind->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimRemindSelected ) );
+	this->Connect( m_pmimCopyDate->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimCopyDateSelected ) );
+	this->Connect( m_pmimCopyTime->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimCopyTimeSelected ) );
+	this->Connect( m_pmimSetTime->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimSetTimeSelected ) );
+	this->Connect( m_pmimAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnAbout ) );
+	this->Connect( m_pmimExit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnExit ) );
 }
 
 GUIFrame::~GUIFrame()
 {
 	// Disconnect Events
-	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( GUIFrame::OnClose ) );
 	this->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GUIFrame::OnLeftDown ) );
 	this->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( GUIFrame::OnRightUp ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimPinSelected ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimShadowSelected ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimTopSelected ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimShowSelected ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimOptionSelected ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimRemindSelected ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimCopyDateSelected ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimCopyTimeSelected ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimSetTimeSelected ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnAbout ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnExit ) );
 	
+	delete m_pMainMenu; 
 }
 
 MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
@@ -135,14 +198,20 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_cbtnAutoRun = new wxCheckBox( m_panSys, wxID_ANY, wxT("开机自动运行"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer2->Add( m_cbtnAutoRun, 0, wxALL, 5 );
 	
-	m_cbtnShadow = new wxCheckBox( m_panSys, wxID_ANY, wxT("有影无形(鼠标穿透)"), wxDefaultPosition, wxDefaultSize, 0 );
-	gSizer2->Add( m_cbtnShadow, 0, wxALL, 5 );
-	
 	m_cbtnAudioChimer = new wxCheckBox( m_panSys, wxID_ANY, wxT("整点报时"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer2->Add( m_cbtnAudioChimer, 0, wxALL, 5 );
 	
 	m_cbtnShowClock = new wxCheckBox( m_panSys, wxID_ANY, wxT("显示时钟"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer2->Add( m_cbtnShowClock, 0, wxALL, 5 );
+	
+	m_cbtnShadow = new wxCheckBox( m_panSys, wxID_ANY, wxT("有影无形(鼠标穿透)"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnShadow, 0, wxALL, 5 );
+	
+	m_cbtnTop = new wxCheckBox( m_panSys, wxID_ANY, wxT("总在最前"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnTop, 0, wxALL, 5 );
+	
+	m_cbtnPin = new wxCheckBox( m_panSys, wxID_ANY, wxT("固定位置"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnPin, 0, wxALL, 5 );
 	
 	sbSizer8->Add( gSizer2, 1, wxEXPAND, 5 );
 	
@@ -211,7 +280,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer22;
 	bSizer22 = new wxBoxSizer( wxVERTICAL );
 	
-	m_listRemind = new wxListCtrl( m_panRemind, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT );
+	m_listRemind = new wxListCtrl( m_panRemind, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_NO_SORT_HEADER|wxLC_REPORT|wxLC_VRULES );
 	bSizer22->Add( m_listRemind, 1, wxALL|wxEXPAND, 5 );
 	
 	m_panRemind->SetSizer( bSizer22 );
@@ -222,7 +291,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer221;
 	bSizer221 = new wxBoxSizer( wxVERTICAL );
 	
-	m_listMemorialDay = new wxListCtrl( m_panMemorialDay, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT );
+	m_listMemorialDay = new wxListCtrl( m_panMemorialDay, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_NO_SORT_HEADER|wxLC_REPORT|wxLC_VRULES );
 	bSizer221->Add( m_listMemorialDay, 1, wxALL|wxEXPAND, 5 );
 	
 	m_panMemorialDay->SetSizer( bSizer221 );
@@ -233,7 +302,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer30;
 	bSizer30 = new wxBoxSizer( wxVERTICAL );
 	
-	m_listBacklog = new wxListCtrl( m_panBacklog, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT );
+	m_listBacklog = new wxListCtrl( m_panBacklog, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_NO_SORT_HEADER|wxLC_REPORT|wxLC_VRULES );
 	bSizer30->Add( m_listBacklog, 1, wxALL|wxEXPAND, 5 );
 	
 	m_panBacklog->SetSizer( bSizer30 );
@@ -244,7 +313,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer222;
 	bSizer222 = new wxBoxSizer( wxVERTICAL );
 	
-	m_listTask = new wxListCtrl( m_panTask, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT );
+	m_listTask = new wxListCtrl( m_panTask, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_NO_SORT_HEADER|wxLC_REPORT|wxLC_VRULES );
 	bSizer222->Add( m_listTask, 1, wxALL|wxEXPAND, 5 );
 	
 	m_panTask->SetSizer( bSizer222 );
@@ -255,7 +324,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer223;
 	bSizer223 = new wxBoxSizer( wxVERTICAL );
 	
-	m_listOverdue = new wxListCtrl( m_panOverdue, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT );
+	m_listOverdue = new wxListCtrl( m_panOverdue, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_NO_SORT_HEADER|wxLC_REPORT|wxLC_VRULES );
 	bSizer223->Add( m_listOverdue, 1, wxALL|wxEXPAND, 5 );
 	
 	m_panOverdue->SetSizer( bSizer223 );
@@ -293,6 +362,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	
 	// Connect Events
 	this->Connect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( MissOptionBase::OnInitDialog ) );
+	m_lsbOption->Connect( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED, wxListbookEventHandler( MissOptionBase::OnLsbOptionPageChanged ), NULL, this );
 	m_choTheme->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissOptionBase::OnThemeChoChange ), NULL, this );
 	m_btnModifyTheme->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnModifyThemeBtnClick ), NULL, this );
 	m_btnUnDoSaveTheme->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnUnDoSaveThemeClick ), NULL, this );
@@ -305,7 +375,11 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_btnModifyTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnModifyTaskClick ), NULL, this );
 	m_btnDeleteTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDeleteTaskClick ), NULL, this );
 	m_nbTimerSetting->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNBTimerSettingChanged ), NULL, this );
-	m_sdbSizerCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnClose ), NULL, this );
+	m_listRemind->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listMemorialDay->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listBacklog->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listTask->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listOverdue->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
 	m_sdbSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnOK ), NULL, this );
 }
 
@@ -313,6 +387,7 @@ MissOptionBase::~MissOptionBase()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( MissOptionBase::OnInitDialog ) );
+	m_lsbOption->Disconnect( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED, wxListbookEventHandler( MissOptionBase::OnLsbOptionPageChanged ), NULL, this );
 	m_choTheme->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissOptionBase::OnThemeChoChange ), NULL, this );
 	m_btnModifyTheme->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnModifyThemeBtnClick ), NULL, this );
 	m_btnUnDoSaveTheme->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnUnDoSaveThemeClick ), NULL, this );
@@ -325,7 +400,11 @@ MissOptionBase::~MissOptionBase()
 	m_btnModifyTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnModifyTaskClick ), NULL, this );
 	m_btnDeleteTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDeleteTaskClick ), NULL, this );
 	m_nbTimerSetting->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNBTimerSettingChanged ), NULL, this );
-	m_sdbSizerCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnClose ), NULL, this );
+	m_listRemind->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listMemorialDay->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listBacklog->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listTask->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listOverdue->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
 	m_sdbSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnOK ), NULL, this );
 	
 	delete m_mnuAdditional; 
@@ -429,7 +508,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_panWeek->SetSizer( fgSizer2 );
 	m_panWeek->Layout();
 	fgSizer2->Fit( m_panWeek );
-	m_cbookDate->AddPage( m_panWeek, wxT("按星期"), false );
+	m_cbookDate->AddPage( m_panWeek, wxT("按周"), false );
 	m_panMonth = new wxPanel( m_cbookDate, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer30;
 	bSizer30 = new wxBoxSizer( wxHORIZONTAL );
@@ -528,7 +607,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_rbtnPStart = new wxRadioButton( this, wxID_ANY, wxT("本程序启动时"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer35->Add( m_rbtnPStart, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_rbtnPClose = new wxRadioButton( this, wxID_ANY, wxT("本程序关闭时"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_rbtnPClose = new wxRadioButton( this, wxID_ANY, wxT("本程序退出时"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_rbtnPClose->SetToolTip( wxT("强制关闭除外") );
 	
 	bSizer35->Add( m_rbtnPClose, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
