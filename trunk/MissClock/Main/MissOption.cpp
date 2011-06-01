@@ -222,8 +222,16 @@ void MissOption::OnBtnAddTaskClick(wxCommandEvent& event)
         }
         catch(...)
         {
-
+            return;
         }
+        ///清空所有列表中的值
+        for(int e = MissGlobal::QT_REMIND; e < MissGlobal::QT_ALL; ++e )
+        {
+            m_pLists[e]->DeleteAllItems();
+        }
+        ///更新当前列表的值
+        int nList = m_nbTimerSetting->GetSelection();
+        UpdataTimerSettingList(nList);
     }
 }
 
@@ -268,6 +276,23 @@ void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
         }
     }
 
+    ///从其他列表删除该项（防止其他列表中出现已删除的项）
+    wxString strID;
+    for(std::vector<int>::iterator itor = vecDelete.begin(); itor != vecDelete.end(); ++itor)
+    {
+        strID.Printf(wxT("%d"),*itor);
+        for(int e = MissGlobal::QT_REMIND; e < MissGlobal::QT_ALL; ++e )
+        {
+            if(e != nList)
+            {
+                item = m_pLists[e]->FindItem(-1,strID);
+                if(item != -1)
+                {
+                    m_pLists[e]->DeleteItem(item);
+                }
+            }
+        }
+    }
 }
 
 void MissOption::OnBtnModifyTaskClick(wxCommandEvent& event)
