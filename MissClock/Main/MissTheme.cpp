@@ -76,7 +76,7 @@ void MissTheme::OnBtnBGPathClick( wxCommandEvent& event )
                 m_edtBGPath->SetValue(fdgBGPic.GetPath());
             }
         }
-        //更新主界面
+        ///更新主界面
         SendUpdateEvent();
     }
 }
@@ -149,7 +149,7 @@ void MissTheme::OnBtnDeleteItem( wxCommandEvent& event )
     {
         m_lstItem->SetItem(ix,0,wxString::Format(wxT("%d"),ix));
     }
-    //更新界面
+    ///更新界面
     SendUpdateEvent();
 }
 
@@ -164,7 +164,7 @@ void MissTheme::OnCbtnShowClick( wxCommandEvent& event )
 {
 // TODO: Implement OnCbtnShowClick
     m_pSkin->GetElement(m_nThemeItem).m_Show = m_cbtnShow->GetValue();
-    //更新主界面
+    ///更新主界面
     SendUpdateEvent();
 }
 
@@ -172,7 +172,7 @@ void MissTheme::OnEdtContentKillFocus( wxFocusEvent& event )
 {
 // TODO: Implement OnEdtContentKillFocus
     m_pSkin->GetElement(m_nThemeItem).m_Content = m_edtContent->GetValue().mb_str();
-    //更新主界面
+    ///更新主界面
     SendUpdateEvent();
 }
 
@@ -186,7 +186,7 @@ void MissTheme::OnBtnFont( wxCommandEvent& event )
     if ( dialog.ShowModal () == wxID_OK )
     {
         m_pSkin->GetElement(m_nThemeItem).m_Font = dialog.GetFontData().GetChosenFont();
-        //更新主界面
+        ///更新主界面
         SendUpdateEvent();
     }
 }
@@ -202,7 +202,7 @@ void MissTheme::OnBtnColor( wxCommandEvent& event )
     if ( dialog.ShowModal () == wxID_OK )
     {
         m_pSkin->GetElement(m_nThemeItem).m_Colour = dialog.GetColourData().GetColour();
-        //更新主界面
+        ///更新主界面
         SendUpdateEvent();
     }
 }
@@ -212,7 +212,7 @@ void MissTheme::OnSldAlignScrollThumbRelease( wxScrollEvent& event )
 // TODO: Implement OnSldAlignScrollThumbRelease
     UpdateEdtAlignText();
     m_pSkin->GetElement(m_nThemeItem).m_Alignment = m_sldAlign->GetValue() / 2.0;
-    //更新主界面
+    ///更新主界面
     SendUpdateEvent();
 }
 
@@ -220,7 +220,7 @@ void MissTheme::OnSpXChange( wxSpinEvent& event )
 {
 // TODO: Implement OnSpXChange
     m_pSkin->GetElement(m_nThemeItem).m_X = m_spX->GetValue();
-    //更新主界面
+    ///更新主界面
     SendUpdateEvent();
 }
 
@@ -228,7 +228,7 @@ void MissTheme::OnSpYChange( wxSpinEvent& event )
 {
 // TODO: Implement OnSpYChange
     m_pSkin->GetElement(m_nThemeItem).m_Y = m_spY->GetValue();
-    //更新主界面
+    ///更新主界面
     SendUpdateEvent();
 }
 

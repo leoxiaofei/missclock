@@ -25,7 +25,6 @@ public:
     wxString m_ConfigName;                     ///配置文件名
     shared_ptr<wxFileInputStream> m_pIStream;  ///文件流
     shared_ptr<wxFileConfig> m_pConfigFile;    ///配置文件读写器
-
 };
 
 MissConfig::MissConfig():
@@ -41,7 +40,6 @@ MissConfig::MissConfig():
     m_pImpl->m_pIStream = shared_ptr<wxFileInputStream>(new wxFileInputStream(m_pImpl->m_ConfigName));
     m_pImpl->m_pConfigFile = shared_ptr<wxFileConfig>(new wxFileConfig(*m_pImpl->m_pIStream));
     LoadIniFile();
-
 }
 
 MissConfig::~MissConfig()
@@ -108,6 +106,16 @@ void MissConfig::SavePin()
 
 void MissConfig::SaveOption()
 {
+    m_pImpl->m_pConfigFile->Write(wxT("选项/是否固定"),m_pImpl->m_Pin);
+    m_pImpl->m_pConfigFile->Write(wxT("选项/是否置顶"),m_pImpl->m_Top);
+    m_pImpl->m_pConfigFile->Write(wxT("选项/显示时钟"),m_pImpl->m_ShowClock);
+    m_pImpl->m_pConfigFile->Write(wxT("选项/有影无形"),m_pImpl->m_Shadow);
+    m_pImpl->m_pConfigFile->Write(wxT("选项/整点报时"),m_pImpl->m_Repeater);
+    m_pImpl->m_pConfigFile->Write(wxT("界面/主题"),m_pImpl->m_SkinName);
+    m_pImpl->m_pConfigFile->Write(wxT("选项/NTP"),m_pImpl->m_NTP);
+    m_pImpl->m_pConfigFile->Write(wxT("界面/不透明度"),m_pImpl->m_Opacity);
+    m_pImpl->m_pConfigFile->Write(wxT("界面/缩放大小"),m_pImpl->m_Zoom);
+    SaveConfig();
 }
 
 void MissConfig::SetPos(const wxPoint& ptPos)
