@@ -71,10 +71,7 @@ void MissSetTimer::GetTaskData(MissGlobal::TaskData& data)
 
     ///时间类型
     data.nTimeType = m_rbtnAppoint->GetValue()?0:m_rbtnPStart->GetValue()?1:m_rbtnPClose->GetValue()?2:3;
-    if(data.nTimeType == 0)
-    {
-        data.strTaskTime.Printf(wxT("%.2d:%.2d"),m_spHour->GetValue(),m_spMin->GetValue());
-    }
+    data.strTaskTime.Printf(wxT("%.2d:%.2d"),m_spHour->GetValue(),m_spMin->GetValue());
 
     ///是否在当天任务表中列出
     data.nRemindType = m_cbtnRemindType->GetValue();
@@ -168,16 +165,14 @@ void MissSetTimer::ImportTaskDataToModify(const MissGlobal::TaskData& data)
     }
 
     ///时间类型
+    wxDateTime dtTmp;
+    dtTmp.ParseTime(data.strTaskTime);
+    m_spHour->SetValue(dtTmp.GetHour());
+    m_spMin->SetValue(dtTmp.GetMinute());
     switch(data.nTimeType)
     {
     case 0:
-        {
-            m_rbtnAppoint->SetValue(true);
-            wxDateTime dtTmp;
-            dtTmp.ParseTime(data.strTaskTime);
-            m_spHour->SetValue(dtTmp.GetHour());
-            m_spMin->SetValue(dtTmp.GetMinute());
-        }
+        m_rbtnAppoint->SetValue(true);
         break;
     case 1:
         m_rbtnPStart->SetValue(true);

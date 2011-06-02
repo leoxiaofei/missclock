@@ -298,10 +298,9 @@ void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
 void MissOption::OnBtnModifyTaskClick(wxCommandEvent& event)
 {
     int nList = m_nbTimerSetting->GetSelection();
-    long nID( -1 );
     if(nList != -1)
     {
-        long item( -1 );
+        long nID( -1 ), item( -1 );
         item = m_pLists[nList]->GetNextItem(item,
                                      wxLIST_NEXT_ALL,
                                      wxLIST_STATE_SELECTED);
