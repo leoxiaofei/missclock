@@ -30,6 +30,9 @@ class MissSetTimer : public MissSetTimerBase
 	    void OnInitDialog( wxInitDialogEvent& event );
     	void OnHLWorkDayClick( wxHyperlinkEvent& event );
     	void OnRbtnNothingClick( wxCommandEvent& event );
+
+    private:
+        wxCheckBox *m_pWeekBox[7];
 };
 
 #endif // __MissSetTimer__
