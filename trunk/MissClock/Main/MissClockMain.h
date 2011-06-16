@@ -17,6 +17,10 @@
 class MissTaskBarIcon;
 class MissSkin;
 class MissConfig;
+namespace MissGlobal
+{
+    struct TaskData;
+}
 
 class MissClockFrame: public GUIFrame
 {
@@ -36,6 +40,7 @@ class MissClockFrame: public GUIFrame
         void UpdateTheme();
         bool UpdateClock();
         void CheckTask();
+        void LoadTask();
         void CheckAudioChimer();
         void OnMinUp();
         void ConnectSlot(Slots& slots, FrameFunc func);
@@ -63,22 +68,22 @@ class MissClockFrame: public GUIFrame
         virtual void OnRightUp( wxMouseEvent& event );
 
     private:
-        shared_ptr<MissTaskBarIcon> m_pTaskBarIcon;
-        shared_ptr<wxTimer> m_pMainTimer;
-        shared_ptr<MissSkin> m_pSkin;
-        shared_ptr<MissConfig> m_pConfig;
-        Slots sg_SecUp;
-        Slots sg_MinUp;
-        HWND m_hWnd;
-        BLENDFUNCTION m_Blend;
-        SIZE m_SizeWindow;
-        struct tm *m_tmNow;
-        time_t m_ttNow;
-        wxBitmap m_bpUI;
-        unsigned int *m_pBitmap;
-        int m_nPixCount;
-        bool m_bRightMenu;
-        bool m_bReloadSkin;
+        shared_ptr<MissTaskBarIcon>      m_pTaskBarIcon;
+        shared_ptr<wxTimer>              m_pMainTimer;
+        shared_ptr<MissSkin>             m_pSkin;
+        shared_ptr<MissConfig>           m_pConfig;
+        Slots                            sg_MinUp;
+        HWND                             m_hWnd;
+        BLENDFUNCTION                    m_Blend;
+        SIZE                             m_SizeWindow;
+        struct tm                       *m_tmNow;
+        time_t                          m_ttNow;
+        wxBitmap                         m_bpUI;
+        unsigned int                   *m_pBitmap;
+        int                              m_nPixCount;
+        bool                             m_bRightMenu;
+        bool                             m_bReloadSkin;
+        std::vector<MissGlobal::TaskData> m_vecMinData;
 };
 
 #endif // MISSCLOCKMAIN_H

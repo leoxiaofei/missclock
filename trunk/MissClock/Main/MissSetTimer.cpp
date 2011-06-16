@@ -15,22 +15,29 @@ MissSetTimerBase( parent )
     }
     toolbar->SetWindowStyle(lStyle);
 
+    m_pWeekBox[0] = m_cbtnSun;
+    m_pWeekBox[1] = m_cbtnMon;
+	m_pWeekBox[2] = m_cbtnTues;
+	m_pWeekBox[3] = m_cbtnWed;
+	m_pWeekBox[4] = m_cbtnThurs;
+	m_pWeekBox[5] = m_cbtnFri;
+	m_pWeekBox[6] = m_cbtnSar;
 }
 
 void MissSetTimer::OnInitDialog(wxInitDialogEvent& event)
 {
-    wxDateTime dtTmp = wxDateTime::Now();
+    wxDateTime dtTmp = wxDateTime::Now().Add(wxTimeSpan(0,1,0,0));
     m_spHour->SetValue(dtTmp.GetHour());
-    m_spMin->SetValue(dtTmp.GetMinute()+1);
+    m_spMin->SetValue(dtTmp.GetMinute());
 }
 
 void MissSetTimer::OnHLWorkDayClick(wxHyperlinkEvent& event)
 {
-    m_cbtnMon->SetValue(true);
-    m_cbtnTues->SetValue(true);
-    m_cbtnWed->SetValue(true);
-    m_cbtnThurs->SetValue(true);
-    m_cbtnFri->SetValue(true);
+    ///星期一到星期五
+    for(int ix = 1; ix != 6; ++ix)
+    {
+        m_pWeekBox[ix]->SetValue(true);
+    }
 }
 
 void MissSetTimer::OnRbtnNothingClick(wxCommandEvent& event)
@@ -53,13 +60,20 @@ void MissSetTimer::GetTaskData(MissGlobal::TaskData& data)
         data.nEvery = m_spEDay->GetValue();
         break;
     case 2:
-        data.nEvery += m_cbtnSun  ->GetValue() ? 1 : 0;
-        data.nEvery += m_cbtnMon  ->GetValue() ? 10 : 0;
-        data.nEvery += m_cbtnTues ->GetValue() ? 100 : 0;
-        data.nEvery += m_cbtnWed  ->GetValue() ? 1000 : 0;
-        data.nEvery += m_cbtnThurs->GetValue() ? 10000 : 0;
-        data.nEvery += m_cbtnFri  ->GetValue() ? 100000 : 0;
-        data.nEvery += m_cbtnSar  ->GetValue() ? 1000000 : 0;
+        for(int ix = 0; ix != 7; ++ix)
+        {
+            if(m_pWeekBox[ix]->GetValue())
+            {
+                data.nEvery |= 2^ix;
+            }
+        }
+        //data.nEvery += m_cbtnSun  ->GetValue() ? 1 : 0;
+        //data.nEvery += m_cbtnMon  ->GetValue() ? 10 : 0;
+        //data.nEvery += m_cbtnTues ->GetValue() ? 100 : 0;
+        //data.nEvery += m_cbtnWed  ->GetValue() ? 1000 : 0;
+        //data.nEvery += m_cbtnThurs->GetValue() ? 10000 : 0;
+        //data.nEvery += m_cbtnFri  ->GetValue() ? 100000 : 0;
+        //data.nEvery += m_cbtnSar  ->GetValue() ? 1000000 : 0;
         break;
     case 3:
         data.nEvery = m_spMonth->GetValue();
@@ -115,6 +129,14 @@ void MissSetTimer::ImportTaskDataToModify(const MissGlobal::TaskData& data)
         break;
     case 2:
         {
+            for(int ix = 0; ix != 7; ++ix)
+            {
+                if(data.nEvery & (2^ix))
+                {
+                    m_pWeekBox[ix]->SetValue(true);
+                }
+            }
+            /*
             int exist, every = data.nEvery;
             for (int loop = 0; loop != 7 && every != 0; ++loop, every /= 10)
             {
@@ -147,6 +169,7 @@ void MissSetTimer::ImportTaskDataToModify(const MissGlobal::TaskData& data)
                     }
                 }
             }
+            */
         }
         break;
     case 3:

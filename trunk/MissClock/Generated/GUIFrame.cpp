@@ -217,6 +217,19 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	
 	bSizer17->Add( sbSizer8, 0, wxEXPAND|wxALL, 5 );
 	
+	wxStaticBoxSizer* sbSizer12;
+	sbSizer12 = new wxStaticBoxSizer( new wxStaticBox( m_panSys, wxID_ANY, wxT("其他设置") ), wxVERTICAL );
+	
+	wxBoxSizer* bSizer36;
+	bSizer36 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_btnWeekSet = new wxButton( m_panSys, wxID_ANY, wxT("工作日"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer36->Add( m_btnWeekSet, 0, wxALL, 5 );
+	
+	sbSizer12->Add( bSizer36, 1, wxEXPAND, 5 );
+	
+	bSizer17->Add( sbSizer12, 0, wxEXPAND|wxALL, 5 );
+	
 	wxStaticBoxSizer* sbSizer9;
 	sbSizer9 = new wxStaticBoxSizer( new wxStaticBox( m_panSys, wxID_ANY, wxT("校时(NTP)") ), wxHORIZONTAL );
 	

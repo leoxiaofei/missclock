@@ -30,7 +30,7 @@
 //#include "../Common/MissFrame.h"
 #include "../Common/MissGlobal.h"
 #include <algorithm>
-
+#include "../Data/MissWxSQLite3.h"
 #include "windows.h"
 //helper functions
 enum wxbuildinfoformat
@@ -90,7 +90,6 @@ MissClockFrame::~MissClockFrame()
 void MissClockFrame::InitEvent()
 {
     this->Connect(wxEVT_TIMER, wxTimerEventHandler(MissClockFrame::OnTimer));
-    //sg_SecUp.connect(&MissClockFrame::UpdateClock);
 
     ConnectSlot(sg_MinUp,&MissClockFrame::CheckTask);
     ConnectSlot(sg_MinUp,&MissClockFrame::CheckAudioChimer);
@@ -152,8 +151,8 @@ void MissClockFrame::OnTimer(wxTimerEvent& event)
 
     if (s_savemin != m_tmNow->tm_min)
     {
-        OnMinUp();
         s_savemin = m_tmNow->tm_min;
+        OnMinUp();
     }
 }
 
@@ -222,8 +221,33 @@ bool MissClockFrame::UpdateClock()
                           &s_ptSrc, 0, &m_Blend, ULW_ALPHA);
 }
 
+void MissClockFrame::LoadTask()
+{
+    //std::vector<std::pair<int,MissGlobal::TaskData> > vecData;
+    try
+    {
+        MissWxSQLite3 sql;
+        sql.QusetNextRemind(wxString::Format(wxT("%04d-%02d-%02d"),m_tmNow->tm_year+1900,
+            m_tmNow->tm_mon+1,m_tmNow->tm_mday),wxString::Format(wxT("%02d:%02d"),
+            m_tmNow->tm_hour,m_tmNow->tm_min),m_vecMinData);
+    }
+    catch(...)
+    {
+        return;
+    }
+}
+
 void MissClockFrame::CheckTask()
 {
+    if(!m_vecMinData.empty())
+    {
+        if(m_vecMinData[0].strTaskTime == wxString::Format(wxT("%02d:%02d"),m_tmNow->tm_hour,m_tmNow->tm_min))
+        {
+            //wxMessageBox(m_vecMinData[0].strTaskContent);
+            m_vecMinData.clear();
+            LoadTask();
+        }
+    }
 }
 
 void MissClockFrame::CheckAudioChimer()
@@ -314,6 +338,7 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
     {
         ReloadSkin();
     }
+    LoadTask();
     m_bRightMenu = true;
 }
 

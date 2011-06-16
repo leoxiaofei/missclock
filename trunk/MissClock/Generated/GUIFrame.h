@@ -111,6 +111,7 @@ class MissOptionBase : public wxDialog
 		wxCheckBox* m_cbtnShadow;
 		wxCheckBox* m_cbtnTop;
 		wxCheckBox* m_cbtnPin;
+		wxButton* m_btnWeekSet;
 		wxStaticText* m_lblNTP;
 		wxComboBox* m_cobNTP;
 		wxButton* m_btnNTP;

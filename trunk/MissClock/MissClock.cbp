@@ -135,7 +135,7 @@
 			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
 				<comment_style block="0" line="0" />
-				<doxyfile_project />
+				<doxyfile_project output_language="Chinese" />
 				<doxyfile_build />
 				<doxyfile_warnings />
 				<doxyfile_output />
