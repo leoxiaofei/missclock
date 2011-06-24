@@ -20,7 +20,7 @@ class MissSetTimer : public MissSetTimerBase
 {
 	public:
 		/** Constructor */
-		MissSetTimer( wxWindow* parent );
+		MissSetTimer( int nWeekDay, wxWindow* parent );
 	//// end generated class members
 	public:
 	    void ImportTaskDataToModify(const MissGlobal::TaskData& data);
@@ -32,7 +32,8 @@ class MissSetTimer : public MissSetTimerBase
     	void OnRbtnNothingClick( wxCommandEvent& event );
 
     private:
-        wxCheckBox *m_pWeekBox[7];
+        wxCheckBox *m_szWeekBox[7];
+        int        m_nWeekDay;
 };
 
 #endif // __MissSetTimer__

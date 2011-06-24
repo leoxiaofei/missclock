@@ -7,6 +7,7 @@
 #include "MissSetTimer.h"
 #include "../Data/MissWxSQLite3.h"
 #include "../Common/MissTools.h"
+#include "MissSetWeekDay.h"
 
 //wxDEFINE_EVENT(wxEVT_MCUI_EVENT, wxCommandEvent);
 
@@ -32,6 +33,8 @@ void MissOption::SetDataSrc(shared_ptr<MissConfig>& pConfig, shared_ptr<MissSkin
 {
     m_pConfig = pConfig;
     m_pSkin = pSkin;
+
+    m_nWeekDay = m_pConfig->GetWeekDay();
 }
 
 void MissOption::OnInitDialog(wxInitDialogEvent& event)
@@ -48,9 +51,16 @@ void MissOption::OnInitDialog(wxInitDialogEvent& event)
         m_pLists[e]->InsertColumn(0,_T("ID"),wxLIST_FORMAT_LEFT,0);
         m_pLists[e]->InsertColumn(1,_T("编号"),wxLIST_FORMAT_LEFT,40);
         m_pLists[e]->InsertColumn(2,_T("提醒日期"),wxLIST_FORMAT_LEFT,72);
-        m_pLists[e]->InsertColumn(3,_T("提醒时间"),wxLIST_FORMAT_LEFT,60);
+        m_pLists[e]->InsertColumn(3,_T("提醒时间"),wxLIST_FORMAT_LEFT,72);
         m_pLists[e]->InsertColumn(4,_T("主题内容"),wxLIST_FORMAT_LEFT,220);
     }
+
+    m_cbtnAudioChimer->SetValue(m_pConfig->GetAudioChimer());
+    m_cbtnShowClock->SetValue(m_pConfig->GetAudioChimer());
+    m_cbtnShadow->SetValue(m_pConfig->GetShadow());
+    m_cbtnTop->SetValue(m_pConfig->GetTop());
+    m_cbtnPin->SetValue(m_pConfig->GetPin());
+    m_cobNTP->SetValue(m_pConfig->GetNTP());
 }
 
 void MissOption::SetZoomState(bool bEnable)
@@ -199,6 +209,14 @@ void MissOption::OnCancel(wxCommandEvent& event)
 void MissOption::OnOK(wxCommandEvent& event)
 {
 // TODO: Implement OnOK
+    m_pConfig->SetWeekDay(m_nWeekDay);
+    m_pConfig->SetShowClock(m_cbtnShowClock->GetValue());
+    m_pConfig->SetAudioChimer(m_cbtnAudioChimer->GetValue());
+    m_pConfig->SetShadow(m_cbtnShadow->GetValue());
+    m_pConfig->SetTop(m_cbtnTop->GetValue());
+    m_pConfig->SetPin(m_cbtnPin->GetValue());
+    m_pConfig->SetNTP(m_cobNTP->GetValue());
+    m_pConfig->SaveOption();
     EndModal(wxID_OK);
 }
 /*
@@ -210,7 +228,7 @@ void MissOption::OnOptionClose(wxCloseEvent& event)
 void MissOption::OnBtnAddTaskClick(wxCommandEvent& event)
 {
     MissTools::AutoHideWindow HideWin(this);
-    MissSetTimer SetTimerDlg(this);
+    MissSetTimer SetTimerDlg(m_nWeekDay,this);
     if(SetTimerDlg.ShowModal() == wxID_OK)
     {
         MissGlobal::TaskData data;
@@ -400,7 +418,7 @@ void MissOption::ModifyTaskData(int nID)
     if(bSuccess)
     {
         MissTools::AutoHideWindow HideWin(this);
-        MissSetTimer SetTimerDlg(this);
+        MissSetTimer SetTimerDlg(m_nWeekDay, this);
         SetTimerDlg.ImportTaskDataToModify(data);
         if(SetTimerDlg.ShowModal() == wxID_OK)
         {
@@ -418,4 +436,17 @@ void MissOption::ModifyTaskData(int nID)
     }
 }
 
+void MissOption::OnBtnWeekSetClick(wxCommandEvent& event)
+{
+    MissSetWeekDay *pWeekDaySetting = new MissSetWeekDay(m_nWeekDay, this);
+    pWeekDaySetting->Connect(wxEVT_MCWD_EVENT, wxCommandEventHandler(MissOption::OnSetWeekDaysEvent), NULL, this);
+    pWeekDaySetting->Move(m_btnWeekSet->GetScreenRect().GetBottomLeft());
+    pWeekDaySetting->Show();
+}
+
+void MissOption::OnSetWeekDaysEvent(wxCommandEvent& event)
+{
+    m_nWeekDay = event.GetInt();
+    std::cout<<m_nWeekDay<<std::endl;
+}
 

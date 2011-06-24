@@ -66,6 +66,12 @@ void MissWxSQLite3::DeleteTaskData(int nID)
     query.ExecuteUpdate();
 }
 
+void MissWxSQLite3::VacuumDB()
+{
+    wxSQLite3Statement query = m_pDB->PrepareStatement(s_strVacuumDB);
+    query.ExecuteUpdate();
+}
+
 void MissWxSQLite3::QuestTaskData(int nType, std::vector<std::pair<int,MissGlobal::TaskData> >& mapData)
 {
     assert(nType >= MissGlobal::QT_REMIND && nType <= MissGlobal::QT_ALL);
@@ -180,16 +186,9 @@ void MissWxSQLite3::QusetNextRemind(const wxString& strDate, const wxString& str
     query.Bind(2,strDate);
     query.Bind(3,strDate);
     query.Bind(4,strDate);
-    query.Bind(5,2<<(static_cast<int>(date.GetWeekDay())-1));
+    query.Bind(5,1<<static_cast<int>(date.GetWeekDay()));
     query.Bind(6,date.GetDay());
     query.Bind(7,date.Format(wxT("%m-%d")));
-    wxPrintf(strTime);
-    std::cout<<std::endl;
-    wxPrintf(strDate);
-    std::cout<<std::endl;
-    std::cout<<(2<<(static_cast<int>(date.GetWeekDay())-1))<<" "<<date.GetDay()<<std::endl;
-    wxPrintf(date.Format(wxT("%m-%d")));
-    std::cout<<std::endl;
 
     wxSQLite3ResultSet result = query.ExecuteQuery();
     if(result.IsOk())
@@ -286,6 +285,11 @@ const wxString MissWxSQLite3::s_strDeleteTaskData= wxT(
 "DELETE FROM TaskData WHERE ID = $ID;"
 );
 
+const wxString MissWxSQLite3::s_strVacuumDB= wxT(
+"VACUUM;"
+);
+
 const wxString MissWxSQLite3::s_strQuestTaskData= wxT(
 "SELECT * FROM TaskData"
 );
+

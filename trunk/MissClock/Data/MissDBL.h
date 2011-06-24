@@ -16,7 +16,7 @@ class MissDBL
         virtual void InsertTaskData(const MissGlobal::TaskData &data) = 0;
         virtual void DeleteTaskData(int nID) = 0;
         virtual void QuestTaskData(int nType, std::vector<std::pair<int,MissGlobal::TaskData> > &mapData) = 0;
-
+        virtual void VacuumDB() = 0;
     protected:
     private:
 };

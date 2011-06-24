@@ -9,19 +9,22 @@ class MissConfig
         virtual ~MissConfig();
 
     public:
-
         void            SetPos(const wxPoint & ptPos);
         void            SetZoom(const double & dZoom);
         void            SetOpacity(int nOpacity);
         void            SetSkinName(const wxString& strName);
         void            SetShowClock(bool bShow);
+        void            SetShadow(bool bShadow);
+        void            SetAudioChimer(bool bEnable);
         void            SetTop(bool bTop);
         void            SetPin(bool bPin);
-
+        void            SetWeekDay(int nWeekDay);
+        void            SetNTP(const wxString& strNTP);
 
         void            SaveOption();
         void            SavePos();
         void            SaveShowClock();
+        void            SaveShadow();
         void            SaveTop();
         void            SavePin();
 
@@ -32,11 +35,12 @@ class MissConfig
         bool            GetTop();
         bool            GetShowClock();
         bool            GetShadow();
-        bool            GetRepeater();
+        bool            GetAudioChimer();
         const wxString& GetSkinName();
         const wxString& GetNTP();
         int             GetOpacity();
         double          GetZoom();
+        int             GetWeekDay();
 
     protected:
         void SaveConfig();

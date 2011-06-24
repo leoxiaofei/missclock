@@ -47,6 +47,11 @@ class MissClockFrame: public GUIFrame
         void DisConnectSlot(Slots& slots, FrameFunc func);
         void ReloadSkin();
 
+        void UpdateShowClock();
+        void UpdateTop();
+        void UpdateShadow();
+        void UpdateAudioChimer();
+
     private:
         void OnTimer(wxTimerEvent& event);
         void OnTaskBarIconLeftUP(wxEvent& event);

@@ -2,10 +2,12 @@
 //#include <wx/choicebk.h>
 #include <wx/toolbar.h>
 #include "../Common/MissGlobal.h"
+#include "../Common/MissTools.h"
 
-MissSetTimer::MissSetTimer( wxWindow* parent )
+MissSetTimer::MissSetTimer( int nWeekDay, wxWindow* parent )
 :
-MissSetTimerBase( parent )
+MissSetTimerBase( parent ),
+m_nWeekDay(nWeekDay)
 {
     wxToolBarBase* toolbar = m_tbRun->GetToolBar();
     long lStyle = toolbar->GetWindowStyle();
@@ -15,13 +17,13 @@ MissSetTimerBase( parent )
     }
     toolbar->SetWindowStyle(lStyle);
 
-    m_pWeekBox[0] = m_cbtnSun;
-    m_pWeekBox[1] = m_cbtnMon;
-	m_pWeekBox[2] = m_cbtnTues;
-	m_pWeekBox[3] = m_cbtnWed;
-	m_pWeekBox[4] = m_cbtnThurs;
-	m_pWeekBox[5] = m_cbtnFri;
-	m_pWeekBox[6] = m_cbtnSar;
+    m_szWeekBox[0] = m_cbtnSun;
+    m_szWeekBox[1] = m_cbtnMon;
+	m_szWeekBox[2] = m_cbtnTues;
+	m_szWeekBox[3] = m_cbtnWed;
+	m_szWeekBox[4] = m_cbtnThurs;
+	m_szWeekBox[5] = m_cbtnFri;
+	m_szWeekBox[6] = m_cbtnSar;
 }
 
 void MissSetTimer::OnInitDialog(wxInitDialogEvent& event)
@@ -33,11 +35,8 @@ void MissSetTimer::OnInitDialog(wxInitDialogEvent& event)
 
 void MissSetTimer::OnHLWorkDayClick(wxHyperlinkEvent& event)
 {
-    ///星期一到星期五
-    for(int ix = 1; ix != 6; ++ix)
-    {
-        m_pWeekBox[ix]->SetValue(true);
-    }
+    ///设置工作日
+    MissTools::WeekDaysCheckBox::SetWeekDaysCheck(m_szWeekBox,m_nWeekDay);
 }
 
 void MissSetTimer::OnRbtnNothingClick(wxCommandEvent& event)
@@ -60,13 +59,7 @@ void MissSetTimer::GetTaskData(MissGlobal::TaskData& data)
         data.nEvery = m_spEDay->GetValue();
         break;
     case 2:
-        for(int ix = 0; ix != 7; ++ix)
-        {
-            if(m_pWeekBox[ix]->GetValue())
-            {
-                data.nEvery |= 2^ix;
-            }
-        }
+        data.nEvery = MissTools::WeekDaysCheckBox::GetWeekDaysCheck(m_szWeekBox);
         //data.nEvery += m_cbtnSun  ->GetValue() ? 1 : 0;
         //data.nEvery += m_cbtnMon  ->GetValue() ? 10 : 0;
         //data.nEvery += m_cbtnTues ->GetValue() ? 100 : 0;
@@ -129,13 +122,7 @@ void MissSetTimer::ImportTaskDataToModify(const MissGlobal::TaskData& data)
         break;
     case 2:
         {
-            for(int ix = 0; ix != 7; ++ix)
-            {
-                if(data.nEvery & (2^ix))
-                {
-                    m_pWeekBox[ix]->SetValue(true);
-                }
-            }
+            MissTools::WeekDaysCheckBox::SetWeekDaysCheck(m_szWeekBox, data.nEvery);
             /*
             int exist, every = data.nEvery;
             for (int loop = 0; loop != 7 && every != 0; ++loop, every /= 10)
