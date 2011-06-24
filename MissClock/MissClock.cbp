@@ -114,6 +114,8 @@
 		<Unit filename="Main\MissOption.h" />
 		<Unit filename="Main\MissSetTimer.cpp" />
 		<Unit filename="Main\MissSetTimer.h" />
+		<Unit filename="Main\MissSetWeekDay.cpp" />
+		<Unit filename="Main\MissSetWeekDay.h" />
 		<Unit filename="Main\MissSoundThread.cpp" />
 		<Unit filename="Main\MissSoundThread.h" />
 		<Unit filename="Main\MissTaskBarIcon.cpp" />

@@ -15,6 +15,7 @@ class MissWxSQLite3: public MissDBL
         void UpdateTaskData(int nID, const MissGlobal::TaskData &data);
         void InsertTaskData(const MissGlobal::TaskData &data);
         void DeleteTaskData(int nID);
+        void VacuumDB();
         void QuestTaskData(int nType, std::vector<std::pair<int,MissGlobal::TaskData> > &mapData);
         void QusetDayTask(const wxString &strDate, std::vector<MissGlobal::TaskData> &vecData);
         void QusetNextRemind(const wxString &strDate, const wxString &strTime,
@@ -36,6 +37,7 @@ class MissWxSQLite3: public MissDBL
         static const wxString s_strInsertTaskData;
         static const wxString s_strUpdateTaskData;
         static const wxString s_strDeleteTaskData;
+        static const wxString s_strVacuumDB;
         static const wxString s_strQuestTaskData;
 };
 

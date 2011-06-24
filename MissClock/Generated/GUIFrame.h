@@ -107,10 +107,10 @@ class MissOptionBase : public wxDialog
 		wxPanel* m_panSys;
 		wxCheckBox* m_cbtnAutoRun;
 		wxCheckBox* m_cbtnAudioChimer;
-		wxCheckBox* m_cbtnShowClock;
+		wxCheckBox* m_cbtnPin;
 		wxCheckBox* m_cbtnShadow;
 		wxCheckBox* m_cbtnTop;
-		wxCheckBox* m_cbtnPin;
+		wxCheckBox* m_cbtnShowClock;
 		wxButton* m_btnWeekSet;
 		wxStaticText* m_lblNTP;
 		wxComboBox* m_cobNTP;
@@ -145,6 +145,7 @@ class MissOptionBase : public wxDialog
 		virtual void OnZoomCbtnClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnZoomSldChanged( wxScrollEvent& event ) { event.Skip(); }
 		virtual void OnTransSldChanged( wxScrollEvent& event ) { event.Skip(); }
+		virtual void OnBtnWeekSetClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnNtpBtnClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnAddTaskClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnAdditionaClick( wxCommandEvent& event ) { event.Skip(); }
@@ -351,6 +352,33 @@ class ProgramPanel : public wxPanel
 		
 		ProgramPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
 		~ProgramPanel();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class MissSetWeekDayBase
+///////////////////////////////////////////////////////////////////////////////
+class MissSetWeekDayBase : public wxFrame 
+{
+	private:
+	
+	protected:
+		wxCheckBox* m_cbtnMon;
+		wxCheckBox* m_cbtnTues;
+		wxCheckBox* m_cbtnWed;
+		wxCheckBox* m_cbtnThurs;
+		wxCheckBox* m_cbtnFri;
+		wxCheckBox* m_cbtnSar;
+		wxCheckBox* m_cbtnSun;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnActivate( wxActivateEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		MissSetWeekDayBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,60 ), long style = wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxSTAY_ON_TOP );
+		~MissSetWeekDayBase();
 	
 };
 

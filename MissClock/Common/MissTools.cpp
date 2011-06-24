@@ -1,5 +1,6 @@
 #include "MissTools.h"
 #include <wx/toplevel.h>
+#include <wx/checkbox.h>
 
 namespace MissTools
 {
@@ -14,5 +15,30 @@ AutoHideWindow::~AutoHideWindow()
 {
     m_pWin->SetTransparent(255);
 }
+
+void WeekDaysCheckBox::SetWeekDaysCheck(wxCheckBox *szWeekBox[7], int nWeekDay)
+{
+    for(int ix = 0; ix != 7; ++ix)
+    {
+        if(nWeekDay & (1<<ix))
+        {
+            szWeekBox[ix]->SetValue(true);
+        }
+    }
+}
+
+int WeekDaysCheckBox::GetWeekDaysCheck(wxCheckBox *szWeekBox[7])
+{
+    int nRet(0);
+    for(int ix = 0; ix != 7; ++ix)
+    {
+        if(szWeekBox[ix]->GetValue())
+        {
+            nRet |= (1<<ix);
+        }
+    }
+    return nRet;
+}
+
 
 }

@@ -184,7 +184,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panUI->SetSizer( bSizer2 );
 	m_panUI->Layout();
 	bSizer2->Fit( m_panUI );
-	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), true );
+	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), false );
 	m_panSys = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer17;
 	bSizer17 = new wxBoxSizer( wxVERTICAL );
@@ -201,8 +201,8 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_cbtnAudioChimer = new wxCheckBox( m_panSys, wxID_ANY, wxT("整点报时"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer2->Add( m_cbtnAudioChimer, 0, wxALL, 5 );
 	
-	m_cbtnShowClock = new wxCheckBox( m_panSys, wxID_ANY, wxT("显示时钟"), wxDefaultPosition, wxDefaultSize, 0 );
-	gSizer2->Add( m_cbtnShowClock, 0, wxALL, 5 );
+	m_cbtnPin = new wxCheckBox( m_panSys, wxID_ANY, wxT("固定位置"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnPin, 0, wxALL, 5 );
 	
 	m_cbtnShadow = new wxCheckBox( m_panSys, wxID_ANY, wxT("有影无形(鼠标穿透)"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer2->Add( m_cbtnShadow, 0, wxALL, 5 );
@@ -210,12 +210,17 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_cbtnTop = new wxCheckBox( m_panSys, wxID_ANY, wxT("总在最前"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer2->Add( m_cbtnTop, 0, wxALL, 5 );
 	
-	m_cbtnPin = new wxCheckBox( m_panSys, wxID_ANY, wxT("固定位置"), wxDefaultPosition, wxDefaultSize, 0 );
-	gSizer2->Add( m_cbtnPin, 0, wxALL, 5 );
+	m_cbtnShowClock = new wxCheckBox( m_panSys, wxID_ANY, wxT("显示时钟"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnShowClock, 0, wxALL, 5 );
 	
 	sbSizer8->Add( gSizer2, 1, wxEXPAND, 5 );
 	
 	bSizer17->Add( sbSizer8, 0, wxEXPAND|wxALL, 5 );
+	
+	wxStaticBoxSizer* sbSizerSync;
+	sbSizerSync = new wxStaticBoxSizer( new wxStaticBox( m_panSys, wxID_ANY, wxT("同步") ), wxVERTICAL );
+	
+	bSizer17->Add( sbSizerSync, 0, wxEXPAND|wxALL, 5 );
 	
 	wxStaticBoxSizer* sbSizer12;
 	sbSizer12 = new wxStaticBoxSizer( new wxStaticBox( m_panSys, wxID_ANY, wxT("其他设置") ), wxVERTICAL );
@@ -248,7 +253,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panSys->SetSizer( bSizer17 );
 	m_panSys->Layout();
 	bSizer17->Fit( m_panSys );
-	m_lsbOption->AddPage( m_panSys, wxT("系统设置"), false );
+	m_lsbOption->AddPage( m_panSys, wxT("系统设置"), true );
 	m_panTmr = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer20;
 	bSizer20 = new wxBoxSizer( wxVERTICAL );
@@ -382,6 +387,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_cbtnAllowZoom->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MissOptionBase::OnZoomCbtnClick ), NULL, this );
 	m_sldZoom->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnZoomSldChanged ), NULL, this );
 	m_sldOpacity->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnTransSldChanged ), NULL, this );
+	m_btnWeekSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnWeekSetClick ), NULL, this );
 	m_btnNTP->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnNtpBtnClick ), NULL, this );
 	m_btnAddTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAddTaskClick ), NULL, this );
 	m_btnAdditional->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAdditionaClick ), NULL, this );
@@ -407,6 +413,7 @@ MissOptionBase::~MissOptionBase()
 	m_cbtnAllowZoom->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MissOptionBase::OnZoomCbtnClick ), NULL, this );
 	m_sldZoom->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnZoomSldChanged ), NULL, this );
 	m_sldOpacity->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnTransSldChanged ), NULL, this );
+	m_btnWeekSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnWeekSetClick ), NULL, this );
 	m_btnNTP->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnNtpBtnClick ), NULL, this );
 	m_btnAddTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAddTaskClick ), NULL, this );
 	m_btnAdditional->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAdditionaClick ), NULL, this );
@@ -994,4 +1001,49 @@ ProgramPanel::ProgramPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos,
 
 ProgramPanel::~ProgramPanel()
 {
+}
+
+MissSetWeekDayBase::MissSetWeekDayBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+	
+	wxGridSizer* gSizer2;
+	gSizer2 = new wxGridSizer( 2, 4, 0, 0 );
+	
+	m_cbtnMon = new wxCheckBox( this, wxID_ANY, wxT("星期一"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnMon, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_cbtnTues = new wxCheckBox( this, wxID_ANY, wxT("星期二"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnTues, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_cbtnWed = new wxCheckBox( this, wxID_ANY, wxT("星期三"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnWed, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_cbtnThurs = new wxCheckBox( this, wxID_ANY, wxT("星期四"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnThurs, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_cbtnFri = new wxCheckBox( this, wxID_ANY, wxT("星期五"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnFri, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_cbtnSar = new wxCheckBox( this, wxID_ANY, wxT("星期六"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnSar, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_cbtnSun = new wxCheckBox( this, wxID_ANY, wxT("星期天"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer2->Add( m_cbtnSun, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	this->SetSizer( gSizer2 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler( MissSetWeekDayBase::OnActivate ) );
+}
+
+MissSetWeekDayBase::~MissSetWeekDayBase()
+{
+	// Disconnect Events
+	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler( MissSetWeekDayBase::OnActivate ) );
+	
 }

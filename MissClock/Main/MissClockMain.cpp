@@ -92,7 +92,7 @@ void MissClockFrame::InitEvent()
     this->Connect(wxEVT_TIMER, wxTimerEventHandler(MissClockFrame::OnTimer));
 
     ConnectSlot(sg_MinUp,&MissClockFrame::CheckTask);
-    ConnectSlot(sg_MinUp,&MissClockFrame::CheckAudioChimer);
+    UpdateAudioChimer();
 
     m_pTaskBarIcon->Connect(wxEVT_TASKBAR_RIGHT_UP, (wxObjectEventFunction)&MissClockFrame::OnRightUp, NULL, this);
     m_pTaskBarIcon->Connect(wxEVT_TASKBAR_LEFT_UP, (wxObjectEventFunction)&MissClockFrame::OnTaskBarIconLeftUP, NULL, this);
@@ -112,6 +112,10 @@ void MissClockFrame::InitUI()
 
     //设置时钟位置
     Move(m_pConfig->GetPos());
+
+    UpdateTop();
+    UpdateShadow();
+    //UpdateShowClock();
 }
 
 void MissClockFrame::InitMenu()
@@ -310,17 +314,8 @@ void MissClockFrame::OnAbout(wxCommandEvent& event)
 
 void MissClockFrame::OnmimTopSelected(wxCommandEvent& event)
 {
-    long lStyle = GetWindowStyleFlag();
-    if (lStyle & wxSTAY_ON_TOP)
-    {
-        lStyle &= ~wxSTAY_ON_TOP;
-    }
-    else
-    {
-        lStyle |= wxSTAY_ON_TOP;
-    }
-    SetWindowStyleFlag(lStyle);
-    m_pConfig->SetTop(lStyle & wxSTAY_ON_TOP);
+    m_pConfig->SetTop(!m_pConfig->GetTop());
+    UpdateTop();
     m_pConfig->SaveTop();
 }
 
@@ -350,17 +345,7 @@ void MissClockFrame::OnmimRemindSelected(wxCommandEvent& event)
 void MissClockFrame::OnmimShowSelected(wxCommandEvent& event)
 {
     m_pConfig->SetShowClock(!m_pConfig->GetShowClock());
-
-    if (m_pConfig->GetShowClock())
-    {
-        Show(true);
-    }
-    else
-    {
-        //m_pImpl->m_Icon.ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
-        Show(false);
-    }
-
+    UpdateShowClock();
     m_pConfig->SaveShowClock();
 }
 
@@ -372,6 +357,9 @@ void MissClockFrame::OnmimPinSelected(wxCommandEvent& event)
 
 void MissClockFrame::OnmimShadowSelected(wxCommandEvent& event)
 {
+    m_pConfig->SetShadow(!m_pConfig->GetShadow());
+    UpdateShadow();
+    m_pConfig->SaveShadow();
 }
 
 void MissClockFrame::OnMinUp()
@@ -445,5 +433,58 @@ void MissClockFrame::ReloadSkin()
         m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
         UpdateClock();
         m_bReloadSkin = false;
+    }
+}
+
+void MissClockFrame::UpdateShowClock()
+{
+    if (m_pConfig->GetShowClock())
+    {
+        Show(true);
+    }
+    else
+    {
+        //m_pImpl->m_Icon.ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
+        Show(false);
+    }
+}
+
+void MissClockFrame::UpdateTop()
+{
+    long lStyle = GetWindowStyleFlag();
+    if (!m_pConfig->GetTop())
+    {
+        lStyle &= ~wxSTAY_ON_TOP;
+    }
+    else
+    {
+        lStyle |= wxSTAY_ON_TOP;
+    }
+    SetWindowStyleFlag(lStyle);
+}
+
+void MissClockFrame::UpdateShadow()
+{
+    long exStyle = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
+    if (!m_pConfig->GetShadow())
+    {
+        exStyle &= ~WS_EX_TRANSPARENT;
+    }
+    else
+    {
+        exStyle |= WS_EX_TRANSPARENT;
+    }
+    ::SetWindowLong(m_hWnd, GWL_EXSTYLE, exStyle);
+}
+
+void MissClockFrame::UpdateAudioChimer()
+{
+    if(m_pConfig->GetAudioChimer())
+    {
+        ConnectSlot(sg_MinUp,&MissClockFrame::CheckAudioChimer);
+    }
+    else
+    {
+        DisConnectSlot(sg_MinUp,&MissClockFrame::CheckAudioChimer);
     }
 }
