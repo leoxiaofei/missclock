@@ -9,6 +9,7 @@ AutoHideWindow::AutoHideWindow(wxTopLevelWindow* pWin):
     m_pWin(pWin)
 {
     m_pWin->SetTransparent(0);
+    wxYield();
 }
 
 AutoHideWindow::~AutoHideWindow()

@@ -184,7 +184,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panUI->SetSizer( bSizer2 );
 	m_panUI->Layout();
 	bSizer2->Fit( m_panUI );
-	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), false );
+	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), true );
 	m_panSys = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer17;
 	bSizer17 = new wxBoxSizer( wxVERTICAL );
@@ -253,7 +253,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panSys->SetSizer( bSizer17 );
 	m_panSys->Layout();
 	bSizer17->Fit( m_panSys );
-	m_lsbOption->AddPage( m_panSys, wxT("系统设置"), true );
+	m_lsbOption->AddPage( m_panSys, wxT("系统设置"), false );
 	m_panTmr = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer20;
 	bSizer20 = new wxBoxSizer( wxVERTICAL );
