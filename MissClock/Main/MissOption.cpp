@@ -45,6 +45,7 @@ void MissOption::OnInitDialog(wxInitDialogEvent& event)
     m_cbtnAllowZoom->SetValue(m_pConfig->GetZoom() != 1.0);
     m_sldZoom->SetValue(static_cast<int>(m_pConfig->GetZoom() * 100));
     SetZoomState(m_cbtnAllowZoom->GetValue());
+    m_sldOpacity->SetValue(m_pConfig->GetOpacity());
 
     for(int e = MissGlobal::QT_REMIND; e < MissGlobal::QT_ALL; ++e )
     {
@@ -110,7 +111,6 @@ void MissOption::OnModifyThemeBtnClick(wxCommandEvent& event)
 {
 // TODO: Implement OnModifySkinBtnClick
     MissTools::AutoHideWindow HideWin(this);
-    //this->SetTransparent(0);
     MissTheme ThemeDlg(this);
     ThemeDlg.SetDataSrc(m_pSkin);
     if(ThemeDlg.ShowModal() == wxID_OK)
@@ -274,7 +274,7 @@ void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
         if(m_pLists[nList]->GetItemText(item).ToLong(&nID))
         {
             vecDelete.push_back(nID);
-            m_pLists[nList]->DeleteItem(item);
+            //m_pLists[nList]->DeleteItem(item);
         }
     }
 
@@ -301,13 +301,10 @@ void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
         strID.Printf(wxT("%d"),*itor);
         for(int e = MissGlobal::QT_REMIND; e < MissGlobal::QT_ALL; ++e )
         {
-            if(e != nList)
+            item = m_pLists[e]->FindItem(-1,strID);
+            if(item != -1)
             {
-                item = m_pLists[e]->FindItem(-1,strID);
-                if(item != -1)
-                {
-                    m_pLists[e]->DeleteItem(item);
-                }
+                m_pLists[e]->DeleteItem(item);
             }
         }
     }

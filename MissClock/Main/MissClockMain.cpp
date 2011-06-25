@@ -77,8 +77,6 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     InitEvent();
     InitUI();
     InitMenu();
-    //MissFrame *a = new MissFrame(this);
-    //a->Show();
 }
 
 MissClockFrame::~MissClockFrame()
@@ -104,18 +102,20 @@ void MissClockFrame::InitUI()
     exStyle |= WS_EX_LAYERED;
     ::SetWindowLong(m_hWnd, GWL_EXSTYLE, exStyle);
 
-    m_Blend.BlendOp = AC_SRC_OVER;      ///指定源混合操作。目前，唯一的源和目标混合操作被定义为 AC_SRC_OVER。 详情，请参阅下面的备注部分。
+    m_Blend.BlendOp = AC_SRC_OVER;      ///指定源混合操作。目前，唯一的源和目标混合操作被定义为 AC_SRC_OVER。
     m_Blend.BlendFlags = 0;             ///必须为 0
     m_Blend.AlphaFormat = AC_SRC_ALPHA; ///该成员控制源和目标位图被解释的方式。
     UpdateAlpha();
     UpdateTheme();
-
-    //设置时钟位置
-    Move(m_pConfig->GetPos());
-
     UpdateTop();
     UpdateShadow();
-    //UpdateShowClock();
+
+    ///设置时钟位置
+    Move(m_pConfig->GetPos());
+
+    ///第一次刷新界面
+    wxTimerEvent send;
+    AddPendingEvent(send);
 }
 
 void MissClockFrame::InitMenu()
@@ -124,7 +124,6 @@ void MissClockFrame::InitMenu()
     m_pmimShadow->Check(m_pConfig->GetShadow());
     m_pmimTop->Check(m_pConfig->GetTop());
     m_pmimShow->Check(m_pConfig->GetShowClock());
-
 }
 
 void MissClockFrame::UpdateAlpha()
@@ -221,6 +220,7 @@ bool MissClockFrame::UpdateClock()
         *pBitmap -= 0x01000000;
         ++pBitmap;
     }
+
     return ::UpdateLayeredWindow(m_hWnd, s_hdcScreen, NULL, &m_SizeWindow, static_cast<HDC>(memdc.GetHDC()),
                           &s_ptSrc, 0, &m_Blend, ULW_ALPHA);
 }
@@ -327,7 +327,11 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
     OptionDlg.Connect(wxEVT_MCUI_EVENT, wxCommandEventHandler(MissClockFrame::OnOptionUiEvent), NULL, this);
     if (OptionDlg.ShowModal() == wxID_OK)
     {
-
+        UpdateAudioChimer();
+        UpdateTop();
+        UpdateShowClock();
+        UpdateShadow();
+        InitMenu();
     }
     else
     {
