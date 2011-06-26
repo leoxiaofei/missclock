@@ -158,7 +158,7 @@ class MissOptionBase : public wxDialog
 	
 	public:
 		
-		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,419 ), long style = wxDEFAULT_DIALOG_STYLE );
+		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,419 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 		~MissOptionBase();
 	
 };
@@ -379,6 +379,26 @@ class MissSetWeekDayBase : public wxFrame
 		
 		MissSetWeekDayBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,60 ), long style = wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxSTAY_ON_TOP );
 		~MissSetWeekDayBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class MissRemindBase
+///////////////////////////////////////////////////////////////////////////////
+class MissRemindBase : public wxFrame 
+{
+	private:
+	
+	protected:
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		MissRemindBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = 0|wxTAB_TRAVERSAL );
+		~MissRemindBase();
 	
 };
 
