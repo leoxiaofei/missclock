@@ -31,7 +31,11 @@
 #include "../Common/MissGlobal.h"
 #include <algorithm>
 #include "../Data/MissWxSQLite3.h"
-#include "windows.h"
+#include "MissRemind.h"
+
+#include <winuser.h>
+//#include "windows.h"
+
 //helper functions
 enum wxbuildinfoformat
 {
@@ -228,6 +232,7 @@ bool MissClockFrame::UpdateClock()
 void MissClockFrame::LoadTask()
 {
     //std::vector<std::pair<int,MissGlobal::TaskData> > vecData;
+    m_vecMinData.clear();
     try
     {
         MissWxSQLite3 sql;
@@ -248,10 +253,36 @@ void MissClockFrame::CheckTask()
         if(m_vecMinData[0].strTaskTime == wxString::Format(wxT("%02d:%02d"),m_tmNow->tm_hour,m_tmNow->tm_min))
         {
             //wxMessageBox(m_vecMinData[0].strTaskContent);
-            m_vecMinData.clear();
+            int nIndex(0);
+            std::vector<wxString> vecRemindContent;
+            for(std::vector<MissGlobal::TaskData>::iterator itor = m_vecMinData.begin();
+                itor != m_vecMinData.end(); ++itor)
+            {
+                switch(itor->nTaskType)
+                {
+                case 0:
+                    {
+                        vecRemindContent.push_back( itor->strTaskContent );
+                    }
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                }
+            }
+            if(!vecRemindContent.empty())
+            {
+                PopUpRemind(vecRemindContent);
+            }
             LoadTask();
         }
     }
+}
+
+void MissClockFrame::PopUpRemind(const std::vector<wxString>& vecContent)
+{
+
 }
 
 void MissClockFrame::CheckAudioChimer()
@@ -343,7 +374,8 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 
 void MissClockFrame::OnmimRemindSelected(wxCommandEvent& event)
 {
-
+    MissRemind *a = new MissRemind(this);
+    a->Show();
 }
 
 void MissClockFrame::OnmimShowSelected(wxCommandEvent& event)

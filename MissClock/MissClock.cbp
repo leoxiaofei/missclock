@@ -112,6 +112,8 @@
 		<Unit filename="Main\MissClockMain.h" />
 		<Unit filename="Main\MissOption.cpp" />
 		<Unit filename="Main\MissOption.h" />
+		<Unit filename="Main\MissRemind.cpp" />
+		<Unit filename="Main\MissRemind.h" />
 		<Unit filename="Main\MissSetTimer.cpp" />
 		<Unit filename="Main\MissSetTimer.h" />
 		<Unit filename="Main\MissSetWeekDay.cpp" />

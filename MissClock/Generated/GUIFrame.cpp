@@ -1047,3 +1047,21 @@ MissSetWeekDayBase::~MissSetWeekDayBase()
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler( MissSetWeekDayBase::OnActivate ) );
 	
 }
+
+MissRemindBase::MissRemindBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MissRemindBase::OnLeftDown ) );
+}
+
+MissRemindBase::~MissRemindBase()
+{
+	// Disconnect Events
+	this->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MissRemindBase::OnLeftDown ) );
+	
+}

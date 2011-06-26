@@ -52,6 +52,8 @@ class MissClockFrame: public GUIFrame
         void UpdateShadow();
         void UpdateAudioChimer();
 
+        void PopUpRemind(const std::vector<wxString>& vecContent);
+
     private:
         void OnTimer(wxTimerEvent& event);
         void OnTaskBarIconLeftUP(wxEvent& event);
