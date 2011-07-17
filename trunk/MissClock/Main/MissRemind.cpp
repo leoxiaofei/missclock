@@ -28,12 +28,12 @@ MissRemindBase( parent )
 
 void MissRemind::OnTimer(wxTimerEvent& event)
 {
-    int nWidth = 400;
+    int nWidth = 600;
     int nHeight = 100;
     std::vector<wxString> vecContent;
     vecContent.push_back(wxT("这是一个测试。"));
     vecContent.push_back(wxT("This is a Test!!!\n回车测试。\n回车测试。\n回车测试。"));
-    vecContent.push_back(wxT("这是一段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字，超长文字测试。"));
+    vecContent.push_back(wxT("这是一段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字，超长文字测试。"));
     vecContent.push_back(wxT("不知道效果是怎样的？"));
     vecContent.push_back(wxT("不知道效果是怎样的？"));
     vecContent.push_back(wxT("不知道效果是怎样的？"));
