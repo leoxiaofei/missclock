@@ -164,19 +164,6 @@ void MissRemind::OnTimer(wxTimerEvent& event)
         memdc.DrawRectangle(0, 0, nWidth - 10 - 10, mid2.GetHeight()/*nHeight - top3.GetHeight() - bottom3.GetHeight()*/);
         memdc.DrawLabel(vecTextOut[ix],wxRect(0, 0, nWidth - 10 - 10, mid2.GetHeight()),wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
-    /*
-    memdc.SetDeviceOrigin(10, top1.GetHeight() + mid2.GetHeight());
-    memdc.SetBrush(wxBrush(mid2));
-    memdc.DrawRectangle(0, 0, nWidth - 10 - 10, mid2.GetHeight()/*nHeight - top3.GetHeight() - bottom3.GetHeight());
-    memdc.DrawLabel(wxT("2、This is a Test!!!"),wxRect(0, 0, nWidth - 10 - 10, mid2.GetHeight()),wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-
-
-    memdc.SetDeviceOrigin(10, top1.GetHeight() + mid2.GetHeight() * 2);
-    memdc.SetBrush(wxBrush(mid2));
-    memdc.DrawRectangle(0, 0, nWidth - 10 - 10, mid2.GetHeight()/*nHeight - top3.GetHeight() - bottom3.GetHeight());
-    memdc.DrawLabel(wxT("3、不知道效果是怎样的？"),wxRect(0, 0, nWidth - 10 - 10, mid2.GetHeight()),wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-    */
-
 
     nPixTemp = nPixCount;
     pBitmapTemp = pBitmap;
