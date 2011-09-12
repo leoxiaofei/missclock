@@ -3,11 +3,13 @@
 #include <wx/toolbar.h>
 #include "../Common/MissGlobal.h"
 #include "../Common/MissTools.h"
+#include "../Data/MissWxSQLite3.h"
 
 MissSetTimer::MissSetTimer( int nWeekDay, wxWindow* parent )
 :
 MissSetTimerBase( parent ),
-m_nWeekDay(nWeekDay)
+m_nWeekDay(nWeekDay),
+m_nDataID(-1)
 {
     wxToolBarBase* toolbar = m_tbRun->GetToolBar();
     long lStyle = toolbar->GetWindowStyle();
@@ -87,10 +89,10 @@ void MissSetTimer::GetTaskData(MissGlobal::TaskData& data)
     data.nTaskType = m_tbRun->GetSelection();
     switch(data.nTaskType)
     {
-    case 0:
+    case 0:   ///文字提醒任务
         data.strTaskContent = m_panTextRemind->m_edtContent->GetValue();
         break;
-    case 1:
+    case 1:   ///执行程序任务
         data.strTaskContent.Printf(wxT("\"%s\" %s"),m_panProgRemind->m_fpProgram->GetTextCtrlValue().c_str(),
                                    m_panProgRemind->m_edtParameter->GetValue().c_str());
         data.strTaskContent.Trim();
@@ -99,8 +101,9 @@ void MissSetTimer::GetTaskData(MissGlobal::TaskData& data)
 
 }
 
-void MissSetTimer::ImportTaskDataToModify(const MissGlobal::TaskData& data)
+void MissSetTimer::ImportTaskDataToModify(int nDataID, const MissGlobal::TaskData& data)
 {
+    m_nDataID = nDataID;
     ///日期类型
     m_cbookDate->SetSelection(data.nDateType);
     switch(data.nDateType)
@@ -224,6 +227,31 @@ void MissSetTimer::ImportTaskDataToModify(const MissGlobal::TaskData& data)
         }
         break;
     }
+}
+
+void MissSetTimer::OnOKButtonClick(wxCommandEvent& event)
+{
+    MissGlobal::TaskData data;
+    GetTaskData(data);
+    try
+    {
+        MissWxSQLite3 sql;
+        if(m_nDataID == -1)
+        {
+            ///新建数据
+            sql.InsertTaskData(data);
+        }
+        else
+        {
+            ///更新数据
+            sql.UpdateTaskData(m_nDataID,data);
+        }
+    }
+    catch(...)
+    {
+
+    }
+    EndModal(wxID_OK);
 }
 
 
