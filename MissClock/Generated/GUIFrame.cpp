@@ -675,6 +675,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	this->Connect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( MissSetTimerBase::OnInitDialog ) );
 	m_hlWorkDay->Connect( wxEVT_COMMAND_HYPERLINK, wxHyperlinkEventHandler( MissSetTimerBase::OnHLWorkDayClick ), NULL, this );
 	m_rbtnNothing->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( MissSetTimerBase::OnRbtnNothingClick ), NULL, this );
+	m_sdbSizer3OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissSetTimerBase::OnOKButtonClick ), NULL, this );
 }
 
 MissSetTimerBase::~MissSetTimerBase()
@@ -683,6 +684,7 @@ MissSetTimerBase::~MissSetTimerBase()
 	this->Disconnect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( MissSetTimerBase::OnInitDialog ) );
 	m_hlWorkDay->Disconnect( wxEVT_COMMAND_HYPERLINK, wxHyperlinkEventHandler( MissSetTimerBase::OnHLWorkDayClick ), NULL, this );
 	m_rbtnNothing->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( MissSetTimerBase::OnRbtnNothingClick ), NULL, this );
+	m_sdbSizer3OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissSetTimerBase::OnOKButtonClick ), NULL, this );
 	
 }
 

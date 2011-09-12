@@ -231,17 +231,7 @@ void MissOption::OnBtnAddTaskClick(wxCommandEvent& event)
     MissSetTimer SetTimerDlg(m_nWeekDay,this);
     if(SetTimerDlg.ShowModal() == wxID_OK)
     {
-        MissGlobal::TaskData data;
-        SetTimerDlg.GetTaskData(data);
-        try
-        {
-            MissWxSQLite3 sql;
-            sql.InsertTaskData(data);
-        }
-        catch(...)
-        {
-            return;
-        }
+
         ///清空所有列表中的值
         for(int e = MissGlobal::QT_REMIND; e < MissGlobal::QT_ALL; ++e )
         {
@@ -416,19 +406,10 @@ void MissOption::ModifyTaskData(int nID)
     {
         MissTools::AutoHideWindow HideWin(this);
         MissSetTimer SetTimerDlg(m_nWeekDay, this);
-        SetTimerDlg.ImportTaskDataToModify(data);
+        SetTimerDlg.ImportTaskDataToModify(nID,data);
         if(SetTimerDlg.ShowModal() == wxID_OK)
         {
-            SetTimerDlg.GetTaskData(data);
-            try
-            {
-                MissWxSQLite3 sql;
-                sql.UpdateTaskData(nID,data);
-            }
-            catch(...)
-            {
-                return;
-            }
+            ///保存
         }
     }
 }

@@ -144,8 +144,8 @@ void MissClockFrame::UpdateTheme()
 
 void MissClockFrame::OnTimer(wxTimerEvent& event)
 {
-    boost::progress_timer t;
-
+    //boost::progress_timer t;
+    //SetTransparent(rand()%255);
     m_ttNow = time(NULL);
     m_tmNow = localtime(&m_ttNow);
     static int s_savemin = m_tmNow->tm_min;
@@ -260,12 +260,12 @@ void MissClockFrame::CheckTask()
             {
                 switch(itor->nTaskType)
                 {
-                case 0:
+                case 0:     ///文字提醒任务
                     {
                         vecRemindContent.push_back( itor->strTaskContent );
                     }
                     break;
-                case 1:
+                case 1:     ///程序任务
                     break;
                 case 2:
                     break;
@@ -296,7 +296,7 @@ void MissClockFrame::CheckAudioChimer()
         }
         else
         {
-             wxMessageBox( wxT(" Can't create thread !" ));
+             wxMessageBox( wxT("Can't create thread !" ));
         }
     }
 }
@@ -332,8 +332,13 @@ void MissClockFrame::OnClose(wxCloseEvent& event)
     */
 
     std::cout << "MissClockFrame::OnClose()" << std::endl;
+    ///保存时钟坐标信息
     m_pConfig->SetPos(GetPosition());
     m_pConfig->SavePos();
+
+    ///执行关闭时任务
+
+
     Destroy();
 }
 

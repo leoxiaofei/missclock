@@ -23,17 +23,19 @@ class MissSetTimer : public MissSetTimerBase
 		MissSetTimer( int nWeekDay, wxWindow* parent );
 	//// end generated class members
 	public:
-	    void ImportTaskDataToModify(const MissGlobal::TaskData& data);
-        void GetTaskData(MissGlobal::TaskData& data);
+	    void ImportTaskDataToModify(int nDataID, const MissGlobal::TaskData& data);
 
 	protected:
 	    void OnInitDialog( wxInitDialogEvent& event );
     	void OnHLWorkDayClick( wxHyperlinkEvent& event );
     	void OnRbtnNothingClick( wxCommandEvent& event );
+        void OnOKButtonClick( wxCommandEvent& event );
+        void GetTaskData(MissGlobal::TaskData& data);
 
     private:
         wxCheckBox *m_szWeekBox[7];
         int        m_nWeekDay;
+        int        m_nDataID;
 };
 
 #endif // __MissSetTimer__

@@ -24,8 +24,6 @@ public:
 public:
     void DrawSkin(wxDC & dc, struct tm *tmNow);
 
-
-
     void SetSkinName(const wxString& strName);
     void SetBGPicPath(const wxString& strPicPath);
     void SetLocale(const wxString& strLocale);

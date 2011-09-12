@@ -277,7 +277,7 @@ TimeType = $TimeType, \
 TaskTime = $TaskTime, \
 Every = $Every, \
 TaskType = $TaskType, \
-TaskContent = $TaskContent\
+TaskContent = $TaskContent \
 WHERE ID = $ID;"
 );
 

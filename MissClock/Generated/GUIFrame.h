@@ -223,6 +223,7 @@ class MissSetTimerBase : public wxDialog
 		virtual void OnInitDialog( wxInitDialogEvent& event ) { event.Skip(); }
 		virtual void OnHLWorkDayClick( wxHyperlinkEvent& event ) { event.Skip(); }
 		virtual void OnRbtnNothingClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnOKButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
