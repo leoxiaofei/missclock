@@ -25,6 +25,7 @@
 #include "../Data/MissConfig.h"
 #include "MissOption.h"
 #include "../Data/MissSkin.h"
+#include "../Data/MissRemindSkin.h"
 #include "../Data/MissXML.h"
 #include "MissSoundThread.h"
 //#include "../Common/MissFrame.h"
@@ -71,6 +72,7 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     m_pTaskBarIcon(new MissTaskBarIcon),
     m_pMainTimer(new wxTimer(this)),
     m_pSkin(new MissSkin),
+    m_pRemindSkin(new MissRemindSkin),
     m_pConfig(new MissConfig),
     m_bRightMenu(true),
     m_bReloadSkin(false)
@@ -139,6 +141,7 @@ void MissClockFrame::UpdateAlpha()
 void MissClockFrame::UpdateTheme()
 {
     MissXML::LoadSkin(m_pSkin, m_pConfig->GetSkinName());
+    MissXML::LoadRemindSkin(m_pRemindSkin, m_pConfig->GetSkinName());
     UpdateSize();
 }
 
@@ -253,7 +256,7 @@ void MissClockFrame::CheckTask()
         if(m_vecMinData[0].strTaskTime == wxString::Format(wxT("%02d:%02d"),m_tmNow->tm_hour,m_tmNow->tm_min))
         {
             //wxMessageBox(m_vecMinData[0].strTaskContent);
-            int nIndex(0);
+            //int nIndex(0);
             std::vector<wxString> vecRemindContent;
             for(std::vector<MissGlobal::TaskData>::iterator itor = m_vecMinData.begin();
                 itor != m_vecMinData.end(); ++itor)
@@ -379,7 +382,7 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 
 void MissClockFrame::OnmimRemindSelected(wxCommandEvent& event)
 {
-    MissRemind *a = new MissRemind(this);
+    MissRemind *a = new MissRemind(m_pRemindSkin,this);
     a->Show();
 }
 

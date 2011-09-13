@@ -16,7 +16,9 @@
 
 class MissTaskBarIcon;
 class MissSkin;
+class MissRemindSkin;
 class MissConfig;
+
 namespace MissGlobal
 {
     struct TaskData;
@@ -78,15 +80,16 @@ class MissClockFrame: public GUIFrame
         shared_ptr<MissTaskBarIcon>      m_pTaskBarIcon;
         shared_ptr<wxTimer>              m_pMainTimer;
         shared_ptr<MissSkin>             m_pSkin;
+        shared_ptr<MissRemindSkin>       m_pRemindSkin;
         shared_ptr<MissConfig>           m_pConfig;
         Slots                            sg_MinUp;
         HWND                             m_hWnd;
         BLENDFUNCTION                    m_Blend;
         SIZE                             m_SizeWindow;
         struct tm                       *m_tmNow;
-        time_t                          m_ttNow;
+        time_t                           m_ttNow;
         wxBitmap                         m_bpUI;
-        unsigned int                   *m_pBitmap;
+        unsigned int                    *m_pBitmap;
         int                              m_nPixCount;
         bool                             m_bRightMenu;
         bool                             m_bReloadSkin;
