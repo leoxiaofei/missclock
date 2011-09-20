@@ -3,6 +3,7 @@
 #include <wx/colordlg.h>
 #include <wx/filedlg.h>
 #include "../Data/MissSkin.h"
+#include "../Data/MissConfig.h"
 #include "../Common/MissGlobal.h"
 
 MissTheme::MissTheme( wxWindow* parent )
@@ -10,12 +11,7 @@ MissTheme::MissTheme( wxWindow* parent )
 MissThemeBase( parent ),
 m_nThemeItem(-1)
 {
-
-}
-
-void MissTheme::SetDataSrc(shared_ptr<MissSkin>& pSkin)
-{
-    m_pSkin = pSkin;
+    m_pSkin = &MissConfig::GetInstance().GetCurrentSkin();
 }
 
 void MissTheme::OnInitDialog( wxInitDialogEvent& event )
@@ -35,7 +31,7 @@ void MissTheme::OnBtnBGPathClick( wxCommandEvent& event )
     if ( fdgBGPic.ShowModal() == wxID_OK )
     {
         wxString bgPicAddr = wxString::Format(wxT("%s\\Skin\\%s\\"),wxGetCwd().c_str(),
-                                              m_pSkin->GetSkinName().c_str());
+                                              MissConfig::GetInstance().GetSkinName().c_str());
 
         bgPicAddr<<fdgBGPic.GetFilename();
 

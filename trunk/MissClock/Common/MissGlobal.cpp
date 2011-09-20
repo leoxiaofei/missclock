@@ -4,6 +4,28 @@ namespace MissGlobal
 {
 const wxString s_strSWeek[7] = {wxT("日"),wxT("一"),wxT("二"),wxT("三"),wxT("四"),wxT("五"),wxT("六")};
 
+const wxString s_strSDateFormat[] = {
+                            wxT("yyyy年MM月dd日"),
+                            wxT("yyyy-MM-dd"),
+                            wxT("yyyy/MM/dd")};
+
+const wxString s_strCDateFormat[] = {
+                            wxT("%Y年%m月%d日"),
+                            wxT("%Y-%m-%d"),
+                            wxT("%Y/%m/%d")};
+
+const wxString s_strSTimeFormat[] = {
+                            wxT("HH:mm:ss"),
+                            wxT("H:mm:ss"),
+                            wxT("HH:mm")
+                            wxT("II:mm:ss P")};
+
+const wxString s_strCTimeFormat[] = {
+                            wxT("%H:%M:%S"),
+                            wxT("%#H:%M:%S"),
+                            wxT("%H:%M:"),
+                            wxT("%I:%M:%S %p")};
+
 wxString TaskData::GetTDateDesc() const
 {
     wxString strRet;
@@ -84,3 +106,4 @@ wxString TaskData::GetTContentDesc() const
 }
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_MCUI_EVENT);
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_MCDATA_EVENT);

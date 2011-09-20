@@ -21,11 +21,15 @@ class MissRemind : public MissRemindBase
 {
 	public:
 		/** Constructor */
-		MissRemind(shared_ptr<MissRemindSkin> &pRemindSkin, wxWindow* parent );
+		MissRemind(const std::vector<wxString> &vecContent, wxWindow* parent );
 	//// end generated class members
-
+        ~MissRemind()
+        {
+            std::cout<<"~MissRemind"<<std::endl;
+        }
 
     protected:
+        void OnClose( wxCloseEvent& event );
 
 	private:
         void OnLeftDown( wxMouseEvent& event );
@@ -37,7 +41,7 @@ class MissRemind : public MissRemindBase
         BLENDFUNCTION                    m_Blend;
         SIZE                             m_SizeWindow;
         wxBitmap                         m_bpUI;
-        shared_ptr<MissRemindSkin>       m_pRemindSkin;
+        MissRemindSkin                  *m_pRemindSkin;
 };
 
 #endif // __MissRemind__

@@ -172,7 +172,6 @@ void MissWxSQLite3::QusetNextRemind(const wxString& strDate, const wxString& str
     */
     wxDateTime date;
     date.ParseDate(strDate);
-
     wxString strSQL = s_strQuestTaskData +
         wxT(" WHERE TimeType = 0 AND TaskTime >= $TaskTime1 AND (\
             (DateType = 0 AND TaskDate = $TaskDate2) OR \

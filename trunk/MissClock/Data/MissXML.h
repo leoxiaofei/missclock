@@ -7,11 +7,11 @@ class MissRemindSkin;
 class MissXML
 {
     public:
-        static bool SaveSkin(const shared_ptr<MissSkin>& pSkin);
-        static void LoadSkin(const shared_ptr<MissSkin>& pSkin, const wxString& SkinName);
+        static bool SaveSkin(const MissSkin* pSkin);
+        static void LoadSkin(MissSkin* pSkin, const wxString& SkinName);
 
-        static bool SaveRemindSkin(const shared_ptr<MissRemindSkin>& pRemindSkin);
-        static void LoadRemindSkin(const shared_ptr<MissRemindSkin>& pRemindSkin, const wxString& SkinName);
+        static bool SaveRemindSkin(const MissRemindSkin* pRemindSkin);
+        static void LoadRemindSkin(MissRemindSkin* pRemindSkin, const wxString& SkinName);
 
 };
 

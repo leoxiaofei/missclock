@@ -24,6 +24,7 @@ class MissSetTimer : public MissSetTimerBase
 	//// end generated class members
 	public:
 	    void ImportTaskDataToModify(int nDataID, const MissGlobal::TaskData& data);
+        void ImportSetting(int nType);
 
 	protected:
 	    void OnInitDialog( wxInitDialogEvent& event );
