@@ -36,7 +36,7 @@ class MissClockFrame: public GUIFrame
     protected:
         void InitUI();
         void InitEvent();
-        void InitMenu();
+        void UpdateMenu();
         void UpdateSize();
         void UpdateAlpha();
         void UpdateTheme();
@@ -66,10 +66,13 @@ class MissClockFrame: public GUIFrame
         void OnmimShowSelected(wxCommandEvent& event);
         void OnmimPinSelected(wxCommandEvent& event);
         void OnmimShadowSelected(wxCommandEvent& event);
+        void OnmimCopyDateSelected( wxCommandEvent& event );
+        void OnmimCopyTimeSelected( wxCommandEvent& event );
         void OnAbout(wxCommandEvent& event);
         void OnExit( wxCommandEvent& event );
 
         void OnOptionUiEvent(wxCommandEvent& event);
+        void OnDataEvent(wxCommandEvent& event);
 
     private:
         virtual void OnClose(wxCloseEvent& event);
@@ -79,14 +82,14 @@ class MissClockFrame: public GUIFrame
     private:
         shared_ptr<MissTaskBarIcon>      m_pTaskBarIcon;
         shared_ptr<wxTimer>              m_pMainTimer;
-        shared_ptr<MissSkin>             m_pSkin;
-        shared_ptr<MissRemindSkin>       m_pRemindSkin;
-        shared_ptr<MissConfig>           m_pConfig;
+        MissSkin                        *m_pSkin;
+        //shared_ptr<MissRemindSkin>       m_pRemindSkin;
+        MissConfig                      *m_pConfig;
         Slots                            sg_MinUp;
         HWND                             m_hWnd;
         BLENDFUNCTION                    m_Blend;
         SIZE                             m_SizeWindow;
-        struct tm                       *m_tmNow;
+        tm                              *m_tmNow;
         time_t                           m_ttNow;
         wxBitmap                         m_bpUI;
         unsigned int                    *m_pBitmap;

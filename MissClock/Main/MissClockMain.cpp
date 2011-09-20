@@ -19,21 +19,22 @@
 
 #include "MissClockMain.h"
 #include "MissTaskBarIcon.h"
-#include <wx/dcmemory.h>
-#include <boost/progress.hpp>
-#include <wx/menu.h>
-#include "../Data/MissConfig.h"
 #include "MissOption.h"
+#include "MissSoundThread.h"
+#include "MissRemind.h"
+
+#include "../Data/MissConfig.h"
 #include "../Data/MissSkin.h"
 #include "../Data/MissRemindSkin.h"
 #include "../Data/MissXML.h"
-#include "MissSoundThread.h"
-//#include "../Common/MissFrame.h"
-#include "../Common/MissGlobal.h"
-#include <algorithm>
 #include "../Data/MissWxSQLite3.h"
-#include "MissRemind.h"
+#include "../Common/MissGlobal.h"
 
+#include <algorithm>
+#include <boost/progress.hpp>
+
+#include <wx/dcmemory.h>
+#include <wx/menu.h>
 #include <winuser.h>
 //#include "windows.h"
 
@@ -69,20 +70,22 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 
 MissClockFrame::MissClockFrame(wxFrame* frame):
     GUIFrame(frame),
-    m_pTaskBarIcon(new MissTaskBarIcon),
+    m_pTaskBarIcon(new MissTaskBarIcon()),
     m_pMainTimer(new wxTimer(this)),
-    m_pSkin(new MissSkin),
-    m_pRemindSkin(new MissRemindSkin),
-    m_pConfig(new MissConfig),
+//    m_pSkin(new MissSkin),
+//    m_pRemindSkin(new MissRemindSkin),
     m_bRightMenu(true),
     m_bReloadSkin(false)
 {
+    m_pConfig = &MissConfig::GetInstance();
+    m_pSkin   = &MissConfig::GetInstance().GetCurrentSkin();
+
     m_hWnd = static_cast<HWND>(GetHandle());
     m_pTaskBarIcon->SetIcon(wxICON(RC_CLOCK_ICON), wxT("迷失日历时钟"));
     m_pMainTimer->Start(1000);
     InitEvent();
     InitUI();
-    InitMenu();
+    UpdateMenu();
 }
 
 MissClockFrame::~MissClockFrame()
@@ -124,7 +127,7 @@ void MissClockFrame::InitUI()
     AddPendingEvent(send);
 }
 
-void MissClockFrame::InitMenu()
+void MissClockFrame::UpdateMenu()
 {
     m_pmimPin->Check(m_pConfig->GetPin());
     m_pmimShadow->Check(m_pConfig->GetShadow());
@@ -141,7 +144,7 @@ void MissClockFrame::UpdateAlpha()
 void MissClockFrame::UpdateTheme()
 {
     MissXML::LoadSkin(m_pSkin, m_pConfig->GetSkinName());
-    MissXML::LoadRemindSkin(m_pRemindSkin, m_pConfig->GetSkinName());
+    MissXML::LoadRemindSkin(&m_pConfig->GetCurrentRemindSkin(), m_pConfig->GetSkinName());
     UpdateSize();
 }
 
@@ -234,6 +237,7 @@ bool MissClockFrame::UpdateClock()
 
 void MissClockFrame::LoadTask()
 {
+    //std::cout<<"LoadTask::"<<m_tmNow->tm_hour<<":"<<m_tmNow->tm_min<<std::endl;
     //std::vector<std::pair<int,MissGlobal::TaskData> > vecData;
     m_vecMinData.clear();
     try
@@ -245,12 +249,15 @@ void MissClockFrame::LoadTask()
     }
     catch(...)
     {
-        return;
     }
+    ///wxDateTime类影响localtime内部静态变量的值
+    m_ttNow = time(NULL);
+    localtime(&m_ttNow);
 }
 
 void MissClockFrame::CheckTask()
 {
+    //std::cout<<"CheckTask::"<<m_tmNow->tm_hour<<":"<<m_tmNow->tm_min<<std::endl;
     if(!m_vecMinData.empty())
     {
         if(m_vecMinData[0].strTaskTime == wxString::Format(wxT("%02d:%02d"),m_tmNow->tm_hour,m_tmNow->tm_min))
@@ -269,6 +276,9 @@ void MissClockFrame::CheckTask()
                     }
                     break;
                 case 1:     ///程序任务
+                    {
+                        wxExecute(itor->strTaskContent);
+                    }
                     break;
                 case 2:
                     break;
@@ -285,11 +295,13 @@ void MissClockFrame::CheckTask()
 
 void MissClockFrame::PopUpRemind(const std::vector<wxString>& vecContent)
 {
-
+    MissRemind *a = new MissRemind(vecContent, this);
+    a->Show();
 }
 
 void MissClockFrame::CheckAudioChimer()
 {
+    std::cout<<"CheckAudioChimer::"<<m_tmNow->tm_hour<<":"<<m_tmNow->tm_min<<std::endl;
     if ( m_tmNow->tm_min == 0 )
     {
         MissSoundThread *thread = new MissSoundThread(m_tmNow->tm_hour);
@@ -306,9 +318,10 @@ void MissClockFrame::CheckAudioChimer()
 
 void MissClockFrame::OnExit(wxCommandEvent& event)
 {
-    wxCloseEvent send(wxEVT_CLOSE_WINDOW);
+
     /**
     ///关闭子对话框代码
+
     wxWindowList&list = GetChildren();
     for (wxWindowList::iterator iter = list.begin(); iter != list.end(); ++iter)
     {
@@ -318,29 +331,18 @@ void MissClockFrame::OnExit(wxCommandEvent& event)
         }
     }
     */
+    wxCloseEvent send(wxEVT_CLOSE_WINDOW);
     AddPendingEvent(send);
 }
 
 void MissClockFrame::OnClose(wxCloseEvent& event)
 {
-    /*
-    wxWindowList&list = GetChildren();
-    for (wxWindowList::iterator iter = list.begin(); iter != list.end(); ++iter)
-    {
-        if(dynamic_cast<wxDialog *>(*iter) != NULL)
-        {
-            (*iter)->Close();
-        }
-    }
-    */
-
     std::cout << "MissClockFrame::OnClose()" << std::endl;
     ///保存时钟坐标信息
     m_pConfig->SetPos(GetPosition());
     m_pConfig->SavePos();
 
     ///执行关闭时任务
-
 
     Destroy();
 }
@@ -362,27 +364,37 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 {
     m_bRightMenu = false;
     MissOption OptionDlg(this);
-    OptionDlg.SetDataSrc(m_pConfig, m_pSkin);
     OptionDlg.Connect(wxEVT_MCUI_EVENT, wxCommandEventHandler(MissClockFrame::OnOptionUiEvent), NULL, this);
+    OptionDlg.Connect(wxEVT_MCDATA_EVENT, wxCommandEventHandler(MissClockFrame::OnDataEvent), NULL, this);
     if (OptionDlg.ShowModal() == wxID_OK)
     {
         UpdateAudioChimer();
         UpdateTop();
         UpdateShowClock();
         UpdateShadow();
-        InitMenu();
+        UpdateMenu();
     }
     else
     {
         ReloadSkin();
     }
-    LoadTask();
     m_bRightMenu = true;
 }
 
 void MissClockFrame::OnmimRemindSelected(wxCommandEvent& event)
 {
-    MissRemind *a = new MissRemind(m_pRemindSkin,this);
+    std::vector<wxString> vecContent;
+    vecContent.push_back(wxT("这是一个测试。"));
+    vecContent.push_back(wxT("This is a Test!!!\n回车测试。\n回车测试。\n回车测试。"));
+    vecContent.push_back(wxT("这是一段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字，超长文字测试。"));
+    vecContent.push_back(wxT("不知道效果是怎样的？"));
+    vecContent.push_back(wxT("不知道效果是怎样的？"));
+    vecContent.push_back(wxT("不知道效果是怎样的？"));
+    vecContent.push_back(wxT("不知道效果是怎样的？"));
+    vecContent.push_back(wxT("不知道效果是怎样的？"));
+    vecContent.push_back(wxT("不知道效果是怎样的？"));
+    vecContent.push_back(wxT("不知道效果是怎样的？"));
+    MissRemind *a = new MissRemind(vecContent,this);
     a->Show();
 }
 
@@ -404,6 +416,15 @@ void MissClockFrame::OnmimShadowSelected(wxCommandEvent& event)
     m_pConfig->SetShadow(!m_pConfig->GetShadow());
     UpdateShadow();
     m_pConfig->SaveShadow();
+}
+
+void MissClockFrame::OnmimCopyDateSelected(wxCommandEvent& event)
+{
+    m_pTaskBarIcon->ShowBalloon(wxT("测试"),wxT("这是一个测试。"));
+}
+
+void MissClockFrame::OnmimCopyTimeSelected(wxCommandEvent& event)
+{
 }
 
 void MissClockFrame::OnMinUp()
@@ -468,6 +489,12 @@ void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
     m_bReloadSkin = true;
 }
 
+void MissClockFrame::OnDataEvent(wxCommandEvent& event)
+{
+    std::cout<<"OnDataEvent"<<std::endl;
+    LoadTask();
+}
+
 void MissClockFrame::ReloadSkin()
 {
     if(m_bReloadSkin)
@@ -488,8 +515,8 @@ void MissClockFrame::UpdateShowClock()
     }
     else
     {
-        //m_pImpl->m_Icon.ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
         Show(false);
+        m_pTaskBarIcon->ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
     }
 }
 
@@ -517,6 +544,7 @@ void MissClockFrame::UpdateShadow()
     else
     {
         exStyle |= WS_EX_TRANSPARENT;
+        m_pTaskBarIcon->ShowBalloon(wxT("温馨提示："),wxT("时钟已设置有影无形，您可以在这里打开菜单。"));
     }
     ::SetWindowLong(m_hWnd, GWL_EXSTYLE, exStyle);
 }

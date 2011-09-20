@@ -37,7 +37,7 @@ class MissTheme : public MissThemeBase
 		MissTheme( wxWindow* parent );
 	//// end generated class members
 	public:
-        void SetDataSrc(shared_ptr<MissSkin>& pSkin);
+        //void SetDataSrc(shared_ptr<MissSkin>& pSkin);
 
 	protected:
         void EnableItemSet(bool bEnable);
@@ -46,7 +46,7 @@ class MissTheme : public MissThemeBase
         void SendUpdateEvent();
     private:
         int m_nThemeItem;
-        shared_ptr<MissSkin> m_pSkin;
+        MissSkin* m_pSkin;
 };
 
 #endif // __MissTheme__

@@ -4,7 +4,7 @@
 #include "MissRemindSkin.h"
 #include <tinyxml.h>
 
-bool MissXML::SaveSkin(const shared_ptr<MissSkin>& pSkin)
+bool MissXML::SaveSkin(const MissSkin* pSkin)
 {
     bool ret(false);
     TiXmlDocument * xmlDocs = new TiXmlDocument();
@@ -42,16 +42,18 @@ bool MissXML::SaveSkin(const shared_ptr<MissSkin>& pSkin)
         elem->LinkEndChild(elemText);
         elemShow->LinkEndChild(elem);
     }
-    wxString SkinAddr = wxString::Format(wxT("Skin\\%s\\ClockSkin.xml"),pSkin->GetSkinName().c_str());
+    wxString SkinAddr = pSkin->GetSkinPath() + wxT("ClockSkin.xml");
     ret=xmlDocs->SaveFile(SkinAddr.mb_str());
     delete xmlDocs;
     return ret;
 }
 
-void MissXML::LoadSkin(const shared_ptr<MissSkin>& pSkin, const wxString& SkinName)
+void MissXML::LoadSkin(MissSkin* pSkin, const wxString& SkinName)
 {
-    pSkin->SetSkinName( SkinName );
-    wxString SkinAddr = wxString::Format(wxT("Skin\\%s\\ClockSkin.xml"),SkinName.c_str());
+    //pSkin->SetSkinName( SkinName );
+    wxString SkinAddr = wxString::Format(wxT("Skin\\%s\\"),SkinName.c_str());
+    pSkin->SetSkinPath(SkinAddr);
+    SkinAddr += wxT("ClockSkin.xml");
     TiXmlDocument doc(SkinAddr.mb_str());
     doc.LoadFile();
     TiXmlElement* root = doc.FirstChildElement("ApplictionConfig");
@@ -125,7 +127,7 @@ void MissXML::LoadSkin(const shared_ptr<MissSkin>& pSkin, const wxString& SkinNa
     }
 }
 
-bool MissXML::SaveRemindSkin(const shared_ptr<MissRemindSkin>& pRemindSkin)
+bool MissXML::SaveRemindSkin(const MissRemindSkin* pRemindSkin)
 {
     bool ret(false);
     TiXmlDocument * xmlDocs = new TiXmlDocument();
@@ -197,15 +199,18 @@ bool MissXML::SaveRemindSkin(const shared_ptr<MissRemindSkin>& pRemindSkin)
         elem->LinkEndChild(e);
     }
 
-    wxString SkinAddr = wxString::Format(wxT("Skin\\Default\\RemindSkin.xml"));
+    wxString SkinAddr = pRemindSkin->GetSkinPath() + wxT("RemindSkin.xml");
     ret=xmlDocs->SaveFile(SkinAddr.mb_str());
     delete xmlDocs;
     return ret;
 }
 
-void MissXML::LoadRemindSkin(const shared_ptr<MissRemindSkin>& pRemindSkin, const wxString& SkinName)
+void MissXML::LoadRemindSkin(MissRemindSkin* pRemindSkin, const wxString& SkinName)
 {
-    wxString SkinAddr = wxString::Format(wxT("Skin\\%s\\RemindSkin.xml"),SkinName.c_str());
+    wxString SkinAddr = wxString::Format(wxT("Skin\\%s\\"),SkinName.c_str());
+    pRemindSkin->SetSkinPath(SkinAddr);
+
+    SkinAddr += wxT("RemindSkin.xml");
     TiXmlDocument doc(SkinAddr.mb_str());
     doc.LoadFile();
     TiXmlElement* root = doc.FirstChildElement("ApplictionConfig");

@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Jun 30 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -14,6 +14,8 @@
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif //WX_PRECOMP
+
+#include "Common/MissToolBook.h"
 
 #include "GUIFrame.h"
 
@@ -67,6 +69,7 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( GUIFrame::OnClose ) );
 	this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GUIFrame::OnLeftDown ) );
 	this->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( GUIFrame::OnRightUp ) );
 	this->Connect( m_pmimPin->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimPinSelected ) );
@@ -85,6 +88,7 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 GUIFrame::~GUIFrame()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( GUIFrame::OnClose ) );
 	this->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( GUIFrame::OnLeftDown ) );
 	this->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( GUIFrame::OnRightUp ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnmimPinSelected ) );
@@ -127,11 +131,6 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_btnModifyTheme = new wxButton( m_panUI, wxID_ANY, wxT("修改主题"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerTheme->Add( m_btnModifyTheme, 0, wxALL, 5 );
-	
-	m_btnUnDoSaveTheme = new wxButton( m_panUI, wxID_ANY, wxT("撤销"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_btnUnDoSaveTheme->Hide();
-	
-	sbSizerTheme->Add( m_btnUnDoSaveTheme, 0, wxALL, 5 );
 	
 	bSizer2->Add( sbSizerTheme, 0, wxALL|wxEXPAND, 5 );
 	
@@ -184,7 +183,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panUI->SetSizer( bSizer2 );
 	m_panUI->Layout();
 	bSizer2->Fit( m_panUI );
-	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), true );
+	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), false );
 	m_panSys = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer17;
 	bSizer17 = new wxBoxSizer( wxVERTICAL );
@@ -231,6 +230,12 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_btnWeekSet = new wxButton( m_panSys, wxID_ANY, wxT("工作日"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer36->Add( m_btnWeekSet, 0, wxALL, 5 );
 	
+	m_btnDateFormatSet = new wxButton( m_panSys, wxID_ANY, wxT("复制日期"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer36->Add( m_btnDateFormatSet, 0, wxALL, 5 );
+	
+	m_btnTimeFormatSet = new wxButton( m_panSys, wxID_ANY, wxT("复制时间"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer36->Add( m_btnTimeFormatSet, 0, wxALL, 5 );
+	
 	sbSizer12->Add( bSizer36, 1, wxEXPAND, 5 );
 	
 	bSizer17->Add( sbSizer12, 0, wxEXPAND|wxALL, 5 );
@@ -253,7 +258,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panSys->SetSizer( bSizer17 );
 	m_panSys->Layout();
 	bSizer17->Fit( m_panSys );
-	m_lsbOption->AddPage( m_panSys, wxT("系统设置"), false );
+	m_lsbOption->AddPage( m_panSys, wxT("系统设置"), true );
 	m_panTmr = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer20;
 	bSizer20 = new wxBoxSizer( wxVERTICAL );
@@ -383,11 +388,12 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_lsbOption->Connect( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED, wxListbookEventHandler( MissOptionBase::OnLsbOptionPageChanged ), NULL, this );
 	m_choTheme->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissOptionBase::OnThemeChoChange ), NULL, this );
 	m_btnModifyTheme->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnModifyThemeBtnClick ), NULL, this );
-	m_btnUnDoSaveTheme->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnUnDoSaveThemeClick ), NULL, this );
 	m_cbtnAllowZoom->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MissOptionBase::OnZoomCbtnClick ), NULL, this );
 	m_sldZoom->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnZoomSldChanged ), NULL, this );
 	m_sldOpacity->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnTransSldChanged ), NULL, this );
 	m_btnWeekSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnWeekSetClick ), NULL, this );
+	m_btnDateFormatSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDateFormatSetClick ), NULL, this );
+	m_btnTimeFormatSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnTimeFormatSetClick ), NULL, this );
 	m_btnNTP->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnNtpBtnClick ), NULL, this );
 	m_btnAddTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAddTaskClick ), NULL, this );
 	m_btnAdditional->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAdditionaClick ), NULL, this );
@@ -409,11 +415,12 @@ MissOptionBase::~MissOptionBase()
 	m_lsbOption->Disconnect( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED, wxListbookEventHandler( MissOptionBase::OnLsbOptionPageChanged ), NULL, this );
 	m_choTheme->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissOptionBase::OnThemeChoChange ), NULL, this );
 	m_btnModifyTheme->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnModifyThemeBtnClick ), NULL, this );
-	m_btnUnDoSaveTheme->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnUnDoSaveThemeClick ), NULL, this );
 	m_cbtnAllowZoom->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MissOptionBase::OnZoomCbtnClick ), NULL, this );
 	m_sldZoom->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnZoomSldChanged ), NULL, this );
 	m_sldOpacity->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MissOptionBase::OnTransSldChanged ), NULL, this );
 	m_btnWeekSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnWeekSetClick ), NULL, this );
+	m_btnDateFormatSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDateFormatSetClick ), NULL, this );
+	m_btnTimeFormatSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnTimeFormatSetClick ), NULL, this );
 	m_btnNTP->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnNtpBtnClick ), NULL, this );
 	m_btnAddTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAddTaskClick ), NULL, this );
 	m_btnAdditional->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAdditionaClick ), NULL, this );
@@ -639,22 +646,79 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	
 	sbSizer9->Add( bSizer51, 1, wxEXPAND, 5 );
 	
-	bSizer24->Add( sbSizer9, 0, wxEXPAND|wxALL, 5 );
+	bSizer24->Add( sbSizer9, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	wxStaticBoxSizer* sbSizer11;
 	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("内容") ), wxVERTICAL );
 	
-	m_tbRun = new wxToolbook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBK_DEFAULT);
-	m_panTextRemind = new TextPanel( m_tbRun );
-	m_panProgRemind = new ProgramPanel( m_tbRun );
-	wxImageList *m_pIL= new wxImageList(30,30,true,5);
-	m_pIL->Add(wxBitmap(30,30,32 ));
-	m_pIL->Add(wxBitmap(30,30,32 ));
-	m_pIL->Add(wxBitmap(30,30,32 ));
-	m_tbRun->SetImageList(m_pIL);
-	m_tbRun->AddPage(m_panTextRemind, wxT("文字提示"),true,0);
-	m_tbRun->AddPage(m_panProgRemind , wxT("程序执行"),false,1);
-	sbSizer11->Add( m_tbRun, 1, wxALL|wxEXPAND, 5 );
+	m_tbRun = new MissToolBook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	wxSize m_tbRunImageSize = wxSize( 30,30 );
+	int m_tbRunIndex = 0;
+	wxImageList* m_tbRunImages = new wxImageList( m_tbRunImageSize.GetWidth(), m_tbRunImageSize.GetHeight() );
+	m_tbRun->AssignImageList( m_tbRunImages );
+	wxBitmap m_tbRunBitmap;
+	wxImage m_tbRunImage;
+	m_panTextRemind = new wxPanel( m_tbRun, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxStaticBoxSizer* sbSizer15;
+	sbSizer15 = new wxStaticBoxSizer( new wxStaticBox( m_panTextRemind, wxID_ANY, wxT("文字提醒") ), wxVERTICAL );
+	
+	m_edtContent = new wxTextCtrl( m_panTextRemind, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer15->Add( m_edtContent, 1, wxALL|wxEXPAND, 5 );
+	
+	m_panTextRemind->SetSizer( sbSizer15 );
+	m_panTextRemind->Layout();
+	sbSizer15->Fit( m_panTextRemind );
+	m_tbRun->AddPage( m_panTextRemind, wxT("文字提醒"), true );
+	m_tbRunBitmap = wxArtProvider::GetBitmap( wxART_NORMAL_FILE, wxART_FRAME_ICON );
+	if ( m_tbRunBitmap.Ok() )
+	{
+		m_tbRunImage = m_tbRunBitmap.ConvertToImage();
+		m_tbRunImages->Add( m_tbRunImage.Scale( m_tbRunImageSize.GetWidth(), m_tbRunImageSize.GetHeight() ) );
+		m_tbRun->SetPageImage( m_tbRunIndex, m_tbRunIndex );
+		m_tbRunIndex++;
+	}
+	m_panProgRemind = new wxPanel( m_tbRun, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer38;
+	bSizer38 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer34;
+	bSizer34 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_lblProgram = new wxStaticText( m_panProgRemind, wxID_ANY, wxT("程序:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lblProgram->Wrap( -1 );
+	bSizer34->Add( m_lblProgram, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_fpProgram = new wxFilePickerCtrl( m_panProgRemind, wxID_ANY, wxEmptyString, wxT("选择一个程序"), wxT("*.exe"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_OPEN|wxFLP_USE_TEXTCTRL );
+	bSizer34->Add( m_fpProgram, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer38->Add( bSizer34, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer40;
+	bSizer40 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_lblParameter = new wxStaticText( m_panProgRemind, wxID_ANY, wxT("参数:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lblParameter->Wrap( -1 );
+	bSizer40->Add( m_lblParameter, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_edtParameter = new wxTextCtrl( m_panProgRemind, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer40->Add( m_edtParameter, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer38->Add( bSizer40, 1, wxEXPAND, 5 );
+	
+	m_panProgRemind->SetSizer( bSizer38 );
+	m_panProgRemind->Layout();
+	bSizer38->Fit( m_panProgRemind );
+	m_tbRun->AddPage( m_panProgRemind, wxT("定时运行程序"), false );
+	m_tbRunBitmap = wxArtProvider::GetBitmap( wxART_EXECUTABLE_FILE, wxART_FRAME_ICON );
+	if ( m_tbRunBitmap.Ok() )
+	{
+		m_tbRunImage = m_tbRunBitmap.ConvertToImage();
+		m_tbRunImages->Add( m_tbRunImage.Scale( m_tbRunImageSize.GetWidth(), m_tbRunImageSize.GetHeight() ) );
+		m_tbRun->SetPageImage( m_tbRunIndex, m_tbRunIndex );
+		m_tbRunIndex++;
+	}
+	
+	sbSizer11->Add( m_tbRun, 1, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	bSizer24->Add( sbSizer11, 1, wxEXPAND|wxALL, 5 );
 	
@@ -863,7 +927,15 @@ MissThemeBase::MissThemeBase( wxWindow* parent, wxWindowID id, const wxString& t
 	m_panSkin->SetSizer( bSizer20 );
 	m_panSkin->Layout();
 	bSizer20->Fit( m_panSkin );
-	m_nbTheme->AddPage( m_panSkin, wxT("时钟"), false );
+	m_nbTheme->AddPage( m_panSkin, wxT("时钟"), true );
+	m_panRemind = new wxPanel( m_nbTheme, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer37;
+	bSizer37 = new wxBoxSizer( wxVERTICAL );
+	
+	m_panRemind->SetSizer( bSizer37 );
+	m_panRemind->Layout();
+	bSizer37->Fit( m_panRemind );
+	m_nbTheme->AddPage( m_panRemind, wxT("提醒"), false );
 	
 	bSizer19->Add( m_nbTheme, 1, wxEXPAND | wxALL, 5 );
 	
@@ -950,61 +1022,6 @@ MissFrameBase::~MissFrameBase()
 	
 }
 
-TextPanel::TextPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
-{
-	wxBoxSizer* bSizer33;
-	bSizer33 = new wxBoxSizer( wxVERTICAL );
-	
-	m_edtContent = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer33->Add( m_edtContent, 1, wxALL|wxEXPAND, 5 );
-	
-	this->SetSizer( bSizer33 );
-	this->Layout();
-	bSizer33->Fit( this );
-}
-
-TextPanel::~TextPanel()
-{
-}
-
-ProgramPanel::ProgramPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
-{
-	wxBoxSizer* bSizer38;
-	bSizer38 = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* bSizer34;
-	bSizer34 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_lblProgram = new wxStaticText( this, wxID_ANY, wxT("程序:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_lblProgram->Wrap( -1 );
-	bSizer34->Add( m_lblProgram, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_fpProgram = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("选择一个程序"), wxT("*.exe"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE|wxFLP_OPEN|wxFLP_USE_TEXTCTRL );
-	bSizer34->Add( m_fpProgram, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	bSizer38->Add( bSizer34, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer40;
-	bSizer40 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_lblParameter = new wxStaticText( this, wxID_ANY, wxT("参数:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_lblParameter->Wrap( -1 );
-	bSizer40->Add( m_lblParameter, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_edtParameter = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer40->Add( m_edtParameter, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	bSizer38->Add( bSizer40, 1, wxEXPAND, 5 );
-	
-	this->SetSizer( bSizer38 );
-	this->Layout();
-	bSizer38->Fit( this );
-}
-
-ProgramPanel::~ProgramPanel()
-{
-}
-
 MissSetWeekDayBase::MissSetWeekDayBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
@@ -1050,6 +1067,53 @@ MissSetWeekDayBase::~MissSetWeekDayBase()
 	
 }
 
+MissSetDTFormatBase::MissSetDTFormatBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+	
+	wxBoxSizer* bSizer39;
+	bSizer39 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer40;
+	bSizer40 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxArrayString m_cobDateTimeChoices;
+	m_cobDateTime = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_cobDateTimeChoices, 0 );
+	m_cobDateTime->SetSelection( -1 );
+	bSizer40->Add( m_cobDateTime, 1, wxALL, 5 );
+	
+	m_edtDateTime = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	bSizer40->Add( m_edtDateTime, 1, wxALL, 5 );
+	
+	bSizer39->Add( bSizer40, 0, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer15;
+	sbSizer15 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("示例") ), wxVERTICAL );
+	
+	m_edtExample = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	sbSizer15->Add( m_edtExample, 0, wxALL|wxEXPAND, 5 );
+	
+	bSizer39->Add( sbSizer15, 0, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer39 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler( MissSetDTFormatBase::OnActivate ) );
+	m_cobDateTime->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissSetDTFormatBase::OnCobDateTime ), NULL, this );
+}
+
+MissSetDTFormatBase::~MissSetDTFormatBase()
+{
+	// Disconnect Events
+	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler( MissSetDTFormatBase::OnActivate ) );
+	m_cobDateTime->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissSetDTFormatBase::OnCobDateTime ), NULL, this );
+	
+}
+
 MissRemindBase::MissRemindBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
@@ -1058,12 +1122,14 @@ MissRemindBase::MissRemindBase( wxWindow* parent, wxWindowID id, const wxString&
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MissRemindBase::OnClose ) );
 	this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MissRemindBase::OnLeftDown ) );
 }
 
 MissRemindBase::~MissRemindBase()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MissRemindBase::OnClose ) );
 	this->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( MissRemindBase::OnLeftDown ) );
 	
 }

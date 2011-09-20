@@ -22,9 +22,9 @@ public:
     virtual ~MissSkin();
 
 public:
-    void DrawSkin(wxDC & dc, struct tm *tmNow);
+    void DrawSkin(wxDC & dc, const tm* tmNow);
 
-    void SetSkinName(const wxString& strName);
+    void SetSkinPath(const wxString& strPath);
     void SetBGPicPath(const wxString& strPicPath);
     void SetLocale(const wxString& strLocale);
     void AddElement(const MissElement& element);
@@ -32,12 +32,12 @@ public:
     void ClearElement();
     void LoadBGPic();
 
-    const wxString &GetSkinName();
-    const wxString &GetBGPicPath();
-    const wxString &GetLocale();
-    int GetElementSize();
-    MissElement &GetElement(int nIndex);
-    const wxBitmap &GetBGBitmap();
+    const wxString &GetSkinPath() const;
+    const wxString &GetBGPicPath() const;
+    const wxString &GetLocale() const;
+    int GetElementSize() const;
+    MissElement &GetElement(int nIndex) const;
+    const wxBitmap &GetBGBitmap() const;
 
 protected:
 

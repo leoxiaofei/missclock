@@ -1,12 +1,24 @@
 #ifndef MISSCONFIG_H
 #define MISSCONFIG_H
 
+class MissSkin;
+class MissRemindSkin;
+
 class MissConfig
 {
     class MissConfigImpl;
     public:
+        static MissConfig& GetInstance()
+        {
+            static MissConfig theSingleton;
+            return theSingleton;
+        }
+
+    private:
         MissConfig();
         virtual ~MissConfig();
+        MissConfig(const MissConfig&);
+        MissConfig& operator=(const MissConfig&);
 
     public:
         void            SetPos(const wxPoint & ptPos);
@@ -41,6 +53,8 @@ class MissConfig
         int             GetOpacity();
         double          GetZoom();
         int             GetWeekDay();
+        MissSkin&       GetCurrentSkin();
+        MissRemindSkin& GetCurrentRemindSkin();
 
     protected:
         void SaveConfig();

@@ -89,6 +89,8 @@
 		<Unit filename="Common\MissFrame.h" />
 		<Unit filename="Common\MissGlobal.cpp" />
 		<Unit filename="Common\MissGlobal.h" />
+		<Unit filename="Common\MissToolBook.cpp" />
+		<Unit filename="Common\MissToolBook.h" />
 		<Unit filename="Common\MissTools.cpp" />
 		<Unit filename="Common\MissTools.h" />
 		<Unit filename="Data\MissConfig.cpp" />
@@ -115,6 +117,8 @@
 		<Unit filename="Main\MissOption.h" />
 		<Unit filename="Main\MissRemind.cpp" />
 		<Unit filename="Main\MissRemind.h" />
+		<Unit filename="Main\MissSetDTFormat.cpp" />
+		<Unit filename="Main\MissSetDTFormat.h" />
 		<Unit filename="Main\MissSetTimer.cpp" />
 		<Unit filename="Main\MissSetTimer.h" />
 		<Unit filename="Main\MissSetWeekDay.cpp" />

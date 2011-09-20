@@ -1,5 +1,7 @@
 ﻿#include "MissRemind.h"
 #include <wx/dcmemory.h>
+
+#include "../Data/MissConfig.h"
 #include "../Data/MissRemindSkin.h"
 #include "../Data/MissXML.h"
 
@@ -7,11 +9,12 @@
 #ifdef DrawText
 #undef DrawText
 #endif
-MissRemind::MissRemind(shared_ptr<MissRemindSkin> &pRemindSkin, wxWindow* parent )
+MissRemind::MissRemind(const std::vector<wxString> &vecContent, wxWindow* parent )
 :
-MissRemindBase( parent ),
-m_pRemindSkin(pRemindSkin)
+MissRemindBase( parent )
 {
+    m_pRemindSkin = &MissConfig::GetInstance().GetCurrentRemindSkin();
+    m_pRemindSkin->TakeOrderWithNewline(vecContent);
     m_hWnd = static_cast<HWND>(GetHandle());
 
     long exStyle = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
@@ -24,6 +27,7 @@ m_pRemindSkin(pRemindSkin)
     m_Blend.SourceConstantAlpha = 255;
 
     std::cout<<"MissRemind"<<std::endl;
+    CentreOnScreen();
 
     Connect(wxEVT_TIMER, wxTimerEventHandler(MissRemind::OnTimer));
 
@@ -33,23 +37,8 @@ m_pRemindSkin(pRemindSkin)
 
 void MissRemind::OnDrawSkin()
 {
-    std::vector<wxString> vecContent;
-    vecContent.push_back(wxT("这是一个测试。"));
-    vecContent.push_back(wxT("This is a Test!!!\n回车测试。\n回车测试。\n回车测试。"));
-    vecContent.push_back(wxT("这是一段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字，超长文字测试。"));
-    vecContent.push_back(wxT("不知道效果是怎样的？"));
-    vecContent.push_back(wxT("不知道效果是怎样的？"));
-    vecContent.push_back(wxT("不知道效果是怎样的？"));
-    vecContent.push_back(wxT("不知道效果是怎样的？"));
-    vecContent.push_back(wxT("不知道效果是怎样的？"));
-    vecContent.push_back(wxT("不知道效果是怎样的？"));
-    vecContent.push_back(wxT("不知道效果是怎样的？"));
-
-
-
     //PatternInfo painfo;
     m_pRemindSkin->LoadTempData();
-    m_pRemindSkin->TakeOrderWithNewline(vecContent);
 
     m_SizeWindow.cx = m_pRemindSkin->GetOverallWidth();
     m_SizeWindow.cy = m_pRemindSkin->GetOverallHeight();
@@ -103,16 +92,16 @@ void MissRemind::OnTimer(wxTimerEvent& event)
 
 void MissRemind::OnLeftDown(wxMouseEvent& event)
 {
-    /*
-    if ( event.GetX() > m_Config.btn_x-10 && event.GetX() < m_Config.btn_x+m_width+20 )
+    if(m_pRemindSkin->PtInCloseBtn(event.GetPosition()))
     {
-        if ( event.GetY() > m_Config.btn_y-4 && event.GetY() < m_Config.btn_y+m_height+6 &&!m_isOption )
-        {
-            Close();
-        }
+        Close();
     }
-    */
     ///移动窗口 Windows API
     ::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(event.GetX(), event.GetY()));
 }
 
+void MissRemind::OnClose(wxCloseEvent& event)
+{
+    Destroy();
+    //delete this;
+}

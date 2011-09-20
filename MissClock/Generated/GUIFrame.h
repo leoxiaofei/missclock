@@ -1,12 +1,16 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Jun 30 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __GUIFrame__
-#define __GUIFrame__
+#ifndef __GUIFRAME_H__
+#define __GUIFRAME_H__
+
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
+class MissToolBook;
 
 #include <wx/string.h>
 #include <wx/bitmap.h>
@@ -37,11 +41,9 @@
 #include <wx/hyperlink.h>
 #include <wx/choicebk.h>
 #include <wx/radiobut.h>
-#include <wx/toolbook.h>
-class TextPanel;
-class ProgramPanel;
 #include <wx/textctrl.h>
 #include <wx/filepicker.h>
+#include <wx/imaglist.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -60,6 +62,7 @@ class GUIFrame : public wxFrame
 		wxMenuItem* m_pmimShow;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnRightUp( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnmimPinSelected( wxCommandEvent& event ) { event.Skip(); }
@@ -78,6 +81,7 @@ class GUIFrame : public wxFrame
 	public:
 		
 		GUIFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("MissClock"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 481,466 ), long style = wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL );
+		
 		~GUIFrame();
 	
 };
@@ -96,7 +100,6 @@ class MissOptionBase : public wxDialog
 		wxStaticText* m_lblChoiceTheme;
 		wxChoice* m_choTheme;
 		wxButton* m_btnModifyTheme;
-		wxButton* m_btnUnDoSaveTheme;
 		wxCheckBox* m_cbtnAllowZoom;
 		wxStaticText* m_lblZoomOut;
 		wxSlider* m_sldZoom;
@@ -112,6 +115,8 @@ class MissOptionBase : public wxDialog
 		wxCheckBox* m_cbtnTop;
 		wxCheckBox* m_cbtnShowClock;
 		wxButton* m_btnWeekSet;
+		wxButton* m_btnDateFormatSet;
+		wxButton* m_btnTimeFormatSet;
 		wxStaticText* m_lblNTP;
 		wxComboBox* m_cobNTP;
 		wxButton* m_btnNTP;
@@ -141,11 +146,12 @@ class MissOptionBase : public wxDialog
 		virtual void OnLsbOptionPageChanged( wxListbookEvent& event ) { event.Skip(); }
 		virtual void OnThemeChoChange( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnModifyThemeBtnClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnBtnUnDoSaveThemeClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnZoomCbtnClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnZoomSldChanged( wxScrollEvent& event ) { event.Skip(); }
 		virtual void OnTransSldChanged( wxScrollEvent& event ) { event.Skip(); }
 		virtual void OnBtnWeekSetClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBtnDateFormatSetClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBtnTimeFormatSetClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnNtpBtnClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnAddTaskClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnAdditionaClick( wxCommandEvent& event ) { event.Skip(); }
@@ -158,7 +164,7 @@ class MissOptionBase : public wxDialog
 	
 	public:
 		
-		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,419 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,419 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 		~MissOptionBase();
 	
 };
@@ -187,7 +193,6 @@ class MissSetTimerBase : public wxDialog
 		wxCheckBox* m_cbtnTues;
 		wxCheckBox* m_cbtnWed;
 		wxCheckBox* m_cbtnThurs;
-		
 		wxCheckBox* m_cbtnFri;
 		wxCheckBox* m_cbtnSar;
 		wxCheckBox* m_cbtnSun;
@@ -208,13 +213,15 @@ class MissSetTimerBase : public wxDialog
 		wxSpinCtrl* m_spMin;
 		wxStaticText* m_lblMin;
 		wxCheckBox* m_cbtnRemindType;
-		
 		wxRadioButton* m_rbtnPStart;
 		wxRadioButton* m_rbtnPClose;
 		wxRadioButton* m_rbtnNothing;
-		wxToolbook* m_tbRun;
-		TextPanel* m_panTextRemind;
-		ProgramPanel* m_panProgRemind;
+		MissToolBook* m_tbRun;
+		wxPanel* m_panTextRemind;
+		wxTextCtrl* m_edtContent;
+		wxPanel* m_panProgRemind;
+		wxStaticText* m_lblProgram;
+		wxStaticText* m_lblParameter;
 		wxStdDialogButtonSizer* m_sdbSizer3;
 		wxButton* m_sdbSizer3OK;
 		wxButton* m_sdbSizer3Cancel;
@@ -227,8 +234,10 @@ class MissSetTimerBase : public wxDialog
 		
 	
 	public:
+		wxFilePickerCtrl* m_fpProgram;
+		wxTextCtrl* m_edtParameter;
 		
-		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 388,406 ), long style = wxDEFAULT_DIALOG_STYLE );
+		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 388,406 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~MissSetTimerBase();
 	
 };
@@ -267,6 +276,7 @@ class MissThemeBase : public wxDialog
 		wxSpinCtrl* m_spX;
 		wxStaticText* m_lblY;
 		wxSpinCtrl* m_spY;
+		wxPanel* m_panRemind;
 		wxStdDialogButtonSizer* m_sdbSizer;
 		wxButton* m_sdbSizerOK;
 		wxButton* m_sdbSizerCancel;
@@ -291,7 +301,7 @@ class MissThemeBase : public wxDialog
 	
 	public:
 		
-		MissThemeBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("修改主题"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,416 ), long style = wxDEFAULT_DIALOG_STYLE );
+		MissThemeBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("修改主题"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,416 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~MissThemeBase();
 	
 };
@@ -315,44 +325,8 @@ class MissFrameBase : public wxFrame
 	public:
 		
 		MissFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 253,176 ), long style = wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL|wxTRANSPARENT_WINDOW );
+		
 		~MissFrameBase();
-	
-};
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class TextPanel
-///////////////////////////////////////////////////////////////////////////////
-class TextPanel : public wxPanel 
-{
-	private:
-	
-	protected:
-	
-	public:
-		wxTextCtrl* m_edtContent;
-		
-		TextPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
-		~TextPanel();
-	
-};
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class ProgramPanel
-///////////////////////////////////////////////////////////////////////////////
-class ProgramPanel : public wxPanel 
-{
-	private:
-	
-	protected:
-		wxStaticText* m_lblProgram;
-		wxStaticText* m_lblParameter;
-	
-	public:
-		wxFilePickerCtrl* m_fpProgram;
-		wxTextCtrl* m_edtParameter;
-		
-		ProgramPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
-		~ProgramPanel();
 	
 };
 
@@ -379,7 +353,33 @@ class MissSetWeekDayBase : public wxFrame
 	public:
 		
 		MissSetWeekDayBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,60 ), long style = wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxSTAY_ON_TOP );
+		
 		~MissSetWeekDayBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class MissSetDTFormatBase
+///////////////////////////////////////////////////////////////////////////////
+class MissSetDTFormatBase : public wxFrame 
+{
+	private:
+	
+	protected:
+		wxChoice* m_cobDateTime;
+		wxTextCtrl* m_edtDateTime;
+		wxTextCtrl* m_edtExample;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnActivate( wxActivateEvent& event ) { event.Skip(); }
+		virtual void OnCobDateTime( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		MissSetDTFormatBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 313,96 ), long style = wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxTAB_TRAVERSAL );
+		
+		~MissSetDTFormatBase();
 	
 };
 
@@ -393,14 +393,16 @@ class MissRemindBase : public wxFrame
 	protected:
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
 		MissRemindBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = 0|wxTAB_TRAVERSAL );
+		
 		~MissRemindBase();
 	
 };
 
-#endif //__GUIFrame__
+#endif //__GUIFRAME_H__

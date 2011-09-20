@@ -21,20 +21,15 @@ MissOption::MissOption(wxWindow* parent)
     m_pLists[MissGlobal::QT_TASK] = m_listTask;
     m_pLists[MissGlobal::QT_OVERDUE] = m_listOverdue;
 
+    m_pConfig = &MissConfig::GetInstance();
+    m_nWeekDay = m_pConfig->GetWeekDay();
+
     CentreOnScreen();
 }
 
 MissOption::~MissOption()
 {
     std::cout << "~MissOption()" << std::endl;
-}
-
-void MissOption::SetDataSrc(shared_ptr<MissConfig>& pConfig, shared_ptr<MissSkin>& pSkin)
-{
-    m_pConfig = pConfig;
-    m_pSkin = pSkin;
-
-    m_nWeekDay = m_pConfig->GetWeekDay();
 }
 
 void MissOption::OnInitDialog(wxInitDialogEvent& event)
@@ -112,7 +107,7 @@ void MissOption::OnModifyThemeBtnClick(wxCommandEvent& event)
 // TODO: Implement OnModifySkinBtnClick
     MissTools::AutoHideWindow HideWin(this);
     MissTheme ThemeDlg(this);
-    ThemeDlg.SetDataSrc(m_pSkin);
+    //ThemeDlg.SetDataSrc(m_pSkin);
     if(ThemeDlg.ShowModal() == wxID_OK)
     {
         ///保存主题设置
@@ -154,14 +149,14 @@ void MissOption::ChangeModifyState()
     m_lstItem->Enable(m_bThemeModify);
     m_btnAddItem->Enable(m_bThemeModify);
 }
-*/
+
 void MissOption::OnBtnUnDoSaveThemeClick(wxCommandEvent& event)
 {
     wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
     send.SetInt(MissGlobal::UE_UPDATETHEME);
     GetEventHandler()->ProcessEvent(send);
 }
-
+*/
 void MissOption::OnZoomCbtnClick(wxCommandEvent& event)
 {
 // TODO: Implement OnZoomCbtnClick
@@ -231,15 +226,11 @@ void MissOption::OnBtnAddTaskClick(wxCommandEvent& event)
     MissSetTimer SetTimerDlg(m_nWeekDay,this);
     if(SetTimerDlg.ShowModal() == wxID_OK)
     {
+        UpdateListData();
 
-        ///清空所有列表中的值
-        for(int e = MissGlobal::QT_REMIND; e < MissGlobal::QT_ALL; ++e )
-        {
-            m_pLists[e]->DeleteAllItems();
-        }
-        ///更新当前列表的值
-        int nList = m_nbTimerSetting->GetSelection();
-        UpdataTimerSettingList(nList);
+        wxCommandEvent send(wxEVT_MCDATA_EVENT,GetId());
+        //send.SetInt(MissGlobal::UE_ALPHACHANGE);
+        GetEventHandler()->ProcessEvent(send);
     }
 }
 
@@ -277,6 +268,10 @@ void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
             {
                 sql.DeleteTaskData(*itor);
             }
+            ///告诉父窗口更新数据
+            wxCommandEvent send(wxEVT_MCDATA_EVENT,GetId());
+            //send.SetInt(MissGlobal::UE_ALPHACHANGE);
+            GetEventHandler()->ProcessEvent(send);
         }
         catch(...)
         {
@@ -298,6 +293,18 @@ void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
             }
         }
     }
+}
+
+void MissOption::UpdateListData()
+{
+    ///清空所有列表中的值
+    for(int e = MissGlobal::QT_REMIND; e < MissGlobal::QT_ALL; ++e )
+    {
+        m_pLists[e]->DeleteAllItems();
+    }
+    ///更新当前列表的值
+    int nList = m_nbTimerSetting->GetSelection();
+    UpdataTimerSettingList(nList);
 }
 
 void MissOption::OnBtnModifyTaskClick(wxCommandEvent& event)
@@ -409,7 +416,10 @@ void MissOption::ModifyTaskData(int nID)
         SetTimerDlg.ImportTaskDataToModify(nID,data);
         if(SetTimerDlg.ShowModal() == wxID_OK)
         {
-            ///保存
+            UpdateListData();
+            wxCommandEvent send(wxEVT_MCDATA_EVENT,GetId());
+            //send.SetInt(MissGlobal::UE_ALPHACHANGE);
+            GetEventHandler()->ProcessEvent(send);
         }
     }
 }
@@ -426,5 +436,13 @@ void MissOption::OnSetWeekDaysEvent(wxCommandEvent& event)
 {
     m_nWeekDay = event.GetInt();
     std::cout<<m_nWeekDay<<std::endl;
+}
+
+void MissOption::OnBtnDateFormatSetClick(wxCommandEvent& event)
+{
+}
+
+void MissOption::OnBtnTimeFormatSetClick(wxCommandEvent& event)
+{
 }
 

@@ -59,8 +59,10 @@ public:
         void TakeOrderWithNewline(const std::vector<wxString>& vecIn);
         void LoadTempData();
         void ClearTempData();
+        bool PtInCloseBtn(const wxPoint& pt);
 
     public:
+        const wxString& GetSkinPath() const;
         int GetOverallWidth()  const;
         int GetOverallHeight() const;
         int GetMinHeight()     const;
@@ -72,7 +74,7 @@ public:
         int  GetPatternSize() const;
         int  GetFillSize()    const;
 
-
+        void SetSkinPath(const wxString& strSkinPath);
         void SetOverallWidth(int nOverallWidth);
         void SetMinHeight(int nMinHeight);
         void SetMaxHeight(int nMaxHeight);

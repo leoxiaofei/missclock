@@ -1,9 +1,10 @@
 ﻿#include "MissSetTimer.h"
-//#include <wx/choicebk.h>
-#include <wx/toolbar.h>
+
 #include "../Common/MissGlobal.h"
 #include "../Common/MissTools.h"
 #include "../Data/MissWxSQLite3.h"
+#include "../Common/MissToolBook.h"
+
 
 MissSetTimer::MissSetTimer( int nWeekDay, wxWindow* parent )
 :
@@ -11,6 +12,7 @@ MissSetTimerBase( parent ),
 m_nWeekDay(nWeekDay),
 m_nDataID(-1)
 {
+    /*
     wxToolBarBase* toolbar = m_tbRun->GetToolBar();
     long lStyle = toolbar->GetWindowStyle();
     if (lStyle & wxTB_TEXT)
@@ -18,6 +20,7 @@ m_nDataID(-1)
         lStyle &= ~wxTB_TEXT;
     }
     toolbar->SetWindowStyle(lStyle);
+    */
 
     m_szWeekBox[0] = m_cbtnSun;
     m_szWeekBox[1] = m_cbtnMon;
@@ -26,13 +29,18 @@ m_nDataID(-1)
 	m_szWeekBox[4] = m_cbtnThurs;
 	m_szWeekBox[5] = m_cbtnFri;
 	m_szWeekBox[6] = m_cbtnSar;
+
+    wxDateTime dtTmp = wxDateTime::Now().Add(wxTimeSpan(0,1,0,0));
+    m_spHour->SetValue(dtTmp.GetHour());
+    m_spMin->SetValue(dtTmp.GetMinute());
+
+
 }
 
 void MissSetTimer::OnInitDialog(wxInitDialogEvent& event)
 {
-    wxDateTime dtTmp = wxDateTime::Now().Add(wxTimeSpan(0,1,0,0));
-    m_spHour->SetValue(dtTmp.GetHour());
-    m_spMin->SetValue(dtTmp.GetMinute());
+    wxYield();
+    Layout();
 }
 
 void MissSetTimer::OnHLWorkDayClick(wxHyperlinkEvent& event)
@@ -90,11 +98,11 @@ void MissSetTimer::GetTaskData(MissGlobal::TaskData& data)
     switch(data.nTaskType)
     {
     case 0:   ///文字提醒任务
-        data.strTaskContent = m_panTextRemind->m_edtContent->GetValue();
+        data.strTaskContent = m_edtContent->GetValue();
         break;
     case 1:   ///执行程序任务
-        data.strTaskContent.Printf(wxT("\"%s\" %s"),m_panProgRemind->m_fpProgram->GetTextCtrlValue().c_str(),
-                                   m_panProgRemind->m_edtParameter->GetValue().c_str());
+        data.strTaskContent.Printf(wxT("\"%s\" %s"),m_fpProgram->GetTextCtrlValue().c_str(),
+                                   m_edtParameter->GetValue().c_str());
         data.strTaskContent.Trim();
         break;
     }
@@ -206,13 +214,13 @@ void MissSetTimer::ImportTaskDataToModify(int nDataID, const MissGlobal::TaskDat
     switch(data.nTaskType)
     {
     case 0:
-        m_panTextRemind->m_edtContent->SetValue(data.strTaskContent);
+        m_edtContent->SetValue(data.strTaskContent);
         break;
     case 1:
         {
             wxString strAddr,strArgument;
             strAddr = data.strTaskContent;
-            bool exist = strAddr.Find(wxT("\" "));
+            int exist = strAddr.Find(wxT("\" "));
             if( wxNOT_FOUND == exist )
             {
                 strAddr = strAddr.Mid(1,strAddr.length()-2);
@@ -222,8 +230,8 @@ void MissSetTimer::ImportTaskDataToModify(int nDataID, const MissGlobal::TaskDat
                 strArgument = strAddr.Mid(exist+2);
                 strAddr = strAddr.Mid(1,exist-1);
             }
-            m_panProgRemind->m_fpProgram->SetPath( strAddr );
-            m_panProgRemind->m_edtParameter->SetValue( strArgument );
+            m_fpProgram->SetPath( strAddr );
+            m_edtParameter->SetValue( strArgument );
         }
         break;
     }
@@ -254,5 +262,13 @@ void MissSetTimer::OnOKButtonClick(wxCommandEvent& event)
     EndModal(wxID_OK);
 }
 
+void MissSetTimer::ImportSetting(int nType)
+{
+    switch(nType)
+    {
+    case 0:
+        break;
+    }
+}
 
 

@@ -12,7 +12,7 @@ public:
     MissRemindSkinImpl():
     m_pTextBG(NULL)
     {}
-
+    wxString                  m_SkinPath;
     int                       m_nOverallWidth;    ///整体宽度
     int                       m_nMinHeight;       ///最小高度
     int                       m_nMaxHeight;       ///最大高度
@@ -24,7 +24,9 @@ public:
 
     ///临时
     int                            m_nOverallHeight;   ///整体高度（计算得来）
-    int                            m_nTextHeight;      ///字体高度（计算得来）
+    int                            m_nFontHeight;      ///字体高度（计算得来）
+    int                            m_nTextHeight;      ///文本应该使用的高度（计算得来）
+    wxRect                         m_BtnRect;          ///按钮区域
     std::map<PatternPos, wxBitmap> m_mapPatterns;      ///临时的图片存储
     std::map<FillPos,    wxBrush>  m_mapFills;         ///临时画刷存储
     std::vector<wxString>          m_vecTextOut;       ///格式化后的输出文字
@@ -115,6 +117,14 @@ void MissRemindSkin::LoadTempData()
     {
         m_pImpl->m_pTextBG = new wxBitmap(m_pImpl->m_oTextInfo.strBitmap, wxBITMAP_TYPE_PNG);
     }
+
+    ///计算最少高度
+    m_pImpl->m_nTextHeight = m_pImpl->m_pTextBG != NULL? m_pImpl->m_pTextBG->GetHeight():m_pImpl->m_nFontHeight;
+    m_pImpl->m_nOverallHeight = m_pImpl->m_oTextInfo.ptPos.y + m_pImpl->m_oTextInfo.nBottomHeight
+                                + m_pImpl->m_nTextHeight * m_pImpl->m_vecTextOut.size();
+
+    m_pImpl->m_nOverallHeight = m_pImpl->m_nOverallHeight < m_pImpl->m_nMinHeight ? m_pImpl->m_nMinHeight :
+         m_pImpl->m_nOverallHeight > m_pImpl->m_nMaxHeight ? m_pImpl->m_nMaxHeight : m_pImpl->m_nOverallHeight;
 }
 
 void MissRemindSkin::ClearTempData()
@@ -280,7 +290,7 @@ void MissRemindSkin::DrawRemindText(wxDC& memdc)
     if(m_pImpl->m_pTextBG != NULL)
         memdc.SetBrush(wxBrush(*m_pImpl->m_pTextBG));
     memdc.SetTextForeground(m_pImpl->m_oTextInfo.colorText);
-
+    memdc.SetFont(m_pImpl->m_oTextInfo.fontText);
     for(size_t ix = 0; ix != m_pImpl->m_vecTextOut.size(); ++ix)
     {
         memdc.SetDeviceOrigin(m_pImpl->m_oTextInfo.ptPos.x,
@@ -318,9 +328,18 @@ void MissRemindSkin::DrawButton(wxDC& memdc)
 
     memdc.SetPen(wxPen(m_pImpl->m_cButtonInfo.colorBtn));
     memdc.SetBrush(*wxTRANSPARENT_BRUSH);
+    memdc.SetFont(m_pImpl->m_cButtonInfo.fontBtn);
     memdc.SetTextForeground(m_pImpl->m_cButtonInfo.colorBtn);
     memdc.DrawText(m_pImpl->m_cButtonInfo.strBtnText, nTempX, nTempY);
-    memdc.DrawRectangle(nTempX-10,nTempY-4,fontSize.GetWidth()+20,fontSize.GetHeight()+8);
+    m_pImpl->m_BtnRect = wxRect(nTempX-10,nTempY-4,fontSize.GetWidth()+20,fontSize.GetHeight()+8);
+
+    memdc.DrawRectangle(m_pImpl->m_BtnRect.x, m_pImpl->m_BtnRect.y,
+                        m_pImpl->m_BtnRect.width, m_pImpl->m_BtnRect.height);
+}
+
+bool MissRemindSkin::PtInCloseBtn(const wxPoint& pt)
+{
+    return m_pImpl->m_BtnRect.Contains(pt);
 }
 
 const wxBitmap* MissRemindSkin::GetPatternByPos(const PatternPos& pos)
@@ -350,7 +369,7 @@ void MissRemindSkin::TakeOrderWithNewline(const std::vector<wxString>& vecIn)
     wxSize fontSize;
     wxArrayInt widthsArray;
     std::vector<wxString>& vecOut = m_pImpl->m_vecTextOut;
-
+    tmpdc.SetFont(m_pImpl->m_oTextInfo.fontText);
     for(std::vector<wxString>::size_type ix = 0; ix != vecIn.size(); ++ix)
     {
         ///第一步处理换行
@@ -385,15 +404,8 @@ void MissRemindSkin::TakeOrderWithNewline(const std::vector<wxString>& vecIn)
             }
         }
     }
+    m_pImpl->m_nFontHeight = fontSize.GetHeight();
 
-    ///计算最少高度
-
-    m_pImpl->m_nTextHeight = m_pImpl->m_pTextBG != NULL? m_pImpl->m_pTextBG->GetHeight():fontSize.GetHeight();
-    m_pImpl->m_nOverallHeight = m_pImpl->m_oTextInfo.ptPos.y + m_pImpl->m_oTextInfo.nBottomHeight
-                                + m_pImpl->m_nTextHeight * vecOut.size();
-
-    m_pImpl->m_nOverallHeight = m_pImpl->m_nOverallHeight < m_pImpl->m_nMinHeight ? m_pImpl->m_nMinHeight :
-         m_pImpl->m_nOverallHeight > m_pImpl->m_nMaxHeight ? m_pImpl->m_nMaxHeight : m_pImpl->m_nOverallHeight;
 }
 
 
@@ -497,3 +509,12 @@ int MissRemindSkin::GetFillSize() const
     return m_pImpl->m_vecFills.size();
 }
 
+const wxString& MissRemindSkin::GetSkinPath() const
+{
+    return m_pImpl->m_SkinPath;
+}
+
+void MissRemindSkin::SetSkinPath(const wxString& strSkinPath)
+{
+    m_pImpl->m_SkinPath = strSkinPath;
+}

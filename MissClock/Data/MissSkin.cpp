@@ -8,7 +8,7 @@
 class MissSkin::MissSkinImpl
 {
 public:
-    wxString                 m_SkinName;
+    wxString                 m_SkinPath;
     wxString                 m_BGPicPath;
     wxString                 m_Locale;
     std::vector<MissElement> m_Element;
@@ -26,7 +26,7 @@ MissSkin::~MissSkin()
     //dtor
 }
 
-void MissSkin::DrawSkin(wxDC& dc, struct tm *tmNow)
+void MissSkin::DrawSkin(wxDC& dc, const tm* tmNow)
 {
     static char str[100];
     static wxCoord width;
@@ -48,14 +48,14 @@ void MissSkin::DrawSkin(wxDC& dc, struct tm *tmNow)
     }
 }
 
-MissElement& MissSkin::GetElement(int nIndex)
+MissElement& MissSkin::GetElement(int nIndex) const
 {
     return m_pImpl->m_Element.at(nIndex);
 }
 
-void MissSkin::SetSkinName(const wxString& strName)
+void MissSkin::SetSkinPath(const wxString& strPath)
 {
-    m_pImpl->m_SkinName = strName;
+    m_pImpl->m_SkinPath = strPath;
 }
 
 void MissSkin::SetBGPicPath(const wxString& strPicPath)
@@ -94,7 +94,7 @@ void MissSkin::LoadBGPic()
 {
     if( wxNOT_FOUND == m_pImpl->m_BGPicPath.Find(wxT("\\")) )
     {
-        wxString bgPicAddr = wxString::Format(wxT("Skin\\%s\\%s"),m_pImpl->m_SkinName.c_str(),m_pImpl->m_BGPicPath.c_str());
+        wxString bgPicAddr = m_pImpl->m_SkinPath + m_pImpl->m_BGPicPath;
         m_pImpl->m_ClockBGPic = wxBitmap(bgPicAddr, wxBITMAP_TYPE_PNG);
         std::wcout<<bgPicAddr.c_str()<<std::endl;
     }
@@ -104,27 +104,27 @@ void MissSkin::LoadBGPic()
     }
 }
 
-const wxString& MissSkin::GetSkinName()
+const wxString& MissSkin::GetSkinPath() const
 {
-    return m_pImpl->m_SkinName;
+    return m_pImpl->m_SkinPath;
 }
 
-const wxString& MissSkin::GetBGPicPath()
+const wxString& MissSkin::GetBGPicPath() const
 {
     return m_pImpl->m_BGPicPath;
 }
 
-const wxString& MissSkin::GetLocale()
+const wxString& MissSkin::GetLocale() const
 {
     return m_pImpl->m_Locale;
 }
 
-int MissSkin::GetElementSize()
+int MissSkin::GetElementSize() const
 {
     return m_pImpl->m_Element.size();
 }
 
-const wxBitmap& MissSkin::GetBGBitmap()
+const wxBitmap& MissSkin::GetBGBitmap() const
 {
     return m_pImpl->m_ClockBGPic;
 }

@@ -2,7 +2,8 @@
 #include "MissConfig.h"
 #include <wx/fileconf.h>
 #include <wx/wfstream.h>
-
+#include "MissSkin.h"
+#include "MissRemindSkin.h"
 
 class MissConfig::MissConfigImpl
 {
@@ -12,20 +13,24 @@ public:
     {};
 
 public:
-    int m_Pin;                                 ///是否固定位置
-    int m_Top;                                 ///是否置顶
-    int m_AudioChimer;                         ///是否整点报时
-    int m_ShowClock;                           ///是否显示时钟
-    int m_Shadow;                              ///是否有影无形
-    int m_Opacity;                             ///不透明度
-    int m_WeekDay;                             ///工作日（二进制表示，第一位表示星期天，第二位表示星期一…）
-    double m_Zoom;                             ///缩放 1表示不缩放
+    int m_Pin;                                  ///是否固定位置
+    int m_Top;                                  ///是否置顶
+    int m_AudioChimer;                          ///是否整点报时
+    int m_ShowClock;                            ///是否显示时钟
+    int m_Shadow;                               ///是否有影无形
+    int m_Opacity;                              ///不透明度
+    int m_WeekDay;                              ///工作日（二进制表示，第一位表示星期天，第二位表示星期一…）
+    double m_Zoom;                              ///缩放 1表示不缩放
     wxPoint  m_Pos;                             ///位置坐标
     wxString m_NTP;                             ///NTP的地址
     wxString m_SkinName;                        ///当前使用的皮肤名称
+    MissSkin m_CurrentSkin;                     ///当前时钟皮肤
+    MissRemindSkin m_CurrentRemindSkin;         ///当前提醒皮肤
+
     wxString m_ConfigName;                      ///配置文件名
     shared_ptr<wxFileInputStream> m_pIStream;   ///文件流
     shared_ptr<wxFileConfig> m_pConfigFile;     ///配置文件读写器
+
 };
 
 MissConfig::MissConfig():
@@ -235,4 +240,14 @@ void MissConfig::SetZoom(const double& dZoom)
 void MissConfig::SetOpacity(int nOpacity)
 {
     m_pImpl->m_Opacity = nOpacity;
+}
+
+MissSkin& MissConfig::GetCurrentSkin()
+{
+    return m_pImpl->m_CurrentSkin;
+}
+
+MissRemindSkin& MissConfig::GetCurrentRemindSkin()
+{
+    return m_pImpl->m_CurrentRemindSkin;
 }

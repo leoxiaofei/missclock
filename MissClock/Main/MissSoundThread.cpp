@@ -11,7 +11,7 @@ MissSoundThread::MissSoundThread(int hour)
 #ifdef __WXDEBUG__
 MissSoundThread::~MissSoundThread()
 {
-    std::cout << "~MissClockFrame()" << std::endl;
+    std::cout << "~MissSoundThread()" << std::endl;
 }
 #endif
 
