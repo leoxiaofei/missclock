@@ -29,9 +29,10 @@
 #include "../Data/MissXML.h"
 #include "../Data/MissWxSQLite3.h"
 #include "../Common/MissGlobal.h"
+#include "../Common/MissTools.h"
 
 #include <algorithm>
-#include <boost/progress.hpp>
+//#include <boost/progress.hpp>
 
 #include <wx/dcmemory.h>
 #include <wx/menu.h>
@@ -421,10 +422,16 @@ void MissClockFrame::OnmimShadowSelected(wxCommandEvent& event)
 void MissClockFrame::OnmimCopyDateSelected(wxCommandEvent& event)
 {
     m_pTaskBarIcon->ShowBalloon(wxT("测试"),wxT("这是一个测试。"));
+    char str[100];
+    strftime (str,100, m_pConfig->GetPDateFormat().mb_str(),m_tmNow);
+    MissTools::CopyToClipboard( wxString(str,wxConvLocal) );
 }
 
 void MissClockFrame::OnmimCopyTimeSelected(wxCommandEvent& event)
 {
+    char str[100];
+    strftime (str,100, m_pConfig->GetPTimeFormat().mb_str(),m_tmNow);
+    MissTools::CopyToClipboard( wxString(str,wxConvLocal) );
 }
 
 void MissClockFrame::OnMinUp()

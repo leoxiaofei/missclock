@@ -17,12 +17,23 @@ class MissSetDTFormat : public MissSetDTFormatBase
 		// Handlers for MissSetDTFormatBase events.
 		void OnActivate( wxActivateEvent& event );
 		void OnCobDateTime( wxCommandEvent& event );
+        void OnDateTimeText( wxCommandEvent& event );
 
 	public:
 		/** Constructor */
-		MissSetDTFormat( wxWindow* parent );
+		MissSetDTFormat(int nType, const wxString& strFormat, wxWindow* parent );
 	//// end generated class members
 
+    protected:
+        int GetSelectByFormatString(const wxString & strFormat);
+
+    private:
+        int m_nType;
+        wxString m_strFormat;
 };
+
+BEGIN_DECLARE_EVENT_TYPES()
+    DECLARE_LOCAL_EVENT_TYPE(wxEVT_MCDTF_EVENT, -1)
+END_DECLARE_EVENT_TYPES()
 
 #endif // __MissSetDTFormat__

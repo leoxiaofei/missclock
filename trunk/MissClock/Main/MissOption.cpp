@@ -8,6 +8,7 @@
 #include "../Data/MissWxSQLite3.h"
 #include "../Common/MissTools.h"
 #include "MissSetWeekDay.h"
+#include "MissSetDTFormat.h"
 
 //wxDEFINE_EVENT(wxEVT_MCUI_EVENT, wxCommandEvent);
 
@@ -23,6 +24,8 @@ MissOption::MissOption(wxWindow* parent)
 
     m_pConfig = &MissConfig::GetInstance();
     m_nWeekDay = m_pConfig->GetWeekDay();
+    m_strPDateFormat = m_pConfig->GetPDateFormat();
+    m_strPTimeFormat = m_pConfig->GetPTimeFormat();
 
     CentreOnScreen();
 }
@@ -205,6 +208,8 @@ void MissOption::OnOK(wxCommandEvent& event)
 {
 // TODO: Implement OnOK
     m_pConfig->SetWeekDay(m_nWeekDay);
+    m_pConfig->SetPDateFormat(m_strPDateFormat);
+    m_pConfig->SetPTimeFormat(m_strPTimeFormat);
     m_pConfig->SetShowClock(m_cbtnShowClock->GetValue());
     m_pConfig->SetAudioChimer(m_cbtnAudioChimer->GetValue());
     m_pConfig->SetShadow(m_cbtnShadow->GetValue());
@@ -438,11 +443,26 @@ void MissOption::OnSetWeekDaysEvent(wxCommandEvent& event)
     std::cout<<m_nWeekDay<<std::endl;
 }
 
+void MissOption::OnSetDTFormatEvent(wxCommandEvent& event)
+{
+    wxString& strFormat = event.GetInt() == MissGlobal::FT_DATE?
+                            m_strPDateFormat:m_strPTimeFormat;
+    strFormat = event.GetString();
+}
+
 void MissOption::OnBtnDateFormatSetClick(wxCommandEvent& event)
 {
+    MissSetDTFormat *pDTFormatSetting = new MissSetDTFormat(0,m_strPDateFormat, this);
+    pDTFormatSetting->Connect(wxEVT_MCDTF_EVENT, wxCommandEventHandler(MissOption::OnSetDTFormatEvent), NULL, this);
+    pDTFormatSetting->Move(m_btnDateFormatSet->GetScreenRect().GetBottomLeft());
+    pDTFormatSetting->Show();
 }
 
 void MissOption::OnBtnTimeFormatSetClick(wxCommandEvent& event)
 {
+    MissSetDTFormat *pDTFormatSetting = new MissSetDTFormat(1, m_strPTimeFormat,this);
+    pDTFormatSetting->Connect(wxEVT_MCDTF_EVENT, wxCommandEventHandler(MissOption::OnSetDTFormatEvent), NULL, this);
+    pDTFormatSetting->Move(m_btnTimeFormatSet->GetScreenRect().GetBottomLeft());
+    pDTFormatSetting->Show();
 }
 

@@ -1,6 +1,7 @@
 #include "MissTools.h"
 #include <wx/toplevel.h>
 #include <wx/checkbox.h>
+#include <wx/clipbrd.h>
 
 namespace MissTools
 {
@@ -41,5 +42,14 @@ int WeekDaysCheckBox::GetWeekDaysCheck(wxCheckBox *szWeekBox[7])
     return nRet;
 }
 
+void CopyToClipboard(const wxString& strText)
+{
+    if (wxTheClipboard->Open())
+    {
+        wxTextDataObject *word = new wxTextDataObject( strText );
+        wxTheClipboard->SetData( word );
+        wxTheClipboard->Close();
+    }
+}
 
 }

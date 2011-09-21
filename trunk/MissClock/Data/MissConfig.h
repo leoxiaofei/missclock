@@ -31,6 +31,8 @@ class MissConfig
         void            SetTop(bool bTop);
         void            SetPin(bool bPin);
         void            SetWeekDay(int nWeekDay);
+        void            SetPDateFormat(const wxString& strFormat);
+        void            SetPTimeFormat(const wxString& strFormat);
         void            SetNTP(const wxString& strNTP);
 
         void            SaveOption();
@@ -53,6 +55,8 @@ class MissConfig
         int             GetOpacity();
         double          GetZoom();
         int             GetWeekDay();
+        const wxString& GetPDateFormat();
+        const wxString& GetPTimeFormat();
         MissSkin&       GetCurrentSkin();
         MissRemindSkin& GetCurrentRemindSkin();
 

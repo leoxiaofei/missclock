@@ -17,13 +17,13 @@ const wxString s_strCDateFormat[] = {
 const wxString s_strSTimeFormat[] = {
                             wxT("HH:mm:ss"),
                             wxT("H:mm:ss"),
-                            wxT("HH:mm")
+                            wxT("HH:mm"),
                             wxT("II:mm:ss P")};
 
 const wxString s_strCTimeFormat[] = {
                             wxT("%H:%M:%S"),
                             wxT("%#H:%M:%S"),
-                            wxT("%H:%M:"),
+                            wxT("%H:%M"),
                             wxT("%I:%M:%S %p")};
 
 wxString TaskData::GetTDateDesc() const
