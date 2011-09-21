@@ -22,6 +22,8 @@ namespace MissTools
         static void SetWeekDaysCheck(wxCheckBox *szWeekBox[7], int nWeekDay);
         static int  GetWeekDaysCheck(wxCheckBox *szWeekBox[7]);
     };
+
+    void CopyToClipboard(const wxString& strText);
 };
 
 #endif // MISSTOOLS_H

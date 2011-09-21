@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun 30 2011)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -669,7 +669,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_panTextRemind->Layout();
 	sbSizer15->Fit( m_panTextRemind );
 	m_tbRun->AddPage( m_panTextRemind, wxT("文字提醒"), true );
-	m_tbRunBitmap = wxArtProvider::GetBitmap( wxART_NORMAL_FILE, wxART_FRAME_ICON );
+	m_tbRunBitmap = wxBitmap( wxT("wxART_NORMAL_FILE"), wxBITMAP_TYPE_RESOURCE );
 	if ( m_tbRunBitmap.Ok() )
 	{
 		m_tbRunImage = m_tbRunBitmap.ConvertToImage();
@@ -709,7 +709,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_panProgRemind->Layout();
 	bSizer38->Fit( m_panProgRemind );
 	m_tbRun->AddPage( m_panProgRemind, wxT("定时运行程序"), false );
-	m_tbRunBitmap = wxArtProvider::GetBitmap( wxART_EXECUTABLE_FILE, wxART_FRAME_ICON );
+	m_tbRunBitmap = wxBitmap( wxT("wxART_EXECUTABLE_FILE"), wxBITMAP_TYPE_RESOURCE );
 	if ( m_tbRunBitmap.Ok() )
 	{
 		m_tbRunImage = m_tbRunBitmap.ConvertToImage();
@@ -1086,13 +1086,13 @@ MissSetDTFormatBase::MissSetDTFormatBase( wxWindow* parent, wxWindowID id, const
 	m_edtDateTime = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	bSizer40->Add( m_edtDateTime, 1, wxALL, 5 );
 	
-	bSizer39->Add( bSizer40, 0, wxEXPAND, 5 );
+	bSizer39->Add( bSizer40, 1, wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizer15;
 	sbSizer15 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("示例") ), wxVERTICAL );
 	
 	m_edtExample = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	sbSizer15->Add( m_edtExample, 0, wxALL|wxEXPAND, 5 );
+	sbSizer15->Add( m_edtExample, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer39->Add( sbSizer15, 0, wxEXPAND, 5 );
 	
@@ -1104,6 +1104,7 @@ MissSetDTFormatBase::MissSetDTFormatBase( wxWindow* parent, wxWindowID id, const
 	// Connect Events
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler( MissSetDTFormatBase::OnActivate ) );
 	m_cobDateTime->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissSetDTFormatBase::OnCobDateTime ), NULL, this );
+	m_edtDateTime->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MissSetDTFormatBase::OnDateTimeText ), NULL, this );
 }
 
 MissSetDTFormatBase::~MissSetDTFormatBase()
@@ -1111,6 +1112,7 @@ MissSetDTFormatBase::~MissSetDTFormatBase()
 	// Disconnect Events
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler( MissSetDTFormatBase::OnActivate ) );
 	m_cobDateTime->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MissSetDTFormatBase::OnCobDateTime ), NULL, this );
+	m_edtDateTime->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MissSetDTFormatBase::OnDateTimeText ), NULL, this );
 	
 }
 

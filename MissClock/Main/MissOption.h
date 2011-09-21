@@ -46,6 +46,7 @@ class MissOption : public MissOptionBase
         //void OnOptionClose( wxCloseEvent& event );
         ///自定义消息
         void OnSetWeekDaysEvent(wxCommandEvent& event);
+        void OnSetDTFormatEvent(wxCommandEvent& event);
 
 	public:
 		/** Constructor */
@@ -67,6 +68,8 @@ class MissOption : public MissOptionBase
 
         wxListCtrl* m_pLists[5];
         int         m_nWeekDay;
+        wxString    m_strPDateFormat;
+        wxString    m_strPTimeFormat;
 	//// end generated class members
 
 };

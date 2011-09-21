@@ -23,6 +23,8 @@ public:
     double m_Zoom;                              ///缩放 1表示不缩放
     wxPoint  m_Pos;                             ///位置坐标
     wxString m_NTP;                             ///NTP的地址
+    wxString m_strPDateFormat;                  ///粘贴日期的格式
+    wxString m_strPTimeFormat;                  ///粘贴时间的格式
     wxString m_SkinName;                        ///当前使用的皮肤名称
     MissSkin m_CurrentSkin;                     ///当前时钟皮肤
     MissRemindSkin m_CurrentRemindSkin;         ///当前提醒皮肤
@@ -66,6 +68,8 @@ void MissConfig::LoadIniFile()
     m_pImpl->m_SkinName     = m_pImpl->m_pConfigFile->Read(wxT("界面/主题"),wxT("Default"));
     m_pImpl->m_NTP          = m_pImpl->m_pConfigFile->Read(wxT("选项/NTP"),wxT("203.129.68.14"));
     m_pImpl->m_Opacity      = m_pImpl->m_pConfigFile->Read(wxT("界面/不透明度"),0xFFl);
+    m_pImpl->m_strPDateFormat = m_pImpl->m_pConfigFile->Read(wxT("选项/复制日期格式"),wxT("%Y-%m-%d"));
+    m_pImpl->m_strPTimeFormat = m_pImpl->m_pConfigFile->Read(wxT("选项/复制时间格式"),wxT("%H:%M:%S"));
 
     if( m_pImpl->m_Opacity < 50 || m_pImpl->m_Opacity > 255 )
     {
@@ -125,6 +129,9 @@ void MissConfig::SaveOption()
     m_pImpl->m_pConfigFile->Write(wxT("选项/有影无形"),m_pImpl->m_Shadow);
     m_pImpl->m_pConfigFile->Write(wxT("选项/整点报时"),m_pImpl->m_AudioChimer);
     m_pImpl->m_pConfigFile->Write(wxT("选项/工作日"),m_pImpl->m_WeekDay);
+    m_pImpl->m_pConfigFile->Write(wxT("选项/复制日期格式"),m_pImpl->m_strPDateFormat);
+    m_pImpl->m_pConfigFile->Write(wxT("选项/复制时间格式"),m_pImpl->m_strPTimeFormat);
+
     m_pImpl->m_pConfigFile->Write(wxT("界面/主题"),m_pImpl->m_SkinName);
     m_pImpl->m_pConfigFile->Write(wxT("选项/NTP"),m_pImpl->m_NTP);
     m_pImpl->m_pConfigFile->Write(wxT("界面/不透明度"),m_pImpl->m_Opacity);
@@ -250,4 +257,24 @@ MissSkin& MissConfig::GetCurrentSkin()
 MissRemindSkin& MissConfig::GetCurrentRemindSkin()
 {
     return m_pImpl->m_CurrentRemindSkin;
+}
+
+void MissConfig::SetPDateFormat(const wxString& strFormat)
+{
+    m_pImpl->m_strPDateFormat = strFormat;
+}
+
+void MissConfig::SetPTimeFormat(const wxString& strFormat)
+{
+    m_pImpl->m_strPTimeFormat = strFormat;
+}
+
+const wxString& MissConfig::GetPDateFormat()
+{
+    return m_pImpl->m_strPDateFormat;
+}
+
+const wxString& MissConfig::GetPTimeFormat()
+{
+    return m_pImpl->m_strPTimeFormat;
 }

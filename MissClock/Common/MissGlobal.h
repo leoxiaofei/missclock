@@ -6,11 +6,14 @@ namespace MissGlobal
     enum EUiEvent{UE_UPDATE, UE_UPDATETHEME, UE_SAVETHEME, UE_ZOOMCHANGE, UE_ALPHACHANGE};
     enum EQuestType{QT_REMIND, QT_MEMORIAL_DAY, QT_BACKLOG, QT_TASK, QT_OVERDUE, QT_ALL};
     enum ETaskType{TT_Text, TT_Program, TT_SHOTDOWN};
+    enum EFormatType{FT_DATE,FT_TIME};
+
     extern const wxString s_strSWeek[];
     extern const wxString s_strSDateFormat[];
     extern const wxString s_strCDateFormat[];
     extern const wxString s_strSTimeFormat[];
     extern const wxString s_strCTimeFormat[];
+
     struct TaskData
     {
         int      nDateType;
