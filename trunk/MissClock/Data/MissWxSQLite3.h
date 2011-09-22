@@ -4,7 +4,7 @@
 #include "MissDBL.h"
 
 class wxSQLite3Database;
-
+class wxSQLite3ResultSet;
 //typedef void (*DataFunc)(const MissGlobal::TaskData &data);
 
 class MissWxSQLite3: public MissDBL
@@ -29,6 +29,7 @@ class MissWxSQLite3: public MissDBL
         */
     protected:
         wxSQLite3Database* InitDB();
+        bool GetTaskData(MissGlobal::TaskData& data, wxSQLite3ResultSet& result);
 
     private:
         //std::binder1st<DataFunc> m_Func;

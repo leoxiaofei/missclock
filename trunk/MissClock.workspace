@@ -3,5 +3,6 @@
 	<Workspace title="MC Workspace">
 		<Project filename="MissClock/MissClock.cbp" active="1" />
 		<Project filename="MissNTP/MissNTP.cbp" />
+		<Project filename="MCPlug/MCShutdown/MCShutdown.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

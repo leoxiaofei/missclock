@@ -37,6 +37,7 @@ class MissSetTimer : public MissSetTimerBase
         wxCheckBox *m_szWeekBox[7];
         int        m_nWeekDay;
         int        m_nDataID;
+        int        m_nDefaultCount;
 };
 
 #endif // __MissSetTimer__

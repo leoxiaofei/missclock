@@ -38,8 +38,9 @@ void MissWxSQLite3::UpdateTaskData(int nID, const MissGlobal::TaskData& data)
     query.Bind(5,data.strTaskTime);
     query.Bind(6,data.nEvery);
     query.Bind(7,data.nTaskType);
-    query.Bind(8,data.strTaskContent);
-    query.Bind(9,nID);
+    query.Bind(8,data.strPlugInGUID);
+    query.Bind(9,data.strTaskContent);
+    query.Bind(10,nID);
 
     query.ExecuteUpdate();
 }
@@ -54,7 +55,8 @@ void MissWxSQLite3::InsertTaskData(const MissGlobal::TaskData& data)
     query.Bind(5,data.strTaskTime);
     query.Bind(6,data.nEvery);
     query.Bind(7,data.nTaskType);
-    query.Bind(8,data.strTaskContent);
+    query.Bind(8,data.strPlugInGUID);
+    query.Bind(9,data.strTaskContent);
 
     query.ExecuteUpdate();
 }
@@ -119,14 +121,7 @@ void MissWxSQLite3::QuestTaskData(int nType, std::vector<std::pair<int,MissGloba
         MissGlobal::TaskData data;
         while(result.NextRow())
         {
-            data.nDateType      = result.GetInt(wxT("DateType"));
-            data.strTaskDate    = result.GetString(wxT("TaskDate"));
-            data.nRemindType    = result.GetInt(wxT("RemindType"));
-            data.nTimeType      = result.GetInt(wxT("TimeType"));
-            data.strTaskTime    = result.GetString(wxT("TaskTime"));
-            data.nEvery         = result.GetInt(wxT("Every"));
-            data.nTaskType      = result.GetInt(wxT("TaskType"));
-            data.strTaskContent = result.GetString(wxT("TaskContent"));
+            GetTaskData(data,result);
             mapData.push_back(std::make_pair(result.GetInt(wxT("ID")),data));
         }
     }
@@ -144,14 +139,7 @@ void MissWxSQLite3::QusetDayTask(const wxString& strDate, std::vector<MissGlobal
         MissGlobal::TaskData data;
         while(result.NextRow())
         {
-            data.nDateType      = result.GetInt(wxT("DateType"));
-            data.strTaskDate    = result.GetString(wxT("TaskDate"));
-            data.nRemindType    = result.GetInt(wxT("RemindType"));
-            data.nTimeType      = result.GetInt(wxT("TimeType"));
-            data.strTaskTime    = result.GetString(wxT("TaskTime"));
-            data.nEvery         = result.GetInt(wxT("Every"));
-            data.nTaskType      = result.GetInt(wxT("TaskType"));
-            data.strTaskContent = result.GetString(wxT("TaskContent"));
+            GetTaskData(data,result);
             vecData.push_back(data);
         }
     }
@@ -211,6 +199,7 @@ void MissWxSQLite3::QusetNextRemind(const wxString& strDate, const wxString& str
             data.strTaskTime    = result.GetString(wxT("TaskTime"));
             data.nEvery         = result.GetInt(wxT("Every"));
             data.nTaskType      = result.GetInt(wxT("TaskType"));
+            data.strPlugInGUID  = result.GetString(wxT("PlugInGUID"));
             data.strTaskContent = result.GetString(wxT("TaskContent"));
             vecData.push_back(data);
         }
@@ -227,18 +216,25 @@ bool MissWxSQLite3::GetTaskDataByID(int nID, MissGlobal::TaskData& data)
     {
         if(!result.Eof())
         {
-            data.nDateType      = result.GetInt(wxT("DateType"));
-            data.strTaskDate    = result.GetString(wxT("TaskDate"));
-            data.nRemindType    = result.GetInt(wxT("RemindType"));
-            data.nTimeType      = result.GetInt(wxT("TimeType"));
-            data.strTaskTime    = result.GetString(wxT("TaskTime"));
-            data.nEvery         = result.GetInt(wxT("Every"));
-            data.nTaskType      = result.GetInt(wxT("TaskType"));
-            data.strTaskContent = result.GetString(wxT("TaskContent"));
+            GetTaskData(data,result);
             return true;
         }
     }
     return false;
+}
+
+bool MissWxSQLite3::GetTaskData(MissGlobal::TaskData& data, wxSQLite3ResultSet& result)
+{
+    data.nDateType      = result.GetInt(wxT("DateType"));
+    data.strTaskDate    = result.GetString(wxT("TaskDate"));
+    data.nRemindType    = result.GetInt(wxT("RemindType"));
+    data.nTimeType      = result.GetInt(wxT("TimeType"));
+    data.strTaskTime    = result.GetString(wxT("TaskTime"));
+    data.nEvery         = result.GetInt(wxT("Every"));
+    data.nTaskType      = result.GetInt(wxT("TaskType"));
+    data.strPlugInGUID  = result.GetString(wxT("PlugInGUID"));
+    data.strTaskContent = result.GetString(wxT("TaskContent"));
+    return true;
 }
 
 const wxString MissWxSQLite3::s_strCreateTaskTable = wxT(
@@ -251,6 +247,7 @@ const wxString MissWxSQLite3::s_strCreateTaskTable = wxT(
 \"TaskTime\"  TEXT,\
 \"Every\"  INTEGER,\
 \"TaskType\"  INTEGER,\
+\"PlugInGUID\"  TEXT,\
 \"TaskContent\"  TEXT);"
 );
 
@@ -264,6 +261,7 @@ $TimeType, \
 $TaskTime, \
 $Every, \
 $TaskType, \
+$PlugInGUID, \
 $TaskContent);"
 );
 
@@ -276,6 +274,7 @@ TimeType = $TimeType, \
 TaskTime = $TaskTime, \
 Every = $Every, \
 TaskType = $TaskType, \
+PlugInGUID = $PlugInGUID, \
 TaskContent = $TaskContent \
 WHERE ID = $ID;"
 );

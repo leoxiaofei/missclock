@@ -31,11 +31,14 @@
 #include "../Common/MissGlobal.h"
 #include "../Common/MissTools.h"
 
+#include "../../MCPlug/Common/MissPlugBase.h"
+
 #include <algorithm>
 //#include <boost/progress.hpp>
 
 #include <wx/dcmemory.h>
-#include <wx/menu.h>
+//#include <wx/menu.h>
+#include <wx/dynlib.h>
 #include <winuser.h>
 //#include "windows.h"
 
@@ -87,6 +90,22 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     InitEvent();
     InitUI();
     UpdateMenu();
+
+    MissGlobal::PLUG_ST pst;
+    pst.pDllHandle = new wxDynamicLibrary(wxT("Plugin/MCShutdown.dll"));
+    if ( pst.pDllHandle->IsLoaded() )
+    {
+        typedef bool (* PFN_CreatePlugObject)(void **);
+        PFN_CreatePlugObject pFun = (PFN_CreatePlugObject)(
+                        pst.pDllHandle->GetSymbol(wxT("CreatePlugObject")));
+        pFun((void **)&pst.pPlugObj);
+        MissGlobal::g_vecPlug.push_back(pst);
+    }
+    else
+    {
+        std::wcout << "MCShutdown加载失败了呢？" << std::endl;
+    }
+
 }
 
 MissClockFrame::~MissClockFrame()
@@ -281,7 +300,14 @@ void MissClockFrame::CheckTask()
                         wxExecute(itor->strTaskContent);
                     }
                     break;
-                case 2:
+                default:    ///插件类型任务
+                    {
+                        MissPlugBase* pPlug = MissGlobal::FindPlugByGUID(itor->strPlugInGUID);
+                        if(pPlug != NULL)
+                        {
+                            pPlug->TimeUpRun(m_tmNow,itor->strTaskContent);
+                        }
+                    }
                     break;
                 }
             }
@@ -296,8 +322,8 @@ void MissClockFrame::CheckTask()
 
 void MissClockFrame::PopUpRemind(const std::vector<wxString>& vecContent)
 {
-    MissRemind *a = new MissRemind(vecContent, this);
-    a->Show();
+    MissRemind *pRemind = new MissRemind(vecContent, this);
+    pRemind->Show();
 }
 
 void MissClockFrame::CheckAudioChimer()
@@ -421,7 +447,7 @@ void MissClockFrame::OnmimShadowSelected(wxCommandEvent& event)
 
 void MissClockFrame::OnmimCopyDateSelected(wxCommandEvent& event)
 {
-    m_pTaskBarIcon->ShowBalloon(wxT("测试"),wxT("这是一个测试。"));
+    //m_pTaskBarIcon->ShowBalloon(wxT("测试"),wxT("这是一个测试。"));
     char str[100];
     strftime (str,100, m_pConfig->GetPDateFormat().mb_str(),m_tmNow);
     MissTools::CopyToClipboard( wxString(str,wxConvLocal) );
