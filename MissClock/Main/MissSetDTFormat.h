@@ -29,7 +29,7 @@ class MissSetDTFormat : public MissSetDTFormatBase
 
     private:
         int m_nType;
-        wxString m_strFormat;
+
 };
 
 BEGIN_DECLARE_EVENT_TYPES()

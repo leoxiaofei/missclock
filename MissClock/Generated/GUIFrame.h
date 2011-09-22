@@ -1,13 +1,15 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Jun 30 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __GUIFrame__
-#define __GUIFrame__
+#ifndef __GUIFRAME_H__
+#define __GUIFRAME_H__
 
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
 class MissToolBook;
 
 #include <wx/string.h>
@@ -79,6 +81,7 @@ class GUIFrame : public wxFrame
 	public:
 		
 		GUIFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("MissClock"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 481,466 ), long style = wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL );
+		
 		~GUIFrame();
 	
 };
@@ -161,7 +164,7 @@ class MissOptionBase : public wxDialog
 	
 	public:
 		
-		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,419 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		MissOptionBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("选项"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,419 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 		~MissOptionBase();
 	
 };
@@ -190,7 +193,6 @@ class MissSetTimerBase : public wxDialog
 		wxCheckBox* m_cbtnTues;
 		wxCheckBox* m_cbtnWed;
 		wxCheckBox* m_cbtnThurs;
-		
 		wxCheckBox* m_cbtnFri;
 		wxCheckBox* m_cbtnSar;
 		wxCheckBox* m_cbtnSun;
@@ -211,7 +213,6 @@ class MissSetTimerBase : public wxDialog
 		wxSpinCtrl* m_spMin;
 		wxStaticText* m_lblMin;
 		wxCheckBox* m_cbtnRemindType;
-		
 		wxRadioButton* m_rbtnPStart;
 		wxRadioButton* m_rbtnPClose;
 		wxRadioButton* m_rbtnNothing;
@@ -236,7 +237,7 @@ class MissSetTimerBase : public wxDialog
 		wxFilePickerCtrl* m_fpProgram;
 		wxTextCtrl* m_edtParameter;
 		
-		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 388,406 ), long style = wxDEFAULT_DIALOG_STYLE );
+		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 388,406 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~MissSetTimerBase();
 	
 };
@@ -300,7 +301,7 @@ class MissThemeBase : public wxDialog
 	
 	public:
 		
-		MissThemeBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("修改主题"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,416 ), long style = wxDEFAULT_DIALOG_STYLE );
+		MissThemeBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("修改主题"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 435,416 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~MissThemeBase();
 	
 };
@@ -324,6 +325,7 @@ class MissFrameBase : public wxFrame
 	public:
 		
 		MissFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 253,176 ), long style = wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL|wxTRANSPARENT_WINDOW );
+		
 		~MissFrameBase();
 	
 };
@@ -351,6 +353,7 @@ class MissSetWeekDayBase : public wxFrame
 	public:
 		
 		MissSetWeekDayBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,60 ), long style = wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxSTAY_ON_TOP );
+		
 		~MissSetWeekDayBase();
 	
 };
@@ -376,6 +379,7 @@ class MissSetDTFormatBase : public wxFrame
 	public:
 		
 		MissSetDTFormatBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 305,95 ), long style = wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxTAB_TRAVERSAL );
+		
 		~MissSetDTFormatBase();
 	
 };
@@ -397,8 +401,9 @@ class MissRemindBase : public wxFrame
 	public:
 		
 		MissRemindBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = 0|wxTAB_TRAVERSAL );
+		
 		~MissRemindBase();
 	
 };
 
-#endif //__GUIFrame__
+#endif //__GUIFRAME_H__

@@ -1,6 +1,9 @@
 #ifndef MISSGLOBAL_H
 #define MISSGLOBAL_H
 
+class MissPlugBase;
+class wxDynamicLibrary;
+
 namespace MissGlobal
 {
     enum EUiEvent{UE_UPDATE, UE_UPDATETHEME, UE_SAVETHEME, UE_ZOOMCHANGE, UE_ALPHACHANGE};
@@ -21,6 +24,7 @@ namespace MissGlobal
         int      nRemindType;
         int      nEvery;
         int      nTaskType;
+        wxString strPlugInGUID;
         wxString strTaskDate;
         wxString strTaskTime;
         wxString strTaskContent;
@@ -28,8 +32,18 @@ namespace MissGlobal
         wxString GetTDateDesc() const;
         wxString GetTTimeDesc() const;
         wxString GetTContentDesc() const;
+
     };
-    //extern
+
+    struct PLUG_ST
+    {
+        wxDynamicLibrary* pDllHandle;
+        MissPlugBase*     pPlugObj;
+    };
+
+    extern std::vector<PLUG_ST> g_vecPlug;
+    MissPlugBase* FindPlugByGUID(const wxString& strGUID);
+
 };
 
 BEGIN_DECLARE_EVENT_TYPES()

@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Jun 30 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -669,7 +669,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_panTextRemind->Layout();
 	sbSizer15->Fit( m_panTextRemind );
 	m_tbRun->AddPage( m_panTextRemind, wxT("文字提醒"), true );
-	m_tbRunBitmap = wxBitmap( wxT("wxART_NORMAL_FILE"), wxBITMAP_TYPE_RESOURCE );
+	m_tbRunBitmap = wxArtProvider::GetBitmap( wxART_NORMAL_FILE, wxART_FRAME_ICON );
 	if ( m_tbRunBitmap.Ok() )
 	{
 		m_tbRunImage = m_tbRunBitmap.ConvertToImage();
@@ -709,7 +709,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_panProgRemind->Layout();
 	bSizer38->Fit( m_panProgRemind );
 	m_tbRun->AddPage( m_panProgRemind, wxT("定时运行程序"), false );
-	m_tbRunBitmap = wxBitmap( wxT("wxART_EXECUTABLE_FILE"), wxBITMAP_TYPE_RESOURCE );
+	m_tbRunBitmap = wxArtProvider::GetBitmap( wxART_EXECUTABLE_FILE, wxART_FRAME_ICON );
 	if ( m_tbRunBitmap.Ok() )
 	{
 		m_tbRunImage = m_tbRunBitmap.ConvertToImage();

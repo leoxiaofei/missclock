@@ -4,24 +4,15 @@
 #include "../Common/MissTools.h"
 #include "../Data/MissWxSQLite3.h"
 #include "../Common/MissToolBook.h"
-
+#include "../../MCPlug/Common/MissPlugBase.h"
 
 MissSetTimer::MissSetTimer( int nWeekDay, wxWindow* parent )
 :
 MissSetTimerBase( parent ),
 m_nWeekDay(nWeekDay),
-m_nDataID(-1)
+m_nDataID(-1),
+m_nDefaultCount(m_tbRun->GetPageCount())
 {
-    /*
-    wxToolBarBase* toolbar = m_tbRun->GetToolBar();
-    long lStyle = toolbar->GetWindowStyle();
-    if (lStyle & wxTB_TEXT)
-    {
-        lStyle &= ~wxTB_TEXT;
-    }
-    toolbar->SetWindowStyle(lStyle);
-    */
-
     m_szWeekBox[0] = m_cbtnSun;
     m_szWeekBox[1] = m_cbtnMon;
 	m_szWeekBox[2] = m_cbtnTues;
@@ -34,13 +25,27 @@ m_nDataID(-1)
     m_spHour->SetValue(dtTmp.GetHour());
     m_spMin->SetValue(dtTmp.GetMinute());
 
+    wxImageList* imageList = m_tbRun->GetImageList();
+    int nWidth,nHeight;
+    imageList->GetSize(0, nWidth, nHeight);
+    wxImage tbRunImage;
+    MissPlugBase* pPlug(NULL);
+    for(unsigned int ix = 0; ix != MissGlobal::g_vecPlug.size(); ++ix)
+    {
+        pPlug = MissGlobal::g_vecPlug[ix].pPlugObj;
+
+        pPlug->InitPanel(m_tbRun);
+        m_tbRun->AddPage(pPlug->GetPanel(),pPlug->GetPanelName());
+        pPlug->GetIcon(tbRunImage);
+        imageList->Add(tbRunImage.Scale( nWidth, nHeight ));
+        m_tbRun->SetPageImage( m_nDefaultCount+ix, m_nDefaultCount+ix );
+    }
 
 }
 
 void MissSetTimer::OnInitDialog(wxInitDialogEvent& event)
 {
-    wxYield();
-    Layout();
+
 }
 
 void MissSetTimer::OnHLWorkDayClick(wxHyperlinkEvent& event)
@@ -104,6 +109,14 @@ void MissSetTimer::GetTaskData(MissGlobal::TaskData& data)
         data.strTaskContent.Printf(wxT("\"%s\" %s"),m_fpProgram->GetTextCtrlValue().c_str(),
                                    m_edtParameter->GetValue().c_str());
         data.strTaskContent.Trim();
+        break;
+    default:   ///插件任务
+        {
+            MissPlugBase* pPlug = MissGlobal::g_vecPlug[data.nTaskType - m_nDefaultCount].pPlugObj;
+            data.nTaskType = 2;
+            data.strPlugInGUID = pPlug->GetGUID();
+            data.strTaskContent = pPlug->GetTaskContent();
+        }
         break;
     }
 
@@ -210,11 +223,11 @@ void MissSetTimer::ImportTaskDataToModify(int nDataID, const MissGlobal::TaskDat
     m_cbtnRemindType->SetValue(data.nRemindType);
 
     ///任务类型
-    m_tbRun->SetSelection(data.nTaskType);
     switch(data.nTaskType)
     {
     case 0:
         m_edtContent->SetValue(data.strTaskContent);
+        m_tbRun->SetSelection(0);
         break;
     case 1:
         {
@@ -232,6 +245,22 @@ void MissSetTimer::ImportTaskDataToModify(int nDataID, const MissGlobal::TaskDat
             }
             m_fpProgram->SetPath( strAddr );
             m_edtParameter->SetValue( strArgument );
+            m_tbRun->SetSelection(1);
+        }
+        break;
+    default:    ///插件类型任务
+        {
+            MissPlugBase* pPlug(NULL);
+            for(unsigned int ix = 0; ix != MissGlobal::g_vecPlug.size(); ++ix)
+            {
+                pPlug = MissGlobal::g_vecPlug[ix].pPlugObj;
+                if(pPlug->GetGUID() == data.strPlugInGUID)
+                {
+                    pPlug->InitData(data.strTaskContent);
+                    m_tbRun->SetSelection(m_nDefaultCount + ix);
+                    break;
+                }
+            }
         }
         break;
     }

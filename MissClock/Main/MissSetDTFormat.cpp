@@ -6,8 +6,7 @@ DEFINE_LOCAL_EVENT_TYPE(wxEVT_MCDTF_EVENT);
 MissSetDTFormat::MissSetDTFormat(int nType,const wxString& strFormat, wxWindow* parent )
 :
 MissSetDTFormatBase( parent ),
-m_nType(nType),
-m_strFormat(strFormat)
+m_nType(nType)
 {
     long lStyle = GetWindowStyle();
     if (lStyle & wxRESIZE_BORDER)
