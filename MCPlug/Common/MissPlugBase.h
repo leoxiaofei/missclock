@@ -21,6 +21,7 @@ class MissPlugBase
         virtual void TimeUpRun(tm* tmNow, const wxString& strTaskContent) = 0;
         virtual wxString GetDescription(const wxString& strTaskContent) = 0;
         virtual void Release() = 0;
+        virtual bool HasShortcutMenu(){return false;};
         const wxString &GetGUID(){return m_strGUID;};
         const wxString &GetPanelName(){return m_strPanelName;};
         wxPanel* GetPanel(){return m_pan;};

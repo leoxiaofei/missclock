@@ -36,13 +36,16 @@ class MissClockFrame: public GUIFrame
     protected:
         void InitUI();
         void InitEvent();
+        void InitPlugin();
+        void LoadPlugin(const wxString& strPath);
         void UpdateMenu();
         void UpdateSize();
         void UpdateAlpha();
         void UpdateTheme();
         bool UpdateClock();
         void CheckTask();
-        void LoadTask();
+        void LoadTask(int nNextMin = 1);
+        void LoadDayTask();
         void CheckAudioChimer();
         void OnMinUp();
         void ConnectSlot(Slots& slots, FrameFunc func);
@@ -55,6 +58,7 @@ class MissClockFrame: public GUIFrame
         void UpdateAudioChimer();
 
         void PopUpRemind(const std::vector<wxString>& vecContent);
+        void RunStartupTask(int nType);
 
     private:
         void OnTimer(wxTimerEvent& event);
@@ -97,6 +101,7 @@ class MissClockFrame: public GUIFrame
         bool                             m_bRightMenu;
         bool                             m_bReloadSkin;
         std::vector<MissGlobal::TaskData> m_vecMinData;
+        std::vector<MissGlobal::TaskData> m_vecDayData;
 };
 
 #endif // MISSCLOCKMAIN_H

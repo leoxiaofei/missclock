@@ -183,7 +183,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panUI->SetSizer( bSizer2 );
 	m_panUI->Layout();
 	bSizer2->Fit( m_panUI );
-	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), false );
+	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), true );
 	m_panSys = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer17;
 	bSizer17 = new wxBoxSizer( wxVERTICAL );
@@ -258,7 +258,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panSys->SetSizer( bSizer17 );
 	m_panSys->Layout();
 	bSizer17->Fit( m_panSys );
-	m_lsbOption->AddPage( m_panSys, wxT("系统设置"), true );
+	m_lsbOption->AddPage( m_panSys, wxT("系统设置"), false );
 	m_panTmr = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer20;
 	bSizer20 = new wxBoxSizer( wxVERTICAL );
@@ -272,7 +272,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_btnAdditional = new wxButton( m_panTmr, wxID_ANY, wxT("↓"), wxDefaultPosition, wxSize( 20,-1 ), 0 );
 	m_mnuAdditional = new wxMenu();
 	wxMenuItem* m_mnuRemind;
-	m_mnuRemind = new wxMenuItem( m_mnuAdditional, wxID_ANY, wxString( wxT("定时提醒") ) , wxEmptyString, wxITEM_NORMAL );
+	m_mnuRemind = new wxMenuItem( m_mnuAdditional, wxID_ANY, wxString( wxT("工作日提醒") ) , wxEmptyString, wxITEM_NORMAL );
 	m_mnuAdditional->Append( m_mnuRemind );
 	
 	wxMenuItem* m_mnuBirthday;
@@ -282,10 +282,6 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	wxMenuItem* m_mnuTodo;
 	m_mnuTodo = new wxMenuItem( m_mnuAdditional, wxID_ANY, wxString( wxT("明日待办") ) , wxEmptyString, wxITEM_NORMAL );
 	m_mnuAdditional->Append( m_mnuTodo );
-	
-	wxMenuItem* m_mnuShutdown;
-	m_mnuShutdown = new wxMenuItem( m_mnuAdditional, wxID_ANY, wxString( wxT("定时关机") ) , wxEmptyString, wxITEM_NORMAL );
-	m_mnuAdditional->Append( m_mnuShutdown );
 	
 	
 	bSizer21->Add( m_btnAdditional, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
@@ -397,6 +393,9 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_btnNTP->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnNtpBtnClick ), NULL, this );
 	m_btnAddTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAddTaskClick ), NULL, this );
 	m_btnAdditional->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAdditionaClick ), NULL, this );
+	this->Connect( m_mnuRemind->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MissOptionBase::OnMenuRemindSelection ) );
+	this->Connect( m_mnuBirthday->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MissOptionBase::OnMenuBirthdaySelection ) );
+	this->Connect( m_mnuTodo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MissOptionBase::OnMenuTodoSelection ) );
 	m_btnModifyTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnModifyTaskClick ), NULL, this );
 	m_btnDeleteTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDeleteTaskClick ), NULL, this );
 	m_nbTimerSetting->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNBTimerSettingChanged ), NULL, this );
@@ -424,6 +423,9 @@ MissOptionBase::~MissOptionBase()
 	m_btnNTP->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnNtpBtnClick ), NULL, this );
 	m_btnAddTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAddTaskClick ), NULL, this );
 	m_btnAdditional->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnAdditionaClick ), NULL, this );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MissOptionBase::OnMenuRemindSelection ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MissOptionBase::OnMenuBirthdaySelection ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MissOptionBase::OnMenuTodoSelection ) );
 	m_btnModifyTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnModifyTaskClick ), NULL, this );
 	m_btnDeleteTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDeleteTaskClick ), NULL, this );
 	m_nbTimerSetting->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNBTimerSettingChanged ), NULL, this );
@@ -652,7 +654,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("内容") ), wxVERTICAL );
 	
 	m_tbRun = new MissToolBook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	wxSize m_tbRunImageSize = wxSize( 30,30 );
+	wxSize m_tbRunImageSize = wxSize( 25,25 );
 	int m_tbRunIndex = 0;
 	wxImageList* m_tbRunImages = new wxImageList( m_tbRunImageSize.GetWidth(), m_tbRunImageSize.GetHeight() );
 	m_tbRun->AssignImageList( m_tbRunImages );
@@ -678,6 +680,9 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 		m_tbRunIndex++;
 	}
 	m_panProgRemind = new wxPanel( m_tbRun, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxStaticBoxSizer* sbSizer16;
+	sbSizer16 = new wxStaticBoxSizer( new wxStaticBox( m_panProgRemind, wxID_ANY, wxT("定时运行") ), wxVERTICAL );
+	
 	wxBoxSizer* bSizer38;
 	bSizer38 = new wxBoxSizer( wxVERTICAL );
 	
@@ -705,9 +710,11 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	
 	bSizer38->Add( bSizer40, 1, wxEXPAND, 5 );
 	
-	m_panProgRemind->SetSizer( bSizer38 );
+	sbSizer16->Add( bSizer38, 1, wxEXPAND, 5 );
+	
+	m_panProgRemind->SetSizer( sbSizer16 );
 	m_panProgRemind->Layout();
-	bSizer38->Fit( m_panProgRemind );
+	sbSizer16->Fit( m_panProgRemind );
 	m_tbRun->AddPage( m_panProgRemind, wxT("定时运行程序"), false );
 	m_tbRunBitmap = wxArtProvider::GetBitmap( wxART_EXECUTABLE_FILE, wxART_FRAME_ICON );
 	if ( m_tbRunBitmap.Ok() )

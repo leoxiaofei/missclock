@@ -27,6 +27,10 @@ class MissWxSQLite3: public MissDBL
             m_Func = func;
         }
         */
+        void BeginTransaction();
+        void CommitTransaction();
+        void RollbackTransaction();
+
     protected:
         wxSQLite3Database* InitDB();
         bool GetTaskData(MissGlobal::TaskData& data, wxSQLite3ResultSet& result);

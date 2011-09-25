@@ -30,6 +30,9 @@ MCShutdown::MCShutdown( wxWindow* parent, wxWindowID id, const wxPoint& pos, con
 	m_rBoxShutdown->SetSelection( 0 );
 	bSizer1->Add( m_rBoxShutdown, 0, wxALL|wxEXPAND, 5 );
 	
+	m_cbtnForce = new wxCheckBox( this, wxID_ANY, wxT("强制（直接关闭系统，而不通知其他程序）"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer1->Add( m_cbtnForce, 0, wxALL|wxEXPAND, 5 );
+	
 	this->SetSizer( bSizer1 );
 	this->Layout();
 }
