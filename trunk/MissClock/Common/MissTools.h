@@ -24,6 +24,10 @@ namespace MissTools
     };
 
     void CopyToClipboard(const wxString& strText);
+
+    void GetAutoRunPath(wxString& strRunPath);
+    bool GetAutoRun();
+    void SetAutoRun(bool bAutoRun);
 };
 
 #endif // MISSTOOLS_H

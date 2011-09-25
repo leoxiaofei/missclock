@@ -16,6 +16,7 @@
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
+#include <wx/checkbox.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
 
@@ -33,6 +34,7 @@ class MCShutdown : public wxPanel
 	
 	public:
 		wxRadioBox* m_rBoxShutdown;
+		wxCheckBox* m_cbtnForce;
 		
 		MCShutdown( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
 		~MCShutdown();

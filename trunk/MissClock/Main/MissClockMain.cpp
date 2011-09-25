@@ -37,7 +37,7 @@
 //#include <boost/progress.hpp>
 
 #include <wx/dcmemory.h>
-//#include <wx/menu.h>
+#include <wx/dir.h>
 #include <wx/dynlib.h>
 #include <winuser.h>
 //#include "windows.h"
@@ -90,22 +90,14 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     InitEvent();
     InitUI();
     UpdateMenu();
+    InitPlugin();
 
-    MissGlobal::PLUG_ST pst;
-    pst.pDllHandle = new wxDynamicLibrary(wxT("Plugin/MCShutdown.dll"));
-    if ( pst.pDllHandle->IsLoaded() )
-    {
-        typedef bool (* PFN_CreatePlugObject)(void **);
-        PFN_CreatePlugObject pFun = (PFN_CreatePlugObject)(
-                        pst.pDllHandle->GetSymbol(wxT("CreatePlugObject")));
-        pFun((void **)&pst.pPlugObj);
-        MissGlobal::g_vecPlug.push_back(pst);
-    }
-    else
-    {
-        std::wcout << "MCShutdown加载失败了呢？" << std::endl;
-    }
+    m_ttNow = time(NULL);
+    m_tmNow = localtime(&m_ttNow);
 
+    LoadTask();
+    LoadDayTask();
+    RunStartupTask(1);
 }
 
 MissClockFrame::~MissClockFrame()
@@ -145,6 +137,48 @@ void MissClockFrame::InitUI()
     ///第一次刷新界面
     wxTimerEvent send;
     AddPendingEvent(send);
+}
+
+void MissClockFrame::InitPlugin()
+{
+    wxString diraddr = wxT("Plugin\\");
+    wxDir dir(diraddr);
+    if (dir.IsOpened())
+    {
+        wxString filename;
+        bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_FILES);
+        while (cont)
+        {
+            LoadPlugin(diraddr + filename);
+            cont = dir.GetNext(&filename);
+        }
+    }
+}
+
+void MissClockFrame::LoadPlugin(const wxString& strPath)
+{
+    MissGlobal::PLUG_ST pst;
+    pst.pDllHandle = new wxDynamicLibrary(strPath);
+    if ( pst.pDllHandle->IsLoaded() )
+    {
+        typedef bool (* PFN_CreatePlugObject)(void **);
+        PFN_CreatePlugObject pFun = (PFN_CreatePlugObject)(
+                        pst.pDllHandle->GetSymbol(wxT("CreatePlugObject")));
+        if(pFun)
+        {
+            pFun((void **)&pst.pPlugObj);
+            MissGlobal::g_vecPlug.push_back(pst);
+        }
+        else
+        {
+            pst.pDllHandle->Unload();
+            delete pst.pDllHandle;
+        }
+    }
+    else
+    {
+        std::wcout <<strPath.c_str()<< " failed to load..." << std::endl;
+    }
 }
 
 void MissClockFrame::UpdateMenu()
@@ -255,17 +289,40 @@ bool MissClockFrame::UpdateClock()
                           &s_ptSrc, 0, &m_Blend, ULW_ALPHA);
 }
 
-void MissClockFrame::LoadTask()
+void MissClockFrame::LoadTask(int nNextMin)
 {
     //std::cout<<"LoadTask::"<<m_tmNow->tm_hour<<":"<<m_tmNow->tm_min<<std::endl;
     //std::vector<std::pair<int,MissGlobal::TaskData> > vecData;
-    m_vecMinData.clear();
+    std::vector<MissGlobal::TaskData> ().swap(m_vecMinData);
     try
     {
         MissWxSQLite3 sql;
         sql.QusetNextRemind(wxString::Format(wxT("%04d-%02d-%02d"),m_tmNow->tm_year+1900,
             m_tmNow->tm_mon+1,m_tmNow->tm_mday),wxString::Format(wxT("%02d:%02d"),
-            m_tmNow->tm_hour,m_tmNow->tm_min),m_vecMinData);
+            m_tmNow->tm_hour, (m_tmNow->tm_min + nNextMin) % 60),m_vecMinData);
+    }
+    catch(...)
+    {
+        std::cout << "db error." <<std::endl;
+    }
+
+
+    for(unsigned int ix = 0; ix != m_vecMinData.size(); ++ix)
+    {
+        std::wcout<<m_vecMinData[ix].strTaskTime.c_str()<<std::endl;
+        std::wcout <<m_vecMinData[ix].strPlugInGUID.c_str()<<std::endl;
+        std::wcout<<m_vecMinData[ix].strTaskContent.c_str()<<std::endl;
+    }
+}
+
+void MissClockFrame::LoadDayTask()
+{
+    std::vector<MissGlobal::TaskData> ().swap(m_vecDayData);
+    try
+    {
+        MissWxSQLite3 sql;
+        sql.QusetDayTask(wxString::Format(wxT("%04d-%02d-%02d"),m_tmNow->tm_year+1900,
+            m_tmNow->tm_mon+1,m_tmNow->tm_mday),m_vecDayData);
     }
     catch(...)
     {
@@ -277,13 +334,20 @@ void MissClockFrame::LoadTask()
 
 void MissClockFrame::CheckTask()
 {
-    //std::cout<<"CheckTask::"<<m_tmNow->tm_hour<<":"<<m_tmNow->tm_min<<std::endl;
+    std::cout<<"CheckTask:"<<m_vecMinData.size()<<std::endl;
+    if(m_tmNow->tm_hour == 0 && m_tmNow->tm_min == 0)
+    {
+        ///TODO:检查零点任务
+        LoadTask(0);
+    }
     if(!m_vecMinData.empty())
     {
+        std::wcout<<m_vecMinData[0].strTaskTime.c_str()<<std::endl;
         if(m_vecMinData[0].strTaskTime == wxString::Format(wxT("%02d:%02d"),m_tmNow->tm_hour,m_tmNow->tm_min))
         {
             //wxMessageBox(m_vecMinData[0].strTaskContent);
             //int nIndex(0);
+            std::cout<<"CT1"<<std::endl;
             std::vector<wxString> vecRemindContent;
             for(std::vector<MissGlobal::TaskData>::iterator itor = m_vecMinData.begin();
                 itor != m_vecMinData.end(); ++itor)
@@ -302,9 +366,11 @@ void MissClockFrame::CheckTask()
                     break;
                 default:    ///插件类型任务
                     {
+                        std::cout<<"CT2"<<std::endl;
                         MissPlugBase* pPlug = MissGlobal::FindPlugByGUID(itor->strPlugInGUID);
                         if(pPlug != NULL)
                         {
+                            std::cout<<"CT3"<<std::endl;
                             pPlug->TimeUpRun(m_tmNow,itor->strTaskContent);
                         }
                     }
@@ -370,7 +436,7 @@ void MissClockFrame::OnClose(wxCloseEvent& event)
     m_pConfig->SavePos();
 
     ///执行关闭时任务
-
+    RunStartupTask(2);
     Destroy();
 }
 
@@ -389,8 +455,18 @@ void MissClockFrame::OnmimTopSelected(wxCommandEvent& event)
 
 void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 {
+    std::vector<std::pair<wxString, wxString> > vecMenu;
+    for(std::vector<MissGlobal::PLUG_ST>::iterator itor = MissGlobal::g_vecPlug.begin();
+        itor != MissGlobal::g_vecPlug.end(); ++itor)
+    {
+        if(itor->pPlugObj->HasShortcutMenu())
+        {
+            vecMenu.push_back(std::make_pair(itor->pPlugObj->GetPanelName(),itor->pPlugObj->GetGUID()));
+        }
+    }
     m_bRightMenu = false;
     MissOption OptionDlg(this);
+    OptionDlg.CreatePluginMenu(vecMenu);
     OptionDlg.Connect(wxEVT_MCUI_EVENT, wxCommandEventHandler(MissClockFrame::OnOptionUiEvent), NULL, this);
     OptionDlg.Connect(wxEVT_MCDATA_EVENT, wxCommandEventHandler(MissClockFrame::OnDataEvent), NULL, this);
     if (OptionDlg.ShowModal() == wxID_OK)
@@ -526,6 +602,7 @@ void MissClockFrame::OnDataEvent(wxCommandEvent& event)
 {
     std::cout<<"OnDataEvent"<<std::endl;
     LoadTask();
+    LoadDayTask();
 }
 
 void MissClockFrame::ReloadSkin()
@@ -593,3 +670,46 @@ void MissClockFrame::UpdateAudioChimer()
         DisConnectSlot(sg_MinUp,&MissClockFrame::CheckAudioChimer);
     }
 }
+
+void MissClockFrame::RunStartupTask(int nType)
+{
+    if(!m_vecDayData.empty())
+    {
+        std::vector<wxString> vecRemindContent;
+        for(std::vector<MissGlobal::TaskData>::iterator itor = m_vecDayData.begin();
+                itor != m_vecDayData.end(); ++itor)
+        {
+            if(m_vecDayData[0].nTimeType == nType)
+            {
+                switch(itor->nTaskType)
+                {
+                case 0:     ///文字提醒任务
+                    {
+                        vecRemindContent.push_back( itor->strTaskContent );
+                    }
+                    break;
+                case 1:     ///程序任务
+                    {
+                        wxExecute(itor->strTaskContent);
+                    }
+                    break;
+                default:    ///插件类型任务
+                    {
+                        MissPlugBase* pPlug = MissGlobal::FindPlugByGUID(itor->strPlugInGUID);
+                        if(pPlug != NULL)
+                        {
+                            pPlug->TimeUpRun(m_tmNow,itor->strTaskContent);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        if(!vecRemindContent.empty())
+        {
+            PopUpRemind(vecRemindContent);
+        }
+    }
+}
+

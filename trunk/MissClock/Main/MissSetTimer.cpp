@@ -120,25 +120,28 @@ void MissSetTimer::GetTaskData(MissGlobal::TaskData& data)
         break;
     }
 
+    ///wxDateTime类影响localtime内部静态变量的值
+    time_t ttNow = time(NULL);
+    localtime(&ttNow);
+
 }
 
 void MissSetTimer::ImportTaskDataToModify(int nDataID, const MissGlobal::TaskData& data)
 {
     m_nDataID = nDataID;
+    wxDateTime dtTmp;
     ///日期类型
     m_cbookDate->SetSelection(data.nDateType);
     switch(data.nDateType)
     {
     case 0:
         {
-            wxDateTime dtTmp;
             dtTmp.ParseDate(data.strTaskDate);
             m_dpAppoint->SetValue(dtTmp);
         }
         break;
     case 1:
         {
-            wxDateTime dtTmp;
             dtTmp.ParseDate(data.strTaskDate);
             m_dpEDay->SetValue(dtTmp);
             m_spEDay->SetValue(data.nEvery);
@@ -190,19 +193,21 @@ void MissSetTimer::ImportTaskDataToModify(int nDataID, const MissGlobal::TaskDat
         break;
     case 4:
         {
-            wxDateTime dtTmp;
             dtTmp.ParseDate(data.strTaskDate);
-            m_spYMonth->SetValue(dtTmp.GetMonth());
+            m_spYMonth->SetValue(dtTmp.GetMonth()+1);
             m_spYDay->SetValue(dtTmp.GetDay());
         }
         break;
     }
 
     ///时间类型
-    wxDateTime dtTmp;
-    dtTmp.ParseTime(data.strTaskTime);
-    m_spHour->SetValue(dtTmp.GetHour());
-    m_spMin->SetValue(dtTmp.GetMinute());
+    if(!data.strTaskTime.IsEmpty())
+    {
+        dtTmp.ParseTime(data.strTaskTime);
+        m_spHour->SetValue(dtTmp.GetHour());
+        m_spMin->SetValue(dtTmp.GetMinute());
+    }
+
     switch(data.nTimeType)
     {
     case 0:
@@ -289,15 +294,6 @@ void MissSetTimer::OnOKButtonClick(wxCommandEvent& event)
 
     }
     EndModal(wxID_OK);
-}
-
-void MissSetTimer::ImportSetting(int nType)
-{
-    switch(nType)
-    {
-    case 0:
-        break;
-    }
 }
 
 

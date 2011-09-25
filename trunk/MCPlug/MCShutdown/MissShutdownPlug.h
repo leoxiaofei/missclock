@@ -16,11 +16,13 @@ class MissShutdownPlug : public MissPlugBase
         wxString GetDescription(const wxString& strTaskContent);
         void TimeUpRun(tm* tmNow, const wxString& strTaskContent);
         void Release();
+        bool HasShortcutMenu();
 
     protected:
-        static wxString s_strDescription[];
+        bool AdjustToken();
 
     private:
+        static wxString s_strDescription[];
 };
 
 #endif // MISSSHUTDOWNPLUG_H

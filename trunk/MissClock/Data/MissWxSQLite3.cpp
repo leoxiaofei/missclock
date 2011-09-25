@@ -149,6 +149,7 @@ void MissWxSQLite3::QusetDayTask(const wxString& strDate, std::vector<MissGlobal
 void MissWxSQLite3::QusetNextRemind(const wxString& strDate, const wxString& strTime,
                                     std::vector<MissGlobal::TaskData>& vecData)
 {
+    std::wcout<<strTime.c_str()<<std::endl;
     /*
            wxT(" WHERE TimeType = 0 AND TaskTime >= $TaskTime AND (\
            (DateType = 0 AND TaskDate = $TaskDate1) OR \
@@ -205,6 +206,10 @@ void MissWxSQLite3::QusetNextRemind(const wxString& strDate, const wxString& str
         }
     }
     result.Finalize();
+
+    ///wxDateTime类影响localtime内部静态变量的值
+    time_t ttNow = time(NULL);
+    localtime(&ttNow);
 }
 
 bool MissWxSQLite3::GetTaskDataByID(int nID, MissGlobal::TaskData& data)
@@ -235,6 +240,21 @@ bool MissWxSQLite3::GetTaskData(MissGlobal::TaskData& data, wxSQLite3ResultSet& 
     data.strPlugInGUID  = result.GetString(wxT("PlugInGUID"));
     data.strTaskContent = result.GetString(wxT("TaskContent"));
     return true;
+}
+
+void MissWxSQLite3::BeginTransaction()
+{
+    m_pDB->Begin();
+}
+
+void MissWxSQLite3::CommitTransaction()
+{
+    m_pDB->Commit();
+}
+
+void MissWxSQLite3::RollbackTransaction()
+{
+    m_pDB->Rollback();
 }
 
 const wxString MissWxSQLite3::s_strCreateTaskTable = wxT(

@@ -28,6 +28,7 @@ MissOption::MissOption(wxWindow* parent)
     m_strPTimeFormat = m_pConfig->GetPTimeFormat();
 
     CentreOnScreen();
+
 }
 
 MissOption::~MissOption()
@@ -60,6 +61,7 @@ void MissOption::OnInitDialog(wxInitDialogEvent& event)
     m_cbtnTop->SetValue(m_pConfig->GetTop());
     m_cbtnPin->SetValue(m_pConfig->GetPin());
     m_cobNTP->SetValue(m_pConfig->GetNTP());
+    m_cbtnAutoRun->SetValue(MissTools::GetAutoRun());
 }
 
 void MissOption::SetZoomState(bool bEnable)
@@ -207,6 +209,7 @@ void MissOption::OnCancel(wxCommandEvent& event)
 void MissOption::OnOK(wxCommandEvent& event)
 {
 // TODO: Implement OnOK
+    MissTools::SetAutoRun(m_cbtnAutoRun->GetValue());
     m_pConfig->SetWeekDay(m_nWeekDay);
     m_pConfig->SetPDateFormat(m_strPDateFormat);
     m_pConfig->SetPTimeFormat(m_strPTimeFormat);
@@ -269,10 +272,12 @@ void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
         try
         {
             MissWxSQLite3 sql;
+            sql.BeginTransaction();
             for(std::vector<int>::iterator itor = vecDelete.begin(); itor != vecDelete.end(); ++itor)
             {
                 sql.DeleteTaskData(*itor);
             }
+            sql.CommitTransaction();
             ///告诉父窗口更新数据
             wxCommandEvent send(wxEVT_MCDATA_EVENT,GetId());
             //send.SetInt(MissGlobal::UE_ALPHACHANGE);
@@ -280,7 +285,6 @@ void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
         }
         catch(...)
         {
-
         }
     }
 
@@ -416,16 +420,7 @@ void MissOption::ModifyTaskData(int nID)
 
     if(bSuccess)
     {
-        MissTools::AutoHideWindow HideWin(this);
-        MissSetTimer SetTimerDlg(m_nWeekDay, this);
-        SetTimerDlg.ImportTaskDataToModify(nID,data);
-        if(SetTimerDlg.ShowModal() == wxID_OK)
-        {
-            UpdateListData();
-            wxCommandEvent send(wxEVT_MCDATA_EVENT,GetId());
-            //send.SetInt(MissGlobal::UE_ALPHACHANGE);
-            GetEventHandler()->ProcessEvent(send);
-        }
+        OpenSetTimerByTemplate(data,nID);
     }
 }
 
@@ -466,3 +461,88 @@ void MissOption::OnBtnTimeFormatSetClick(wxCommandEvent& event)
     pDTFormatSetting->Show();
 }
 
+void MissOption::OpenSetTimerByTemplate(const MissGlobal::TaskData& data, int nID)
+{
+    MissTools::AutoHideWindow HideWin(this);
+    MissSetTimer SetTimerDlg(m_nWeekDay, this);
+    SetTimerDlg.ImportTaskDataToModify(nID,data);
+    if(SetTimerDlg.ShowModal() == wxID_OK)
+    {
+        UpdateListData();
+        wxCommandEvent send(wxEVT_MCDATA_EVENT,GetId());
+        //send.SetInt(MissGlobal::UE_ALPHACHANGE);
+        GetEventHandler()->ProcessEvent(send);
+    }
+}
+
+void MissOption::OnTimingMenuSelection(wxCommandEvent& event)
+{
+    std::cout<<event.GetId()<<std::endl;
+    std::map<int,wxString>::iterator itor = m_mapMenuIdToGUID.find(event.GetId());
+    if( itor != m_mapMenuIdToGUID.end())
+    {
+        MissGlobal::TaskData data;
+        data.nDateType   = 0;   ///按指定日期提醒
+        data.strTaskDate = wxDateTime::Now().FormatISODate();
+        data.nTimeType   = 0;   ///启动时提醒
+        data.nRemindType = 0;   ///在任务列表
+        data.nTaskType   = 2;   ///插件类型的任务
+        data.strPlugInGUID = itor->second;
+        OpenSetTimerByTemplate(data);
+    }
+}
+
+void MissOption::OnMenuRemindSelection(wxCommandEvent& event)
+{
+    MissGlobal::TaskData data;
+    data.nDateType   = 2;   ///按周提醒
+    data.nEvery      = m_nWeekDay;
+    data.nTimeType   = 0;   ///定时
+    data.nRemindType = 0;   ///在任务列表
+    data.nTaskType   = 0;   ///文字类型的任务
+    //data.nEvery      =;
+    data.strTaskContent = wxT("在公司要做...");
+    OpenSetTimerByTemplate(data);
+}
+
+void MissOption::OnMenuBirthdaySelection(wxCommandEvent& event)
+{
+    MissGlobal::TaskData data;
+    data.nDateType   = 4;   ///按年提醒
+    data.strTaskDate = wxDateTime::Now().FormatISODate();
+    data.nTimeType   = 1;   ///启动时提醒
+    data.nRemindType = 1;   ///在任务列表
+    data.nTaskType   = 0;   ///文字类型的任务
+    //data.nEvery      =;
+    data.strTaskContent = wxT("今天是 xxx 的生日，记得给他（她）祝福哦。");
+    OpenSetTimerByTemplate(data);
+}
+
+void MissOption::OnMenuTodoSelection(wxCommandEvent& event)
+{
+    MissGlobal::TaskData data;
+    data.nDateType   = 0;   ///按指定日期提醒
+    data.strTaskDate = wxDateTime::Now().Add(wxDateSpan(0,0,0,1)).FormatISODate();
+    data.nTimeType   = 1;   ///启动时提醒
+    data.nRemindType = 1;   ///在任务列表
+    data.nTaskType   = 0;   ///文字类型的任务
+    //data.nEvery      =;
+    data.strTaskContent = wxT("不要忘记今天要做...");
+    OpenSetTimerByTemplate(data);
+}
+
+void MissOption::CreatePluginMenu(const std::vector<std::pair<wxString, wxString> >& vecMenu)
+{
+    wxMenuItem* m_mnuPlugin;
+    for(std::vector<std::pair<wxString, wxString> >::const_iterator citor = vecMenu.begin();
+        citor != vecMenu.end(); ++citor)
+    {
+        m_mnuPlugin = new wxMenuItem( m_mnuAdditional, wxID_ANY, citor->first
+                               , wxEmptyString, wxITEM_NORMAL );
+        Connect( m_mnuPlugin->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+                wxCommandEventHandler( MissOption::OnTimingMenuSelection ) );
+        m_mnuAdditional->Append( m_mnuPlugin );
+        m_mapMenuIdToGUID.insert(std::make_pair(m_mnuPlugin->GetId(),citor->second));
+    }
+
+}
