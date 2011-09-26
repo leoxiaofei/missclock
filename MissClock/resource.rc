@@ -1,3 +1,34 @@
+#include "wx/msw/wx.rc"
+#include "Version.h"
+
 RC_CLOCK_ICON ICON "wx/msw/std.ico"
 
-#include "wx/msw/wx.rc"
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+
+1 VERSIONINFO
+    FILEVERSION     1,1,0,SVN_REVISION
+    PRODUCTVERSION  1,1,0,SVN_REVISION
+    FILEOS          VOS__WINDOWS32
+    FILETYPE        VFT_APP
+    FILESUBTYPE     VFT2_UNKNOWN
+    FILEFLAGSMASK   0x00000000
+    FILEFLAGS       0x00000000
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "0804fde9"
+        {
+            VALUE "CompanyName", "迷失之家"
+            VALUE "FileDescription", "迷失日历时钟主程序"
+            VALUE "InternalName", "MissClock"
+            VALUE "LegalCopyright", "Copyright 2009-2012 迷失之家"
+            VALUE "OriginalFilename", "MissClock"
+            VALUE "ProductName", "迷失日历时钟"
+            VALUE "ProductVersion", "1.1" SVN_LOCAL_MODIFICATIONS
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0804, 0xFDE9
+    }
+}
