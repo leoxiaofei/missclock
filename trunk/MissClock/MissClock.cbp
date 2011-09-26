@@ -82,6 +82,8 @@
 		<Linker>
 			<Add option="-mthreads" />
 			<Add library="libgdi32.a" />
+			<Add library="libole32.a" />
+			<Add library="libuuid.a" />
 			<Add directory="$(#tinyxml)\lib" />
 			<Add directory="$(#wxsqlite3)\lib\gcc_dll" />
 		</Linker>
