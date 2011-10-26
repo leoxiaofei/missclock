@@ -1,10 +1,12 @@
 #include "MissDDE.h"
+#include "../Main/MissClockMain.h"
 
 namespace MissDDE
 {
 
-MissServer::MissServer(): wxServer(),
-m_connection(NULL)
+MissServer::MissServer(wxFrame *frmMain): wxServer(),
+m_connection(NULL),
+m_frmMain(frmMain)
 {
 }
 
@@ -17,7 +19,7 @@ void MissServer::Disconnect()
 {
     if (m_connection)
     {
-        m_connection->Disconnect();
+        m_connection->wxDDEConnection::Disconnect();
         delete m_connection;
         m_connection = NULL;
     }
@@ -30,6 +32,8 @@ wxConnectionBase* MissServer::OnAcceptConnection(const wxString& topic)
     {
         std::cout<<"new MissConnection"<<std::endl;
         m_connection = new MissConnection();
+        m_connection->Connect(wxEVT_MCTOOLTIP_EVENT, wxCommandEventHandler(MissClockFrame::OnToolTipEvent), NULL, m_frmMain);
+        m_connection->Connect(wxEVT_MCDDE_EVENT, wxCommandEventHandler(MissClockFrame::OnDDEEvent), NULL, m_frmMain);
         return m_connection;
     }
     // unknown topic
@@ -47,16 +51,30 @@ MissConnection::~MissConnection()
 bool MissConnection::OnPoke(const wxString& topic, const wxString& item, wxChar* data, int size, wxIPCFormat format)
 {
     ///TODO:这里处理消息
-    wxMessageBox(wxString(data),item);
+    std::cout<<"OnPoke"<<std::endl;
+    //std::wcout<<size<<std::endl;
+    //std::wcout<<wxString(data,size).c_str()<<std::endl;
+    //wxMessageBox(wxString(data,size),item);
+    if(topic == wxT("ToolTip"))
+    {
+        wxCommandEvent send(wxEVT_MCTOOLTIP_EVENT,0);
+        send.SetString(item);
+        send.SetClientData(static_cast<void *>(data));
+        ProcessEvent(send);
+    }
     return wxConnection::OnPoke(topic, item, data, size, format);
 }
 
 bool MissConnection::OnDisconnect()
 {
     ///TODO:发消息告诉外面，连接断开了。
+    wxCommandEvent send(wxEVT_MCDDE_EVENT,0);
+    ProcessEvent(send);
     std::cout<<"MissConnection::OnDisconnect"<<std::endl;
     return true;
 }
 
-
 }
+
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_MCTOOLTIP_EVENT);
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_MCDDE_EVENT);

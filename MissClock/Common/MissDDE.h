@@ -5,7 +5,7 @@
 
 namespace MissDDE
 {
-class MissConnection : public wxConnection
+class MissConnection : public wxConnection, public wxEvtHandler
 {
 public:
     MissConnection();
@@ -30,7 +30,7 @@ public:
 class MissServer: public wxServer
 {
 public:
-    MissServer();
+    MissServer(wxFrame *frmMain);
     ~MissServer();
     void Disconnect();
     bool IsConnected() { return m_connection != NULL; };
@@ -39,10 +39,16 @@ public:
     //bool CanAdvise() { return m_connection != NULL && !m_connection->m_sAdvise.IsEmpty(); };
     wxConnectionBase *OnAcceptConnection(const wxString& topic);
 
-protected:
+private:
     MissConnection     *m_connection;
+    wxFrame            *m_frmMain;
 };
 
 }
+
+BEGIN_DECLARE_EVENT_TYPES()
+    DECLARE_LOCAL_EVENT_TYPE(wxEVT_MCTOOLTIP_EVENT, -1)
+    DECLARE_LOCAL_EVENT_TYPE(wxEVT_MCDDE_EVENT, -1)
+END_DECLARE_EVENT_TYPES()
 
 #endif // MISSDDE_H

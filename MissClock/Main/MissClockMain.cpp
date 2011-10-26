@@ -77,7 +77,7 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     GUIFrame(frame),
     m_pTaskBarIcon(new MissTaskBarIcon()),
     m_pMainTimer(new wxTimer(this)),
-    m_pDdeServer(new MissDDE::MissServer()),
+    m_pDdeServer(new MissDDE::MissServer(this)),
 //    m_pSkin(new MissSkin),
 //    m_pRemindSkin(new MissRemindSkin),
     m_bRightMenu(true),
@@ -556,7 +556,7 @@ void MissClockFrame::OnmimSetTimeSelected(wxCommandEvent& event)
     // Pass the application to start with high privileges.
     settime.lpFile = wxT("MissNTP.exe");
     // Pass the command line.
-    settime.lpParameters = wxString::Format(wxT("/NetTime %s"),m_pConfig->GetNTP().c_str());
+    settime.lpParameters = wxString::Format(wxT("/N %s"),m_pConfig->GetNTP().c_str());
     // Don't forget this parameter otherwise the window will be hidden.
     settime.nShow = SW_SHOWNORMAL;
     ShellExecuteEx(&settime);
@@ -739,5 +739,16 @@ void MissClockFrame::RunStartupTask(int nType)
             PopUpRemind(vecRemindContent);
         }
     }
+}
+
+void MissClockFrame::OnToolTipEvent(wxCommandEvent& event)
+{
+    m_pTaskBarIcon->ShowBalloon(event.GetString(),
+        wxString(static_cast<wxChar *>(event.GetClientData())));
+}
+
+void MissClockFrame::OnDDEEvent(wxCommandEvent& event)
+{
+    m_pDdeServer->Disconnect();
 }
 
