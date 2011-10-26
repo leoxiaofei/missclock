@@ -30,6 +30,7 @@
 #include "../Data/MissWxSQLite3.h"
 #include "../Common/MissGlobal.h"
 #include "../Common/MissTools.h"
+#include "../Common/MissDDE.h"
 
 #include "../../MCPlug/Common/MissPlugBase.h"
 
@@ -76,6 +77,7 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     GUIFrame(frame),
     m_pTaskBarIcon(new MissTaskBarIcon()),
     m_pMainTimer(new wxTimer(this)),
+    m_pDdeServer(new MissDDE::MissServer()),
 //    m_pSkin(new MissSkin),
 //    m_pRemindSkin(new MissRemindSkin),
     m_bRightMenu(true),
@@ -90,6 +92,7 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     InitEvent();
     InitUI();
     UpdateMenu();
+    InitDDE();
     InitPlugin();
 
     m_ttNow = time(NULL);
@@ -97,6 +100,8 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
 
     LoadTask();
     LoadDayTask();
+
+    ///执行启动时任务
     RunStartupTask(1);
 }
 
@@ -152,6 +157,15 @@ void MissClockFrame::InitPlugin()
             LoadPlugin(diraddr + filename);
             cont = dir.GetNext(&filename);
         }
+    }
+}
+
+void MissClockFrame::InitDDE()
+{
+    if(!m_pDdeServer->Create(wxT("MissClock")))
+    {
+        ///TODO:DDE监听出错。
+        assert(false);
     }
 }
 
@@ -534,6 +548,20 @@ void MissClockFrame::OnmimCopyTimeSelected(wxCommandEvent& event)
     char str[100];
     strftime (str,100, m_pConfig->GetPTimeFormat().mb_str(),m_tmNow);
     MissTools::CopyToClipboard( wxString(str,wxConvLocal) );
+}
+
+void MissClockFrame::OnmimSetTimeSelected(wxCommandEvent& event)
+{
+    SHELLEXECUTEINFO settime = { sizeof(SHELLEXECUTEINFO) };
+    // Pass the application to start with high privileges.
+    settime.lpFile = wxT("MissNTP.exe");
+    // Pass the command line.
+    settime.lpParameters = wxString::Format(wxT("/NetTime %s"),m_pConfig->GetNTP().c_str());
+    // Don't forget this parameter otherwise the window will be hidden.
+    settime.nShow = SW_SHOWNORMAL;
+    ShellExecuteEx(&settime);
+
+    //wxExecute(wxString::Format(wxT("G:\\CBproject\\ntptemp\\bin\\Release\\ntptemp.exe /NetTime %s"),m_Config.m_NTP.c_str()));
 }
 
 void MissClockFrame::OnMinUp()

@@ -32,7 +32,7 @@
 					<Add directory="$(#wx)\lib\gcc_dll" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="Comparelay.exe $(TARGET_OBJECT_DIR)Version.o $(ProjectDir)Version.h" />
+					<Add before="D:\Program Files\TortoiseSVN\bin\SubWCRev.exe $(ProjectDir) Version Version.h" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Release">
@@ -91,6 +91,8 @@
 			<Add directory="$(#tinyxml)\lib" />
 			<Add directory="$(#wxsqlite3)\lib\gcc_dll" />
 		</Linker>
+		<Unit filename="Common\MissDDE.cpp" />
+		<Unit filename="Common\MissDDE.h" />
 		<Unit filename="Common\MissFrame.cpp" />
 		<Unit filename="Common\MissFrame.h" />
 		<Unit filename="Common\MissGlobal.cpp" />
@@ -140,7 +142,7 @@
 			<Option weight="0" />
 		</Unit>
 		<Unit filename="Version">
-			<Option compiler="gcc" use="1" buildCommand="D:\Program Files\TortoiseSVN\bin\SubWCRev.exe $(ProjectDir) Version $(TARGET_OBJECT_DIR)Version.o\nD:\Program Files\TortoiseSVN\bin\SubWCRev.exe $(ProjectDir) Version Version.h" />
+			<Option compiler="gcc" use="1" buildCommand="D:\Program Files\TortoiseSVN\bin\SubWCRev.exe $(ProjectDir) Version $(TARGET_OBJECT_DIR)Version.o\n" />
 		</Unit>
 		<Unit filename="WxWizFrame.fbp" />
 		<Unit filename="resource.rc">
