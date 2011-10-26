@@ -118,7 +118,7 @@ void rfc1305print(unsigned int *data, struct ntptime *arrival, struct timeval* t
     */
 }
 
-void set_local_time(struct timeval &tv)
+bool set_local_time(struct timeval &tv)
 {
 	SYSTEMTIME time;
 	struct tm* ltm;
@@ -131,11 +131,11 @@ void set_local_time(struct timeval &tv)
 	time.wMinute = ltm->tm_min;
 	time.wSecond = ltm->tm_sec;
 	time.wMilliseconds = 0;
-	if (0 == SetLocalTime(&time))
-	{
+	return (0 != SetLocalTime(&time));
+//	{
 		///perror("SetLocalTime");
-		return;
-	}
+//		return;
+//	}
 
 	///printf("set local time to ntp server's time.\n");
 }
@@ -146,6 +146,8 @@ int TimeFunction(const char *pNTP_SERVER)
     struct sockaddr_in addr_src;
 	struct sockaddr_in addr_dst;
 	int addr_len = sizeof(struct sockaddr_in);
+    CMissDDE dde;
+    dde.DdeClientInit("MissClock","ToolTip");
 
 	/*WSAStartup*/
 	WSADATA wsadata;
@@ -156,6 +158,11 @@ int TimeFunction(const char *pNTP_SERVER)
 	if (-1 == sock)
 	{
 		///perror("create socket");
+		const wchar_t *strText = L"错误:create socket";
+		dde.DdeCall(XTYP_POKE,
+                L"抱歉",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
 		return (1);
 	}
 
@@ -167,6 +174,11 @@ int TimeFunction(const char *pNTP_SERVER)
 	if (-1 == bind(sock, (struct sockaddr*)&addr_src, addr_len))
 	{
 		///perror("bind socket");
+        const wchar_t *strText = L"错误:bind socket";
+		dde.DdeCall(XTYP_POKE,
+                L"抱歉",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
 		return (1);
 	}
 
@@ -178,6 +190,11 @@ int TimeFunction(const char *pNTP_SERVER)
 		if (NULL == host)
 		{
 			///perror("gethostbyname");
+			const wchar_t *strText = L"错误:gethostbyname";
+            dde.DdeCall(XTYP_POKE,
+                L"抱歉",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
 			return (1);
 		}
 		if (4 != host->h_length)
@@ -194,10 +211,15 @@ int TimeFunction(const char *pNTP_SERVER)
 	if (-1 == connect(sock, (struct sockaddr*)&addr_dst, addr_len))
 	{
 		///perror("connect ntp server");
+        const wchar_t *strText = L"错误:connect ntp server";
+        dde.DdeCall(XTYP_POKE,
+                L"抱歉",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
 		return (1);
 	}
 
-    while (0)
+    //while (0)
 	{
 		fd_set fds_read;
 		struct timeval timeout;
@@ -214,39 +236,84 @@ int TimeFunction(const char *pNTP_SERVER)
 		FD_ZERO(&fds_read);
 		FD_SET(sock, &fds_read);
 
+        send_packet(sock);
+
 		timeout.tv_sec = 6;
 		timeout.tv_usec = 0;
 		ret = select(sock + 1, &fds_read, NULL, NULL, &timeout);
 		if (-1 == ret)
 		{
 			///perror("select");
+            const wchar_t *strText = L"错误:select";
+            dde.DdeCall(XTYP_POKE,
+                L"抱歉",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
             return (1);
 		}
-		if (0 == ret || !FD_ISSET(sock, &fds_read))
-		{
+		if(0 == ret)
+        {
+            ///超时，没有接收到数据
+            const wchar_t *strText = L"汗~网络不是很通啊~，请关闭您的防火墙，并确定您的网络连接是否畅通，然后再试。";
+            dde.DdeCall(XTYP_POKE,
+                L"抱歉",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
+			return (1);
+        }
+		//if (0 == ret || !FD_ISSET(sock, &fds_read))
+		//{
 			/* send ntp protocol packet. */
-			send_packet(sock);
-			continue;
-		}
+		//	send_packet(sock);
+		//	continue;
+		//}
 
 		/* recv ntp server's response. */
 		len = recvfrom(sock, (char*)buf, sizeof(buf), 0, (struct sockaddr*)&server, &svr_len);
 		if (-1 == len)
 		{
 			///perror("recvfrom");
+			const wchar_t *strText = L"错误:recvfrom";
+            dde.DdeCall(XTYP_POKE,
+                L"抱歉",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
 			return (1);
 		}
+		/*
 		if (0 == len)
 		{
-			continue;
+			//continue;
+            const wchar_t *strText = L"汗~网络不是很通啊~，请关闭您的防火墙，并确定您的网络连接是否畅通，然后再试。";
+            dde.DdeCall(XTYP_POKE,
+                L"抱歉",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
+			return (1);
 		}
-
+		*/
+        std::cout<<"get_packet_timestamp"<<std::endl;
 		/* get local timestamp. */
 		get_packet_timestamp(sock, &arrival_ntp);
 		/* get server's time and print it. */
 		rfc1305print(buf, &arrival_ntp, &newtime);
 		/* set local time to the server's time, if you're a root user. */
-		set_local_time(newtime);
+		if(set_local_time(newtime))
+        {
+            const wchar_t *strText = L"网络校时成功。";
+            dde.DdeCall(XTYP_POKE,
+                L"恭喜",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
+        }
+        else
+        {
+            const wchar_t *strText = L"调整系统时间失败，请检查是否有权限。";
+            dde.DdeCall(XTYP_POKE,
+                L"抱歉",
+                strText,
+                sizeof(wchar_t)*(wcslen(strText)+1) );
+        }
 	}
 
 	closesocket(sock);
@@ -318,23 +385,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
         pNTP_SERVER[nEndIndex - nStartIndex] = 0;
     }
 
-    CMissDDE dde;
-    dde.DdeClientInit("MissClock","ToolTip");
-    dde.DdeCall(XTYP_POKE,
-                L"中文呢",
-                L"中文？啊",
-                sizeof(L"中文？啊") );
-
-    int a;
-    std::cin>>a;
-    return 0;
-
+    int nRet(0);
     if(pNTP_SERVER != NULL)
     {
-        return TimeFunction(pNTP_SERVER);
+        std::cout<<pNTP_SERVER<<std::endl;
+        nRet = TimeFunction(pNTP_SERVER);
+        std::cout<<nRet<<std::endl;
     }
 
-    return 0;
+    return nRet;
     // The user interface is a modal dialog box
     //return DialogBox(hInstance, MAKEINTRESOURCE(DLG_MAIN), NULL, (DLGPROC)DialogProc);
 }

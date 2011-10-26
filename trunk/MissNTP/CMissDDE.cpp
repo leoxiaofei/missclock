@@ -142,3 +142,20 @@ void CMissDDE::DdeClientInit(LPCSTR szSvr, LPCSTR szTopic)
     DdeFreeStringHandle(m_idInst,hszServName);
     DdeFreeStringHandle(m_idInst,hszTopic);
 }
+/*
+void CMyDde::DdeServer(CString strReply)
+{
+    m_strReply=strReply;
+    fakeThis=this;
+    // 建立DDE
+    DdeInitialize(&idInst,DdeCallback,APPCLASS_STANDARD|
+        CBF_FAIL_ADVISES|
+        CBF_FAIL_POKES|
+        CBF_SKIP_REGISTRATIONS|
+        CBF_SKIP_UNREGISTRATIONS,0L);
+    // 注册服务名MyDDEService,使该程序作为DDE服务器
+    AppName="MyDDEService";
+    HSZ hszService=DdeCreateStringHandle(idInst,AppName,0);
+    DdeNameService(idInst,hszService,NULL,DNS_REGISTER);
+}
+*/

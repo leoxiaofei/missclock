@@ -65,6 +65,10 @@ class MissClockFrame: public GUIFrame
         void PopUpRemind(const std::vector<wxString>& vecContent);
         void RunStartupTask(int nType);
 
+    public:
+        void OnToolTipEvent(wxCommandEvent& event);
+        void OnDDEEvent(wxCommandEvent& event);
+
     private:
         void OnTimer(wxTimerEvent& event);
         void OnTaskBarIconLeftUP(wxEvent& event);
