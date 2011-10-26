@@ -23,6 +23,10 @@ namespace MissGlobal
 {
     struct TaskData;
 }
+namespace MissDDE
+{
+    class MissServer;
+}
 
 class MissClockFrame: public GUIFrame
 {
@@ -37,6 +41,7 @@ class MissClockFrame: public GUIFrame
         void InitUI();
         void InitEvent();
         void InitPlugin();
+        void InitDDE();
         void LoadPlugin(const wxString& strPath);
         void UpdateMenu();
         void UpdateSize();
@@ -72,6 +77,8 @@ class MissClockFrame: public GUIFrame
         void OnmimShadowSelected(wxCommandEvent& event);
         void OnmimCopyDateSelected( wxCommandEvent& event );
         void OnmimCopyTimeSelected( wxCommandEvent& event );
+        void OnmimSetTimeSelected( wxCommandEvent& event );
+
         void OnAbout(wxCommandEvent& event);
         void OnExit( wxCommandEvent& event );
 
@@ -86,6 +93,7 @@ class MissClockFrame: public GUIFrame
     private:
         shared_ptr<MissTaskBarIcon>      m_pTaskBarIcon;
         shared_ptr<wxTimer>              m_pMainTimer;
+        shared_ptr<MissDDE::MissServer>  m_pDdeServer;
         MissSkin                        *m_pSkin;
         //shared_ptr<MissRemindSkin>       m_pRemindSkin;
         MissConfig                      *m_pConfig;
