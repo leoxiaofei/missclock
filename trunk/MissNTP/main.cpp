@@ -190,7 +190,7 @@ int TimeFunction(const char *pNTP_SERVER)
 		if (NULL == host)
 		{
 			///perror("gethostbyname");
-			const wchar_t *strText = L"错误:gethostbyname";
+			const wchar_t *strText = L"抱歉:错误的URL";
             dde.DdeCall(XTYP_POKE,
                 L"抱歉",
                 strText,

@@ -44,6 +44,7 @@ class MissToolBook;
 #include <wx/textctrl.h>
 #include <wx/filepicker.h>
 #include <wx/imaglist.h>
+#include <wx/statbmp.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -108,6 +109,7 @@ class MissOptionBase : public wxDialog
 		wxSlider* m_sldOpacity;
 		wxStaticText* m_lblOpacity;
 		wxPanel* m_panSys;
+		wxBoxSizer* m_srNTP;
 		wxCheckBox* m_cbtnAutoRun;
 		wxCheckBox* m_cbtnAudioChimer;
 		wxCheckBox* m_cbtnPin;
@@ -120,6 +122,7 @@ class MissOptionBase : public wxDialog
 		wxStaticText* m_lblNTP;
 		wxComboBox* m_cobNTP;
 		wxButton* m_btnNTP;
+		wxStaticText* m_lblNTPMessage;
 		wxPanel* m_panTmr;
 		wxButton* m_btnAddTask;
 		wxButton* m_btnAdditional;
@@ -152,7 +155,7 @@ class MissOptionBase : public wxDialog
 		virtual void OnBtnWeekSetClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnDateFormatSetClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnTimeFormatSetClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnNtpBtnClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBtnNtpClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnAddTaskClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBtnAdditionaClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnMenuRemindSelection( wxCommandEvent& event ) { event.Skip(); }
@@ -406,6 +409,34 @@ class MissRemindBase : public wxFrame
 		MissRemindBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,300 ), long style = 0|wxTAB_TRAVERSAL );
 		
 		~MissRemindBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class MissAboutBase
+///////////////////////////////////////////////////////////////////////////////
+class MissAboutBase : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticBitmap* m_bitmapSoftIcon;
+		wxStaticText* m_lblSoftName;
+		wxStaticText* m_lblCopyright;
+		wxStaticText* m_lblWeb;
+		wxStaticText* m_lblEmail;
+		wxButton* m_btnUpdate;
+		wxStdDialogButtonSizer* m_sdbSizer4;
+		wxButton* m_sdbSizer4OK;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnBtnUpdateClick( wxCommandEvent& event ) { event.Skip(); }
+		
+	
+	public:
+		
+		MissAboutBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("关于..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 267,162 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~MissAboutBase();
 	
 };
 

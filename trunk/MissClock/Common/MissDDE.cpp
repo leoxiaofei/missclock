@@ -32,8 +32,7 @@ wxConnectionBase* MissServer::OnAcceptConnection(const wxString& topic)
     {
         std::cout<<"new MissConnection"<<std::endl;
         m_connection = new MissConnection();
-        m_connection->Connect(wxEVT_MCTOOLTIP_EVENT, wxCommandEventHandler(MissClockFrame::OnToolTipEvent), NULL, m_frmMain);
-        m_connection->Connect(wxEVT_MCDDE_EVENT, wxCommandEventHandler(MissClockFrame::OnDDEEvent), NULL, m_frmMain);
+        static_cast<MissClockFrame *>(m_frmMain)->ConnectDDEEvent(m_connection);
         return m_connection;
     }
     // unknown topic

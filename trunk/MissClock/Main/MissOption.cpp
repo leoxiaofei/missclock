@@ -1,6 +1,7 @@
 ﻿#include "MissOption.h"
 #include <wx/dir.h>
 #include <wx/filename.h>
+#include <wx/textfile.h>
 #include "../Data/MissConfig.h"
 #include "../Common/MissGlobal.h"
 #include "MissTheme.h"
@@ -62,6 +63,8 @@ void MissOption::OnInitDialog(wxInitDialogEvent& event)
     m_cbtnPin->SetValue(m_pConfig->GetPin());
     m_cobNTP->SetValue(m_pConfig->GetNTP());
     m_cbtnAutoRun->SetValue(MissTools::GetAutoRun());
+
+    LoadNTPServer();
 }
 
 void MissOption::SetZoomState(bool bEnable)
@@ -193,9 +196,13 @@ void MissOption::OnTransSldChanged(wxScrollEvent& event)
     GetEventHandler()->ProcessEvent(send);
 }
 
-void MissOption::OnNtpBtnClick(wxCommandEvent& event)
+void MissOption::OnBtnNtpClick(wxCommandEvent& event)
 {
-// TODO: Implement OnNtpBtnClick
+    wxCommandEvent send(wxEVT_SETTIME_SELECTED,GetId());
+    send.SetString(m_cobNTP->GetValue());
+    GetEventHandler()->ProcessEvent(send);
+    //std::cout<<<<std::endl;
+    m_btnNTP->Enable(!send.GetInt());
 }
 
 /*
@@ -544,5 +551,36 @@ void MissOption::CreatePluginMenu(const std::vector<std::pair<wxString, wxString
         m_mnuAdditional->Append( m_mnuPlugin );
         m_mapMenuIdToGUID.insert(std::make_pair(m_mnuPlugin->GetId(),citor->second));
     }
-
 }
+
+void MissOption::LoadNTPServer()
+{
+    wxTextFile file;
+    if(file.Open(wxT("NTPServer.dat")))
+    {
+        for (size_t ix = 0; ix < file.GetLineCount(); ++ix)
+        {
+            wxString tmp(file[ix]);
+            if(!tmp.IsEmpty())
+            {
+                m_cobNTP->Append(tmp);
+            }
+        }
+    }
+}
+
+void MissOption::OnToolTipEvent(wxCommandEvent& event)
+{
+    m_btnNTP->Enable();
+    //std::cout<<m_lblNTPMessage->GetSize().GetWidth()<<std::endl;
+    //m_lblNTPMessage->Wrap(100);
+    m_lblNTPMessage->Show();
+    m_lblNTPMessage->SetLabel(event.GetString()+
+        wxT(":")+wxString(static_cast<wxChar*>(event.GetClientData()))+wxT("\n"));
+    //std::cout<<m_lblNTPMessage->GetSize().GetWidth()<<std::endl;
+    //
+    m_srNTP->Layout();
+    //GetSizer()->Fit(this);
+}
+
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_SETTIME_SELECTED);

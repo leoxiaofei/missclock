@@ -1,7 +1,7 @@
 #include "wx/msw/wx.rc"
 #include "Version.h"
 
-RC_CLOCK_ICON ICON "wx/msw/std.ico"
+RC_CLOCK_ICON ICON "MissClock.ico"
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 
