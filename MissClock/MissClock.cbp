@@ -117,6 +117,8 @@
 		<Unit filename="Data\MissXML.h" />
 		<Unit filename="Generated\GUIFrame.cpp" />
 		<Unit filename="Generated\GUIFrame.h" />
+		<Unit filename="Main\MissAbout.cpp" />
+		<Unit filename="Main\MissAbout.h" />
 		<Unit filename="Main\MissClockApp.cpp" />
 		<Unit filename="Main\MissClockApp.h" />
 		<Unit filename="Main\MissClockMain.cpp" />

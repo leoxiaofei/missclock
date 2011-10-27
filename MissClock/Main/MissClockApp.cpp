@@ -31,7 +31,7 @@ bool MissClockApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     //LoadLibrary(_T("MissSkin.dll"));
 
-    m_frame = new MissClockFrame(0L);
+    MissClockFrame* m_frame = new MissClockFrame(0L);
     m_frame->SetIcon(wxICON(RC_CLOCK_ICON)); // To Set App Icon
     m_frame->Show();
 

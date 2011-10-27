@@ -18,6 +18,7 @@ class MissTaskBarIcon;
 class MissSkin;
 class MissRemindSkin;
 class MissConfig;
+class MissOption;
 
 namespace MissGlobal
 {
@@ -26,6 +27,7 @@ namespace MissGlobal
 namespace MissDDE
 {
     class MissServer;
+    class MissConnection;
 }
 
 class MissClockFrame: public GUIFrame
@@ -56,6 +58,7 @@ class MissClockFrame: public GUIFrame
         void ConnectSlot(Slots& slots, FrameFunc func);
         void DisConnectSlot(Slots& slots, FrameFunc func);
         void ReloadSkin();
+        bool RunSetTime(const wxString& strNTP);
 
         void UpdateShowClock();
         void UpdateTop();
@@ -66,8 +69,7 @@ class MissClockFrame: public GUIFrame
         void RunStartupTask(int nType);
 
     public:
-        void OnToolTipEvent(wxCommandEvent& event);
-        void OnDDEEvent(wxCommandEvent& event);
+        void ConnectDDEEvent(MissDDE::MissConnection* connect);
 
     private:
         void OnTimer(wxTimerEvent& event);
@@ -88,6 +90,9 @@ class MissClockFrame: public GUIFrame
 
         void OnOptionUiEvent(wxCommandEvent& event);
         void OnDataEvent(wxCommandEvent& event);
+        void OnSetTimeEvent(wxCommandEvent& event);
+        void OnToolTipEvent(wxCommandEvent& event);
+        void OnDDEEvent(wxCommandEvent& event);
 
     private:
         virtual void OnClose(wxCloseEvent& event);
@@ -99,7 +104,6 @@ class MissClockFrame: public GUIFrame
         shared_ptr<wxTimer>              m_pMainTimer;
         shared_ptr<MissDDE::MissServer>  m_pDdeServer;
         MissSkin                        *m_pSkin;
-        //shared_ptr<MissRemindSkin>       m_pRemindSkin;
         MissConfig                      *m_pConfig;
         Slots                            sg_MinUp;
         HWND                             m_hWnd;
@@ -110,10 +114,11 @@ class MissClockFrame: public GUIFrame
         wxBitmap                         m_bpUI;
         unsigned int                    *m_pBitmap;
         int                              m_nPixCount;
-        bool                             m_bRightMenu;
+//        bool                             m_bRightMenu;
         bool                             m_bReloadSkin;
         std::vector<MissGlobal::TaskData> m_vecMinData;
         std::vector<MissGlobal::TaskData> m_vecDayData;
+        MissOption*                      m_pOptionDlg;
 };
 
 #endif // MISSCLOCKMAIN_H

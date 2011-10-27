@@ -18,11 +18,6 @@ class MissClockApp : public wxApp
 {
     public:
         virtual bool OnInit();
-        MissClockFrame* GetFrame() { return m_frame; };
-    private:
-        MissClockFrame* m_frame;
 };
-
-DECLARE_APP(MissClockApp)
 
 #endif // MISSCLOCKAPP_H

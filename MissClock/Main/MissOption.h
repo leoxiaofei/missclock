@@ -32,7 +32,7 @@ class MissOption : public MissOptionBase
 		void OnZoomCbtnClick( wxCommandEvent& event );
 		void OnZoomSldChanged( wxScrollEvent& event );
 		void OnTransSldChanged( wxScrollEvent& event );
-		void OnNtpBtnClick( wxCommandEvent& event );
+		void OnBtnNtpClick( wxCommandEvent& event );
         void OnBtnAddTaskClick( wxCommandEvent& event );
 		void OnBtnAdditionaClick( wxCommandEvent& event );
 		void OnBtnModifyTaskClick( wxCommandEvent& event );
@@ -60,6 +60,7 @@ class MissOption : public MissOptionBase
 		~MissOption();
         //void SetDataSrc(shared_ptr<MissConfig>& pConfig, shared_ptr<MissSkin>& pSkin);
         void CreatePluginMenu(const std::vector<std::pair<wxString,wxString> > &vecMenu);
+        void OnToolTipEvent(wxCommandEvent& event);
 
     protected:
         wxArrayString GetSkinsName();
@@ -69,7 +70,7 @@ class MissOption : public MissOptionBase
                              const std::pair<int,MissGlobal::TaskData>& item);
         void ModifyTaskData(int nID);
         void UpdateListData();
-
+        void LoadNTPServer();
         void OpenSetTimerByTemplate(const MissGlobal::TaskData& data,int nID = -1);
 
     private:
@@ -86,6 +87,8 @@ class MissOption : public MissOptionBase
 
 };
 
+BEGIN_DECLARE_EVENT_TYPES()
+    DECLARE_LOCAL_EVENT_TYPE(wxEVT_SETTIME_SELECTED, -1)
+END_DECLARE_EVENT_TYPES()
 
-//wxDECLARE_EVENT(wxEVT_SELECTED_CHANGED, wxCommandEvent)
 #endif // __MissOption__

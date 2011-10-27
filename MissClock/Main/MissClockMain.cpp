@@ -22,6 +22,7 @@
 #include "MissOption.h"
 #include "MissSoundThread.h"
 #include "MissRemind.h"
+#include "MissAbout.h"
 
 #include "../Data/MissConfig.h"
 #include "../Data/MissSkin.h"
@@ -80,8 +81,9 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     m_pDdeServer(new MissDDE::MissServer(this)),
 //    m_pSkin(new MissSkin),
 //    m_pRemindSkin(new MissRemindSkin),
-    m_bRightMenu(true),
-    m_bReloadSkin(false)
+//    m_bRightMenu(true),
+    m_bReloadSkin(false),
+    m_pOptionDlg(NULL)
 {
     m_pConfig = &MissConfig::GetInstance();
     m_pSkin   = &MissConfig::GetInstance().GetCurrentSkin();
@@ -250,7 +252,7 @@ void MissClockFrame::OnRightUp(wxMouseEvent& event)
 {
     //::SetForegroundWindow(m_hWnd);
     Raise();
-    if(m_bRightMenu)
+    if(m_pOptionDlg == NULL)
         PopupMenu(m_pMainMenu);
 }
 
@@ -457,7 +459,9 @@ void MissClockFrame::OnClose(wxCloseEvent& event)
 void MissClockFrame::OnAbout(wxCommandEvent& event)
 {
     wxString msgb = wxbuildinfo(long_f);
-    wxMessageBox(msgb, _("Welcome to..."));
+    MissAbout about(this);
+    about.ShowModal();
+    //wxMessageBox(msgb, _("Welcome to..."));
 }
 
 void MissClockFrame::OnmimTopSelected(wxCommandEvent& event)
@@ -478,12 +482,13 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
             vecMenu.push_back(std::make_pair(itor->pPlugObj->GetPanelName(),itor->pPlugObj->GetGUID()));
         }
     }
-    m_bRightMenu = false;
-    MissOption OptionDlg(this);
-    OptionDlg.CreatePluginMenu(vecMenu);
-    OptionDlg.Connect(wxEVT_MCUI_EVENT, wxCommandEventHandler(MissClockFrame::OnOptionUiEvent), NULL, this);
-    OptionDlg.Connect(wxEVT_MCDATA_EVENT, wxCommandEventHandler(MissClockFrame::OnDataEvent), NULL, this);
-    if (OptionDlg.ShowModal() == wxID_OK)
+//    m_bRightMenu = false;
+    m_pOptionDlg = new MissOption(this);
+    m_pOptionDlg->CreatePluginMenu(vecMenu);
+    m_pOptionDlg->Connect(wxEVT_MCUI_EVENT, wxCommandEventHandler(MissClockFrame::OnOptionUiEvent), NULL, this);
+    m_pOptionDlg->Connect(wxEVT_MCDATA_EVENT, wxCommandEventHandler(MissClockFrame::OnDataEvent), NULL, this);
+    m_pOptionDlg->Connect(wxEVT_SETTIME_SELECTED, wxCommandEventHandler(MissClockFrame::OnSetTimeEvent), NULL, this);
+    if (m_pOptionDlg->ShowModal() == wxID_OK)
     {
         UpdateAudioChimer();
         UpdateTop();
@@ -495,7 +500,9 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
     {
         ReloadSkin();
     }
-    m_bRightMenu = true;
+//    m_bRightMenu = true;
+    delete m_pOptionDlg;
+    m_pOptionDlg = NULL;
 }
 
 void MissClockFrame::OnmimRemindSelected(wxCommandEvent& event)
@@ -552,16 +559,7 @@ void MissClockFrame::OnmimCopyTimeSelected(wxCommandEvent& event)
 
 void MissClockFrame::OnmimSetTimeSelected(wxCommandEvent& event)
 {
-    SHELLEXECUTEINFO settime = { sizeof(SHELLEXECUTEINFO) };
-    // Pass the application to start with high privileges.
-    settime.lpFile = wxT("MissNTP.exe");
-    // Pass the command line.
-    settime.lpParameters = wxString::Format(wxT("/N %s"),m_pConfig->GetNTP().c_str());
-    // Don't forget this parameter otherwise the window will be hidden.
-    settime.nShow = SW_SHOWNORMAL;
-    ShellExecuteEx(&settime);
-
-    //wxExecute(wxString::Format(wxT("G:\\CBproject\\ntptemp\\bin\\Release\\ntptemp.exe /NetTime %s"),m_Config.m_NTP.c_str()));
+    RunSetTime(m_pConfig->GetNTP());
 }
 
 void MissClockFrame::OnMinUp()
@@ -718,7 +716,7 @@ void MissClockFrame::RunStartupTask(int nType)
                     break;
                 case 1:     ///程序任务
                     {
-                        wxExecute(itor->strTaskContent);
+                        wxShell(itor->strTaskContent);
                     }
                     break;
                 default:    ///插件类型任务
@@ -743,6 +741,8 @@ void MissClockFrame::RunStartupTask(int nType)
 
 void MissClockFrame::OnToolTipEvent(wxCommandEvent& event)
 {
+    if(m_pOptionDlg != NULL)
+        m_pOptionDlg->OnToolTipEvent(event);
     m_pTaskBarIcon->ShowBalloon(event.GetString(),
         wxString(static_cast<wxChar *>(event.GetClientData())));
 }
@@ -752,3 +752,31 @@ void MissClockFrame::OnDDEEvent(wxCommandEvent& event)
     m_pDdeServer->Disconnect();
 }
 
+void MissClockFrame::ConnectDDEEvent(MissDDE::MissConnection* connection)
+{
+    connection->Connect(wxEVT_MCTOOLTIP_EVENT, wxCommandEventHandler(MissClockFrame::OnToolTipEvent), NULL, this);
+    connection->Connect(wxEVT_MCDDE_EVENT, wxCommandEventHandler(MissClockFrame::OnDDEEvent), NULL, this);
+//    if(m_pOptionDlg != NULL)
+//        connection->Connect(wxID_ANY,wxEVT_MCTOOLTIP_EVENT, wxCommandEventHandler(MissOption::OnToolTipEvent), NULL, m_pOptionDlg);
+}
+
+bool MissClockFrame::RunSetTime(const wxString& strNTP)
+{
+    SHELLEXECUTEINFO settime = { sizeof(SHELLEXECUTEINFO) };
+    // Pass the application to start with high privileges.
+    settime.lpFile = wxT("MissNTP.exe");
+    // Pass the command line.
+    settime.lpParameters = wxString::Format(wxT("/N %s"),strNTP.c_str());
+    // Don't forget this parameter otherwise the window will be hidden.
+    settime.nShow = SW_SHOWNORMAL;
+    return ShellExecuteEx(&settime);
+
+    //return wxShell(wxString(wxT("MissNTP.exe /N ")) + strNTP);
+    //wxExecute(wxString(wxT("MissNTP.exe /N ")) + strNTP);
+}
+
+void MissClockFrame::OnSetTimeEvent(wxCommandEvent& event)
+{
+    bool ret = RunSetTime(event.GetString());
+    event.SetInt(ret);
+}
