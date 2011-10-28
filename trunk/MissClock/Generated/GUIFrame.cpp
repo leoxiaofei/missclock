@@ -669,7 +669,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("内容") ), wxVERTICAL );
 	
 	m_tbRun = new MissToolBook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	wxSize m_tbRunImageSize = wxSize( 25,25 );
+	wxSize m_tbRunImageSize = wxSize( 32,32 );
 	int m_tbRunIndex = 0;
 	wxImageList* m_tbRunImages = new wxImageList( m_tbRunImageSize.GetWidth(), m_tbRunImageSize.GetHeight() );
 	m_tbRun->AssignImageList( m_tbRunImages );
@@ -686,7 +686,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_panTextRemind->Layout();
 	sbSizer15->Fit( m_panTextRemind );
 	m_tbRun->AddPage( m_panTextRemind, wxT("文字提醒"), true );
-	m_tbRunBitmap = wxArtProvider::GetBitmap( wxART_NORMAL_FILE, wxART_FRAME_ICON );
+	m_tbRunBitmap = wxIcon( wxT("RC_TEXT_ICON"), wxBITMAP_TYPE_ICO_RESOURCE, 48, 48 );
 	if ( m_tbRunBitmap.Ok() )
 	{
 		m_tbRunImage = m_tbRunBitmap.ConvertToImage();
@@ -731,7 +731,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_panProgRemind->Layout();
 	sbSizer16->Fit( m_panProgRemind );
 	m_tbRun->AddPage( m_panProgRemind, wxT("定时运行程序"), false );
-	m_tbRunBitmap = wxArtProvider::GetBitmap( wxART_EXECUTABLE_FILE, wxART_FRAME_ICON );
+	m_tbRunBitmap = wxIcon( wxT("RC_PROGRAM_ICON"), wxBITMAP_TYPE_ICO_RESOURCE, 48, 48 );
 	if ( m_tbRunBitmap.Ok() )
 	{
 		m_tbRunImage = m_tbRunBitmap.ConvertToImage();

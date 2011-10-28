@@ -2,8 +2,8 @@
 #include "GUIFrame.h"
 #include <wx/artprov.h>
 #include <wx/image.h>
-
 #include <wx/msgdlg.h>
+#include "Shutdown.xpm"
 
 #define _WIN32_WINNT 0x0500
 
@@ -22,7 +22,9 @@ MissShutdownPlug::~MissShutdownPlug()
 
 void MissShutdownPlug::GetIcon(wxImage& image)
 {
-    image = wxArtProvider::GetBitmap( wxART_TIP, wxART_FRAME_ICON ).ConvertToImage();
+    //wxBitmap icon = wxIcon( wxT("RC_SHUTDOWN_ICON"), wxBITMAP_TYPE_ICO_RESOURCE, 48, 48 );
+    wxBitmap icon = wxIcon(Shutdown_xpm);
+    image = icon.ConvertToImage();
 }
 
 void MissShutdownPlug::InitPanel(wxWindow* parent)

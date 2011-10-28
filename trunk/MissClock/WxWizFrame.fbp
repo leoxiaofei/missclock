@@ -394,7 +394,7 @@
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND | wxALL</property>
                     <property name="proportion">1</property>
-                    <object class="wxListbook" expanded="0">
+                    <object class="wxListbook" expanded="1">
                         <property name="BottomDockable">1</property>
                         <property name="LeftDockable">1</property>
                         <property name="RightDockable">1</property>
@@ -4477,7 +4477,7 @@
                 </object>
             </object>
         </object>
-        <object class="Dialog" expanded="0">
+        <object class="Dialog" expanded="1">
             <property name="BottomDockable">1</property>
             <property name="LeftDockable">1</property>
             <property name="RightDockable">1</property>
@@ -4524,7 +4524,7 @@
             <property name="resize">Resizable</property>
             <property name="row"></property>
             <property name="show">1</property>
-            <property name="size">388,406</property>
+            <property name="size">407,446</property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
             <property name="subclass"></property>
             <property name="title">定时</property>
@@ -4573,7 +4573,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="0">
+            <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer24</property>
                 <property name="orient">wxVERTICAL</property>
@@ -8125,11 +8125,11 @@
                         </object>
                     </object>
                 </object>
-                <object class="sizeritem" expanded="0">
+                <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND|wxALL</property>
                     <property name="proportion">1</property>
-                    <object class="wxStaticBoxSizer" expanded="0">
+                    <object class="wxStaticBoxSizer" expanded="1">
                         <property name="id">wxID_ANY</property>
                         <property name="label">内容</property>
                         <property name="minimum_size"></property>
@@ -8137,11 +8137,11 @@
                         <property name="orient">wxVERTICAL</property>
                         <property name="permission">none</property>
                         <event name="OnUpdateUI"></event>
-                        <object class="sizeritem" expanded="0">
+                        <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND|wxTOP|wxRIGHT|wxLEFT</property>
                             <property name="proportion">1</property>
-                            <object class="wxNotebook" expanded="0">
+                            <object class="wxNotebook" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
                                 <property name="RightDockable">1</property>
@@ -8149,7 +8149,7 @@
                                 <property name="aui_name"></property>
                                 <property name="best_size"></property>
                                 <property name="bg"></property>
-                                <property name="bitmapsize">25,25</property>
+                                <property name="bitmapsize">32,32</property>
                                 <property name="caption"></property>
                                 <property name="caption_visible">1</property>
                                 <property name="center_pane">0</property>
@@ -8223,8 +8223,8 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="notebookpage" expanded="0">
-                                    <property name="bitmap">wxART_NORMAL_FILE; wxART_FRAME_ICON; Load From Art Provider</property>
+                                <object class="notebookpage" expanded="1">
+                                    <property name="bitmap">RC_TEXT_ICON; Load From Icon Resource [48; 48]</property>
                                     <property name="label">文字提醒</property>
                                     <property name="select">1</property>
                                     <object class="wxPanel" expanded="0">
@@ -8408,7 +8408,7 @@
                                     </object>
                                 </object>
                                 <object class="notebookpage" expanded="0">
-                                    <property name="bitmap">wxART_EXECUTABLE_FILE; wxART_FRAME_ICON; Load From Art Provider</property>
+                                    <property name="bitmap">RC_PROGRAM_ICON; Load From Icon Resource [48; 48]</property>
                                     <property name="label">定时运行程序</property>
                                     <property name="select">0</property>
                                     <object class="wxPanel" expanded="0">
@@ -13009,7 +13009,7 @@
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
         </object>
-        <object class="Dialog" expanded="0">
+        <object class="Dialog" expanded="1">
             <property name="BottomDockable">1</property>
             <property name="LeftDockable">1</property>
             <property name="RightDockable">1</property>

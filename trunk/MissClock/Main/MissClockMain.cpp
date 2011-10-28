@@ -93,7 +93,7 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     m_pMainTimer->Start(1000);
     InitEvent();
     InitUI();
-    UpdateMenu();
+
     InitDDE();
     InitPlugin();
 
@@ -137,6 +137,7 @@ void MissClockFrame::InitUI()
     UpdateTheme();
     UpdateTop();
     UpdateShadow();
+    UpdateMenu();
 
     ///设置时钟位置
     Move(m_pConfig->GetPos());
@@ -503,6 +504,17 @@ void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 //    m_bRightMenu = true;
     delete m_pOptionDlg;
     m_pOptionDlg = NULL;
+
+    /*
+    if(m_pConfig->GetShowClock())
+    {
+        m_pTaskBarIcon->ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
+    }
+    else if(m_pConfig->GetShadow())
+    {
+        m_pTaskBarIcon->ShowBalloon(wxT("温馨提示："),wxT("时钟已设置有影无形，您可以在这里打开菜单。"));
+    }
+    */
 }
 
 void MissClockFrame::OnmimRemindSelected(wxCommandEvent& event)
@@ -527,6 +539,10 @@ void MissClockFrame::OnmimShowSelected(wxCommandEvent& event)
     m_pConfig->SetShowClock(!m_pConfig->GetShowClock());
     UpdateShowClock();
     m_pConfig->SaveShowClock();
+    if(m_pConfig->GetShowClock())
+    {
+        m_pTaskBarIcon->ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
+    }
 }
 
 void MissClockFrame::OnmimPinSelected(wxCommandEvent& event)
@@ -540,6 +556,10 @@ void MissClockFrame::OnmimShadowSelected(wxCommandEvent& event)
     m_pConfig->SetShadow(!m_pConfig->GetShadow());
     UpdateShadow();
     m_pConfig->SaveShadow();
+    if(m_pConfig->GetShadow())
+    {
+        m_pTaskBarIcon->ShowBalloon(wxT("温馨提示："),wxT("时钟已设置有影无形，您可以在这里打开菜单。"));
+    }
 }
 
 void MissClockFrame::OnmimCopyDateSelected(wxCommandEvent& event)
@@ -645,15 +665,7 @@ void MissClockFrame::ReloadSkin()
 
 void MissClockFrame::UpdateShowClock()
 {
-    if (m_pConfig->GetShowClock())
-    {
-        Show(true);
-    }
-    else
-    {
-        Show(false);
-        m_pTaskBarIcon->ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
-    }
+    Show(m_pConfig->GetShowClock());
 }
 
 void MissClockFrame::UpdateTop()
@@ -680,7 +692,6 @@ void MissClockFrame::UpdateShadow()
     else
     {
         exStyle |= WS_EX_TRANSPARENT;
-        m_pTaskBarIcon->ShowBalloon(wxT("温馨提示："),wxT("时钟已设置有影无形，您可以在这里打开菜单。"));
     }
     ::SetWindowLong(m_hWnd, GWL_EXSTYLE, exStyle);
 }
