@@ -77,6 +77,9 @@
 		<Unit filename="WxWizFrame.fbp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
+		<Unit filename="resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
