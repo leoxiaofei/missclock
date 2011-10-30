@@ -183,7 +183,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panUI->SetSizer( bSizer2 );
 	m_panUI->Layout();
 	bSizer2->Fit( m_panUI );
-	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), true );
+	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), false );
 	m_panSys = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_srNTP = new wxBoxSizer( wxVERTICAL );
 	
@@ -371,7 +371,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panTmr->SetSizer( bSizer20 );
 	m_panTmr->Layout();
 	bSizer20->Fit( m_panTmr );
-	m_lsbOption->AddPage( m_panTmr, wxT("定时设置"), false );
+	m_lsbOption->AddPage( m_panTmr, wxT("定时设置"), true );
 	#ifndef __WXGTK__ // Small icon style not supported in GTK
 	wxListView* m_lsbOptionListView = m_lsbOption->GetListView();
 	long m_lsbOptionFlags = m_lsbOptionListView->GetWindowStyleFlag();
@@ -414,10 +414,15 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_btnModifyTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnModifyTaskClick ), NULL, this );
 	m_btnDeleteTask->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDeleteTaskClick ), NULL, this );
 	m_nbTimerSetting->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNBTimerSettingChanged ), NULL, this );
+	m_listRemind->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listRemind->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listMemorialDay->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listMemorialDay->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listBacklog->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listBacklog->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listTask->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listTask->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listOverdue->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listOverdue->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
 	m_sdbSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnOK ), NULL, this );
 }
@@ -444,10 +449,15 @@ MissOptionBase::~MissOptionBase()
 	m_btnModifyTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnModifyTaskClick ), NULL, this );
 	m_btnDeleteTask->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnBtnDeleteTaskClick ), NULL, this );
 	m_nbTimerSetting->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MissOptionBase::OnNBTimerSettingChanged ), NULL, this );
+	m_listRemind->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listRemind->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listMemorialDay->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listMemorialDay->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listBacklog->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listBacklog->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listTask->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listTask->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
+	m_listOverdue->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MissOptionBase::OnListKeyDown ), NULL, this );
 	m_listOverdue->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( MissOptionBase::OnListRemindItemActivated ), NULL, this );
 	m_sdbSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MissOptionBase::OnOK ), NULL, this );
 	
@@ -679,7 +689,7 @@ MissSetTimerBase::MissSetTimerBase( wxWindow* parent, wxWindowID id, const wxStr
 	wxStaticBoxSizer* sbSizer15;
 	sbSizer15 = new wxStaticBoxSizer( new wxStaticBox( m_panTextRemind, wxID_ANY, wxT("文字提醒") ), wxVERTICAL );
 	
-	m_edtContent = new wxTextCtrl( m_panTextRemind, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_edtContent = new wxTextCtrl( m_panTextRemind, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
 	sbSizer15->Add( m_edtContent, 1, wxALL|wxEXPAND, 5 );
 	
 	m_panTextRemind->SetSizer( sbSizer15 );

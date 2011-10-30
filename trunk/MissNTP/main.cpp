@@ -238,7 +238,7 @@ int TimeFunction(const char *pNTP_SERVER)
 
         send_packet(sock);
 
-		timeout.tv_sec = 6;
+		timeout.tv_sec = 4;
 		timeout.tv_usec = 0;
 		ret = select(sock + 1, &fds_read, NULL, NULL, &timeout);
 		if (-1 == ret)

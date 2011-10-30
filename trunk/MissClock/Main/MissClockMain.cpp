@@ -407,6 +407,7 @@ void MissClockFrame::PopUpRemind(const std::vector<wxString>& vecContent)
 {
     MissRemind *pRemind = new MissRemind(vecContent, this);
     pRemind->Show();
+    pRemind->Raise();
 }
 
 void MissClockFrame::CheckAudioChimer()
@@ -539,7 +540,7 @@ void MissClockFrame::OnmimShowSelected(wxCommandEvent& event)
     m_pConfig->SetShowClock(!m_pConfig->GetShowClock());
     UpdateShowClock();
     m_pConfig->SaveShowClock();
-    if(m_pConfig->GetShowClock())
+    if(!m_pConfig->GetShowClock())
     {
         m_pTaskBarIcon->ShowBalloon(wxT("温馨提示："),wxT("时钟隐藏，您可以在这里打开菜单。"));
     }
