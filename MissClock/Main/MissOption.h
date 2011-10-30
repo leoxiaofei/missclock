@@ -49,6 +49,7 @@ class MissOption : public MissOptionBase
         void OnMenuRemindSelection( wxCommandEvent& event );
         void OnMenuBirthdaySelection( wxCommandEvent& event );
         void OnMenuTodoSelection( wxCommandEvent& event );
+        void OnListKeyDown( wxKeyEvent& event );
         //void OnOptionClose( wxCloseEvent& event );
         ///自定义消息
         void OnSetWeekDaysEvent(wxCommandEvent& event);
@@ -69,6 +70,8 @@ class MissOption : public MissOptionBase
         void InsertListData(wxListCtrl* plist, int nItemIndex,
                              const std::pair<int,MissGlobal::TaskData>& item);
         void ModifyTaskData(int nID);
+        void DeleteSelectedTask();
+
         void UpdateListData();
         void LoadNTPServer();
         void OpenSetTimerByTemplate(const MissGlobal::TaskData& data,int nID = -1);

@@ -256,6 +256,11 @@ void MissOption::OnBtnAdditionaClick(wxCommandEvent& event)
 
 void MissOption::OnBtnDeleteTaskClick(wxCommandEvent& event)
 {
+    DeleteSelectedTask();
+}
+
+void MissOption::DeleteSelectedTask()
+{
     int nList = m_nbTimerSetting->GetSelection();
     long item = -1;
     long nID( -1 );
@@ -347,6 +352,22 @@ void MissOption::OnListRemindItemActivated(wxListEvent& event)
     if(nList != -1 && m_pLists[nList]->GetItemText(nItemIndex).ToLong(&nID))
     {
         ModifyTaskData(nID);
+    }
+}
+
+void MissOption::OnListKeyDown(wxKeyEvent& event)
+{
+    //std::cout<<event.GetKeyCode()<<std::endl;
+    switch(event.GetKeyCode())
+    {
+    case WXK_DELETE:
+        {
+            DeleteSelectedTask();
+        }
+        break;
+    default:
+        event.Skip();
+        break;
     }
 }
 

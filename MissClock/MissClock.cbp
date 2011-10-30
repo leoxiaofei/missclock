@@ -59,6 +59,9 @@
 					<Add library="libwxcode_msw28u_wxsqlite3.a" />
 					<Add directory="$(#wx)\lib\gcc_dll" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="D:\Program Files\TortoiseSVN\bin\SubWCRev.exe $(ProjectDir) Version Version.h" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
