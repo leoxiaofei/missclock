@@ -244,7 +244,7 @@ class MissSetTimerBase : public wxDialog
 		wxFilePickerCtrl* m_fpProgram;
 		wxTextCtrl* m_edtParameter;
 		
-		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 407,446 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		MissSetTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("定时"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 407,446 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 		~MissSetTimerBase();
 	
 };

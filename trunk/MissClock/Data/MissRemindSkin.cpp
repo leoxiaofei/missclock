@@ -5,6 +5,9 @@
 #include <map>
 #include <mAlgorithm.hpp>
 #include <wx/dcmemory.h>
+#include <algorithm>
+#include <windef.h>
+#include <WinGdi.h>
 
 class MissRemindSkin::MissRemindSkinImpl
 {
@@ -143,7 +146,88 @@ void MissRemindSkin::DrawSkin(wxDC& dc)
     DrawRemindText (dc);
     DrawButton     (dc);
 }
+/*
+void MissRemindSkin::DrawText(wxDC& dc, unsigned int nStrLength)
+{
+    std::cout<<nStrLength<<std::endl;
+    wxBitmap tmp(m_pImpl->m_oTextInfo.nTextWidth, m_pImpl->m_nTextHeight,32);
+    wxMemoryDC memdc;
+    memdc.SelectObject(tmp);
 
+    BITMAP bm;
+    ::GetObject(static_cast<HBITMAP>(tmp.GetHBITMAP()), sizeof(bm), &bm);
+    int nPixCount = bm.bmWidth * bm.bmHeight;
+
+    //memset(pBitmap,1,nPixCount*sizeof(unsigned int));
+    //memdc.Clear();
+    //memdc.
+    unsigned int nOutSize(0);
+    if(m_pImpl->m_pTextBG != NULL)
+        memdc.SetBrush(wxBrush(*m_pImpl->m_pTextBG));
+    //memdc.SetTextForeground(m_pImpl->m_oTextInfo.colorText);
+    memdc.SetBackgroundMode(wxTRANSPARENT);
+    memdc.SetTextForeground(*wxRED);
+    memdc.SetFont(m_pImpl->m_oTextInfo.fontText);
+
+    for(size_t ix = 0; ix != m_pImpl->m_vecTextOut.size(); ++ix)
+    {
+        unsigned int *pBitmap = static_cast<unsigned int*>(bm.bmBits);
+        memset(pBitmap,1,nPixCount*sizeof(unsigned int));
+        int nTemp = nPixCount + 1;
+        if(m_pImpl->m_pTextBG != NULL)
+        {
+            memdc.DrawRectangle(0, 0, m_pImpl->m_oTextInfo.nTextWidth, m_pImpl->m_nTextHeight);
+        }
+        nOutSize += m_pImpl->m_vecTextOut[ix].size();
+        if( nOutSize > nStrLength)
+        {
+            //memdc.SetDeviceOrigin(m_pImpl->m_oTextInfo.ptPos.x,
+            //    m_pImpl->m_oTextInfo.ptPos.y + m_pImpl->m_nTextHeight * ix);
+            memdc.DrawLabel(m_pImpl->m_vecTextOut[ix].Left(m_pImpl->m_vecTextOut[ix].size() - nOutSize + nStrLength),wxRect(0, 0,
+                m_pImpl->m_oTextInfo.nTextWidth, m_pImpl->m_nTextHeight),wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+        while(--nTemp)
+        {
+            *pBitmap -= 0x01000000;
+            ++pBitmap;
+        }
+        BLENDFUNCTION blend = {0};
+        blend.AlphaFormat = AC_SRC_ALPHA;
+        blend.BlendOp = AC_SRC_ALPHA;
+        blend.BlendFlags = 0;
+        blend.SourceConstantAlpha = 255;
+        if(!AlphaBlend((HDC)dc.GetHDC(),m_pImpl->m_oTextInfo.ptPos.x,m_pImpl->m_oTextInfo.ptPos.y + m_pImpl->m_nTextHeight * ix,
+                   m_pImpl->m_oTextInfo.nTextWidth, m_pImpl->m_nTextHeight,
+                   (HDC)memdc.GetHDC(),0,0,m_pImpl->m_oTextInfo.nTextWidth, m_pImpl->m_nTextHeight,blend))
+                   {
+                      std::cout<<"AlphaBlend error"<<std::endl;
+                   }
+
+            break;
+        }
+        else
+        {
+            memdc.DrawLabel(m_pImpl->m_vecTextOut[ix],wxRect(0, 0,
+                m_pImpl->m_oTextInfo.nTextWidth, m_pImpl->m_nTextHeight),wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        }
+
+        //memdc.SetDeviceOrigin(m_pImpl->m_oTextInfo.ptPos.x,
+        //    m_pImpl->m_oTextInfo.ptPos.y + m_pImpl->m_nTextHeight * ix);
+        //dc.Blit(wxPoint(m_pImpl->m_oTextInfo.ptPos.x, m_pImpl->m_oTextInfo.ptPos.y + m_pImpl->m_nTextHeight * ix),
+        //         wxSize(m_pImpl->m_oTextInfo.nTextWidth, m_pImpl->m_nTextHeight), &memdc, wxPoint(0, 0));
+
+        //BLENDFUNCTION blend = {0};
+        //blend.AlphaFormat = AC_SRC_ALPHA;
+        //blend.BlendOp = AC_SRC_OVER;
+        //blend.BlendFlags = 0;
+        //blend.SourceConstantAlpha = 255;
+        //AlphaBlend((HDC)dc.GetHDC(),m_pImpl->m_oTextInfo.ptPos.x,m_pImpl->m_oTextInfo.ptPos.y + m_pImpl->m_nTextHeight * ix,
+        //           m_pImpl->m_oTextInfo.nTextWidth, m_pImpl->m_nTextHeight,
+        //           (HDC)memdc.GetHDC(),0,0,m_pImpl->m_oTextInfo.nTextWidth, m_pImpl->m_nTextHeight,blend);
+
+    }
+}
+*/
 void MissRemindSkin::DrawFill(wxDC& memdc)
 {
     int nX, nY, nW, nH;
@@ -517,4 +601,15 @@ const wxString& MissRemindSkin::GetSkinPath() const
 void MissRemindSkin::SetSkinPath(const wxString& strSkinPath)
 {
     m_pImpl->m_SkinPath = strSkinPath;
+}
+
+unsigned int MissRemindSkin::GetRemindStringLength()
+{
+    unsigned int uRet(0);
+    for(std::vector<wxString>::const_iterator itor = m_pImpl->m_vecTextOut.begin();
+        itor != m_pImpl->m_vecTextOut.end(); ++itor )
+    {
+        uRet += itor->size();
+    }
+    return uRet;
 }

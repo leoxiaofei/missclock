@@ -56,6 +56,9 @@ public:
 
     public:
         void DrawSkin(wxDC &dc);
+        void DrawText(wxDC &dc, unsigned int nStrLength);
+
+        unsigned int GetRemindStringLength();
         void TakeOrderWithNewline(const std::vector<wxString>& vecIn);
         void LoadTempData();
         void ClearTempData();
@@ -92,7 +95,6 @@ public:
         void DrawPattern    (wxDC & dc);
         void DrawRemindText (wxDC & dc);
         void DrawButton     (wxDC & dc);
-
 
 
         const wxBitmap* GetPatternByPos(const PatternPos &pos);

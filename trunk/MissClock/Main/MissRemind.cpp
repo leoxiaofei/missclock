@@ -6,12 +6,15 @@
 #include "../Data/MissXML.h"
 
 #include <winuser.h>
+#include <wx/timer.h>
+
 #ifdef DrawText
 #undef DrawText
 #endif
 MissRemind::MissRemind(const std::vector<wxString> &vecContent, wxWindow* parent )
 :
-MissRemindBase( parent )
+MissRemindBase( parent ),
+m_pTimer(new wxTimer(this))
 {
     m_pRemindSkin = &MissConfig::GetInstance().GetCurrentRemindSkin();
     m_pRemindSkin->TakeOrderWithNewline(vecContent);
@@ -27,11 +30,14 @@ MissRemindBase( parent )
     m_Blend.SourceConstantAlpha = 255;
 
     std::cout<<"MissRemind"<<std::endl;
-    CentreOnScreen();
+
 
     Connect(wxEVT_TIMER, wxTimerEventHandler(MissRemind::OnTimer));
+    Connect(wxEVT_FIRST_EVENT, wxCommandEventHandler(MissRemind::OnInitEvent), NULL, this);
+    //wxTimerEvent send;
+    //AddPendingEvent(send);
 
-    wxTimerEvent send;
+    wxCommandEvent send(wxEVT_FIRST_EVENT,GetId());
     AddPendingEvent(send);
 }
 
@@ -65,12 +71,9 @@ void MissRemind::OnDrawSkin()
     wxMemoryDC memdc(m_bpUI);
     ///开始绘图
     m_pRemindSkin->DrawSkin(memdc);
-    m_pRemindSkin->ClearTempData();
-    //gc->GetTextExtent(m_Config.btn_content,&m_width,&m_height,NULL,NULL);
-    //gc->DrawText(m_Config.btn_content, m_Config.btn_x, m_Config.btn_y);
 
-    //gc->SetPen( wxPen( m_Config.btn_colour,2 ) );
-    //gc->DrawRectangle( m_Config.btn_x-10,m_Config.btn_y-4,m_width+20,m_height+6 );
+    m_pRemindSkin->ClearTempData();
+
 
     nPixTemp = nPixCount;
     pBitmapTemp = pBitmap;
@@ -82,12 +85,45 @@ void MissRemind::OnDrawSkin()
     //MissXML::SaveRemindSkin(m_pRemindSkin);
     ::UpdateLayeredWindow(m_hWnd, s_hdcScreen, NULL, &m_SizeWindow, static_cast<HDC>(memdc.GetHDC()),
                           &s_ptSrc, 0, &m_Blend, ULW_ALPHA);
+    CentreOnScreen();
+    //m_pTimer->Start(100);
+}
+/*
+void MissRemind::OnDrawText()
+{
+    static HDC s_hdcScreen = GetDC(m_hWnd);
+    static POINT s_ptSrc = {0, 0};
+    //wxBitmap bpUI = wxBitmap(m_SizeWindow.cx, m_SizeWindow.cy, 32);
+    //wxMemoryDC memdc(bpUI);
+    //memdc.DrawBitmap(m_bpUI,0,0);
+    wxMemoryDC memdc;
+    memdc.SelectObjectAsSource(m_bpUI);
+    static unsigned int uLen = 0;
+    static unsigned int uCoutLen = m_pRemindSkin->GetRemindStringLength();
+    if(uLen <= uCoutLen)
+    {
+        m_pRemindSkin->DrawText(memdc, ++++uLen);
+        ::UpdateLayeredWindow(m_hWnd, s_hdcScreen, NULL, &m_SizeWindow, static_cast<HDC>(memdc.GetHDC()),
+                        &s_ptSrc, 0, &m_Blend, ULW_ALPHA);
+    }
+    else
+    {
+        ::UpdateLayeredWindow(m_hWnd, s_hdcScreen, NULL, &m_SizeWindow, static_cast<HDC>(memdc.GetHDC()),
+                        &s_ptSrc, 0, &m_Blend, ULW_ALPHA);
+        m_pTimer->Stop();
+    }
+}
+*/
+void MissRemind::OnInitEvent(wxCommandEvent& event)
+{
+    OnDrawSkin();
 }
 
 void MissRemind::OnTimer(wxTimerEvent& event)
 {
-    OnDrawSkin();
-    return;
+    //OnDrawText();
+    //OnDrawSkin();
+    //return;
 }
 
 void MissRemind::OnLeftDown(wxMouseEvent& event)
@@ -105,3 +141,6 @@ void MissRemind::OnClose(wxCloseEvent& event)
     Destroy();
     //delete this;
 }
+
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_FIRST_EVENT);
+
