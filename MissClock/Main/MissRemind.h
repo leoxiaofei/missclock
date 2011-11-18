@@ -35,6 +35,8 @@ class MissRemind : public MissRemindBase
         void OnLeftDown( wxMouseEvent& event );
         void OnTimer(wxTimerEvent& event);
         void OnDrawSkin();
+        void OnDrawText();
+        void OnInitEvent(wxCommandEvent& event);
 
     private:
         HWND                             m_hWnd;
@@ -42,6 +44,11 @@ class MissRemind : public MissRemindBase
         SIZE                             m_SizeWindow;
         wxBitmap                         m_bpUI;
         MissRemindSkin                  *m_pRemindSkin;
+        shared_ptr<wxTimer>              m_pTimer;
 };
+
+BEGIN_DECLARE_EVENT_TYPES()
+    DECLARE_LOCAL_EVENT_TYPE(wxEVT_FIRST_EVENT, -1)
+END_DECLARE_EVENT_TYPES()
 
 #endif // __MissRemind__
