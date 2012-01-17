@@ -1,8 +1,8 @@
 #ifndef MISSCONFIG_H
 #define MISSCONFIG_H
 
-class MissSkin;
-class MissRemindSkin;
+//class MissSkin;
+//class MissRemindSkin;
 
 class MissConfig
 {
@@ -24,7 +24,8 @@ class MissConfig
         void            SetPos(const wxPoint & ptPos);
         void            SetZoom(const double & dZoom);
         void            SetOpacity(int nOpacity);
-        void            SetSkinName(const wxString& strName);
+        void            SetCThemeName(const wxString& strName);
+        void            SetTThemeName(const wxString& strName);
         void            SetShowClock(bool bShow);
         void            SetShadow(bool bShadow);
         void            SetAudioChimer(bool bEnable);
@@ -50,15 +51,16 @@ class MissConfig
         bool            GetShowClock();
         bool            GetShadow();
         bool            GetAudioChimer();
-        const wxString& GetSkinName();
+        const wxString& GetCThemeName();
+        const wxString& GetTThemeName();
         const wxString& GetNTP();
         int             GetOpacity();
         double          GetZoom();
         int             GetWeekDay();
         const wxString& GetPDateFormat();
         const wxString& GetPTimeFormat();
-        MissSkin&       GetCurrentSkin();
-        MissRemindSkin& GetCurrentRemindSkin();
+        //MissSkin&       GetCurrentSkin();
+        //MissRemindSkin& GetCurrentRemindSkin();
 
     protected:
         void SaveConfig();

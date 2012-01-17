@@ -1,15 +1,17 @@
-﻿#include "MissOption.h"
+﻿#include "../StdAfx.h"
+#include "MissOption.h"
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/textfile.h>
 #include "../Data/MissConfig.h"
 #include "../Common/MissGlobal.h"
-#include "MissTheme.h"
+//#include "MissTheme.h"
 #include "MissSetTimer.h"
 #include "../Data/MissWxSQLite3.h"
 #include "../Common/MissTools.h"
 #include "MissSetWeekDay.h"
 #include "MissSetDTFormat.h"
+#include "../../MCPlug/Common/MissCThemePlugBase.h"
 
 //wxDEFINE_EVENT(wxEVT_MCUI_EVENT, wxCommandEvent);
 
@@ -39,8 +41,8 @@ MissOption::~MissOption()
 
 void MissOption::OnInitDialog(wxInitDialogEvent& event)
 {
-    m_choTheme->Append(GetSkinsName());
-    m_choTheme->SetStringSelection(m_pConfig->GetSkinName());
+    m_choTheme->Append(GetCThemeNames());
+    m_choTheme->SetStringSelection(m_pConfig->GetCThemeName());
 
     m_cbtnAllowZoom->SetValue(m_pConfig->GetZoom() != 1.0);
     m_sldZoom->SetValue(static_cast<int>(m_pConfig->GetZoom() * 100));
@@ -63,7 +65,7 @@ void MissOption::OnInitDialog(wxInitDialogEvent& event)
     m_cbtnPin->SetValue(m_pConfig->GetPin());
     m_cobNTP->SetValue(m_pConfig->GetNTP());
     m_cbtnAutoRun->SetValue(MissTools::GetAutoRun());
-
+    m_btnModifyTheme->Enable(MissGlobal::g_ThemePlug.pPlugObj->HasOption());
     LoadNTPServer();
 }
 
@@ -76,10 +78,10 @@ void MissOption::SetZoomState(bool bEnable)
     }
 }
 
-wxArrayString MissOption::GetSkinsName()
+wxArrayString MissOption::GetCThemeNames()
 {
     wxArrayString ret;
-    wxString diraddr = wxT("Skin\\");
+    wxString diraddr = wxT("Theme\\");
     wxDir dir(diraddr);
     if (dir.IsOpened())
     {
@@ -87,7 +89,7 @@ wxArrayString MissOption::GetSkinsName()
         bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS);
         while (cont)
         {
-            if (wxFileName::FileExists(diraddr + filename + wxT("\\ClockSkin.xml")))
+            if (wxFileName::FileExists(diraddr + filename + wxT("\\ClockTheme.dll")))
             {
                 ret.Add(filename);
             }
@@ -104,7 +106,7 @@ void MissOption::OnThemeChoChange(wxCommandEvent& event)
      *ProcessEvent是同步处理一个事件，该事件被处理完才结束；
      *wxPostEvent(AddPendingEvent)是异步处理一个事件，将事件加入到对应事件句柄的事件待处理队列，
     */
-    m_pConfig->SetSkinName(event.GetString());
+    m_pConfig->SetCThemeName(event.GetString());
     wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
     send.SetInt(MissGlobal::UE_UPDATETHEME);
     GetEventHandler()->ProcessEvent(send);
@@ -113,16 +115,21 @@ void MissOption::OnThemeChoChange(wxCommandEvent& event)
 void MissOption::OnModifyThemeBtnClick(wxCommandEvent& event)
 {
 // TODO: Implement OnModifySkinBtnClick
-    MissTools::AutoHideWindow HideWin(this);
-    MissTheme ThemeDlg(this);
-    //ThemeDlg.SetDataSrc(m_pSkin);
-    if(ThemeDlg.ShowModal() == wxID_OK)
+    if(MissGlobal::g_ThemePlug.pPlugObj->HasOption())
     {
-        ///保存主题设置
-        wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
-        send.SetInt(MissGlobal::UE_SAVETHEME);
-        GetEventHandler()->ProcessEvent(send);
+        MissTools::AutoHideWindow HideWin(this);
+        MissGlobal::g_ThemePlug.pPlugObj->RunOption();
     }
+
+///    MissTheme ThemeDlg(this);
+    //ThemeDlg.SetDataSrc(m_pSkin);
+///    if(ThemeDlg.ShowModal() == wxID_OK)
+///    {
+        ///保存主题设置
+///        wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
+///        send.SetInt(MissGlobal::UE_SAVETHEME);
+///        GetEventHandler()->ProcessEvent(send);
+///    }
     /*
     if(m_bThemeModify)
     {

@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "MissGlobal.h"
-#include "../../MCPlug/Common/MissPlugBase.h"
+#include "../../MCPlug/Common/MissTaskPlugBase.h"
 
 namespace MissGlobal
 {
@@ -28,7 +28,8 @@ const wxString s_strCTimeFormat[] = {
                             wxT("%H:%M"),
                             wxT("%I:%M:%S %p")};
 
-std::vector<PLUG_ST> g_vecPlug;
+ThemePlug             g_ThemePlug;        ///界面插件
+std::vector<TaskPlug> g_vecTaskPlug;      ///任务插件
 
 wxString TaskData::GetTDateDesc() const
 {
@@ -104,7 +105,7 @@ wxString TaskData::GetTContentDesc() const
         strRet = wxT("运行:") + strTaskContent;
         break;
     default:
-        MissPlugBase* pPlug = FindPlugByGUID(strPlugInGUID);
+        MissTaskPlugBase* pPlug = FindPlugByGUID(strPlugInGUID);
         if(pPlug != NULL)
         {
             strRet = pPlug->GetDescription(strTaskContent);
@@ -118,11 +119,11 @@ wxString TaskData::GetTContentDesc() const
     return strRet;
 }
 
-MissPlugBase* FindPlugByGUID(const wxString& strGUID)
+MissTaskPlugBase* FindPlugByGUID(const wxString& strGUID)
 {
-    MissPlugBase* pRet(NULL);
-    for(std::vector<PLUG_ST>::iterator itor = g_vecPlug.begin();
-        itor != g_vecPlug.end(); ++itor)
+    MissTaskPlugBase* pRet(NULL);
+    for(std::vector<TaskPlug>::iterator itor = g_vecTaskPlug.begin();
+        itor != g_vecTaskPlug.end(); ++itor)
     {
         if(itor->pPlugObj->GetGUID() == strGUID)
         {

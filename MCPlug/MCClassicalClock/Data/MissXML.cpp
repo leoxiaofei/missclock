@@ -1,4 +1,4 @@
-#include "../StdAfx.h"
+//#include "../StdAfx.h"
 #include "MissXML.h"
 #include "MissSkin.h"
 #include "MissRemindSkin.h"
@@ -48,13 +48,13 @@ bool MissXML::SaveSkin(const MissSkin* pSkin)
     return ret;
 }
 
-void MissXML::LoadSkin(MissSkin* pSkin, const wxString& SkinName)
+void MissXML::LoadSkin(MissSkin* pSkin, const wxString& strSkinPath)
 {
     //pSkin->SetSkinName( SkinName );
-    wxString SkinAddr = wxString::Format(wxT("Skin\\%s\\"),SkinName.c_str());
-    pSkin->SetSkinPath(SkinAddr);
-    SkinAddr += wxT("ClockSkin.xml");
-    TiXmlDocument doc(SkinAddr.mb_str());
+    //wxString SkinAddr = wxString::Format(wxT("%s\\Skin\\%s\\"),Miss::GetAppExePath().c_str(), SkinName.c_str());
+    pSkin->SetSkinPath(strSkinPath);
+    //SkinAddr += wxT("ClockSkin.xml");
+    TiXmlDocument doc((strSkinPath + wxT("ClockSkin.xml")).mb_str());
     doc.LoadFile();
     TiXmlElement* root = doc.FirstChildElement("ApplictionConfig");
     if (root)///检测主节点ApplictionConfig是否存在

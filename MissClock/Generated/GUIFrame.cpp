@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun 30 2011)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -129,7 +129,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_choTheme->SetSelection( 0 );
 	sbSizerTheme->Add( m_choTheme, 0, wxALL, 5 );
 	
-	m_btnModifyTheme = new wxButton( m_panUI, wxID_ANY, wxT("修改主题"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_btnModifyTheme = new wxButton( m_panUI, wxID_ANY, wxT("主题设置"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerTheme->Add( m_btnModifyTheme, 0, wxALL, 5 );
 	
 	bSizer2->Add( sbSizerTheme, 0, wxALL|wxEXPAND, 5 );
@@ -183,7 +183,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panUI->SetSizer( bSizer2 );
 	m_panUI->Layout();
 	bSizer2->Fit( m_panUI );
-	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), false );
+	m_lsbOption->AddPage( m_panUI, wxT("界面设置"), true );
 	m_panSys = new wxPanel( m_lsbOption, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_srNTP = new wxBoxSizer( wxVERTICAL );
 	
@@ -371,7 +371,7 @@ MissOptionBase::MissOptionBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_panTmr->SetSizer( bSizer20 );
 	m_panTmr->Layout();
 	bSizer20->Fit( m_panTmr );
-	m_lsbOption->AddPage( m_panTmr, wxT("定时设置"), true );
+	m_lsbOption->AddPage( m_panTmr, wxT("定时设置"), false );
 	#ifndef __WXGTK__ // Small icon style not supported in GTK
 	wxListView* m_lsbOptionListView = m_lsbOption->GetListView();
 	long m_lsbOptionFlags = m_lsbOptionListView->GetWindowStyleFlag();

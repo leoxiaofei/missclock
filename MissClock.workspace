@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="MC Workspace">
-		<Project filename="MissClock/MissClock.cbp" active="1">
+		<Project filename="MissClock/MissClock.cbp">
 			<Depends filename="MissNTP/MissNTP.cbp" />
 			<Depends filename="MCPlug/MCShutdown/MCShutdown.cbp" />
+			<Depends filename="MCPlug/MCClassicalClock/MCClassicalClock.cbp" />
 		</Project>
 		<Project filename="MissNTP/MissNTP.cbp" />
 		<Project filename="MCPlug/MCShutdown/MCShutdown.cbp" />
+		<Project filename="MCPlug/MCClassicalClock/MCClassicalClock.cbp" active="1" />
 	</Workspace>
 </CodeBlocks_workspace_file>

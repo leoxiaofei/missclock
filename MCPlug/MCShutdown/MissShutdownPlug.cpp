@@ -10,7 +10,7 @@
 #include <windows.h>
 
 MissShutdownPlug::MissShutdownPlug():
-MissPlugBase(wxT("定时关机"),wxT("3261B663-0415-4B99-AA91-58D9EB043172"))
+MissTaskPlugBase(wxT("定时关机"),wxT("3261B663-0415-4B99-AA91-58D9EB043172"))
 {
     //ctor
 }

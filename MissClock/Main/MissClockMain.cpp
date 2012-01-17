@@ -25,23 +25,24 @@
 #include "MissAbout.h"
 
 #include "../Data/MissConfig.h"
-#include "../Data/MissSkin.h"
-#include "../Data/MissRemindSkin.h"
-#include "../Data/MissXML.h"
+//#include "../Data/MissSkin.h"
+//#include "../Data/MissRemindSkin.h"
+//#include "../Data/MissXML.h"
 #include "../Data/MissWxSQLite3.h"
 #include "../Common/MissGlobal.h"
 #include "../Common/MissTools.h"
 #include "../Common/MissDDE.h"
 
-#include "../../MCPlug/Common/MissPlugBase.h"
+#include "../../MCPlug/Common/MissTaskPlugBase.h"
+#include "../../MCPlug/Common/MissCThemePlugBase.h"
 
 #include <algorithm>
 //#include <boost/progress.hpp>
 
-#include <wx/dcmemory.h>
+//#include <wx/dcmemory.h>
 #include <wx/dir.h>
 #include <wx/dynlib.h>
-#include <winuser.h>
+//#include <winuser.h>
 //#include "windows.h"
 
 //helper functions
@@ -86,7 +87,7 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     m_pOptionDlg(NULL)
 {
     m_pConfig = &MissConfig::GetInstance();
-    m_pSkin   = &MissConfig::GetInstance().GetCurrentSkin();
+    //m_pSkin   = &MissConfig::GetInstance().GetCurrentSkin();
 
     m_hWnd = static_cast<HWND>(GetHandle());
     m_pTaskBarIcon->SetIcon(wxICON(RC_CLOCK_ICON), wxT("迷失日历时钟"));
@@ -95,7 +96,8 @@ MissClockFrame::MissClockFrame(wxFrame* frame):
     InitUI();
 
     InitDDE();
-    InitPlugin();
+    InitTaskPlugin();
+    InitThemePlugin();
 
     m_ttNow = time(NULL);
     m_tmNow = localtime(&m_ttNow);
@@ -130,11 +132,6 @@ void MissClockFrame::InitUI()
     exStyle |= WS_EX_LAYERED;
     ::SetWindowLong(m_hWnd, GWL_EXSTYLE, exStyle);
 
-    m_Blend.BlendOp = AC_SRC_OVER;      ///指定源混合操作。目前，唯一的源和目标混合操作被定义为 AC_SRC_OVER。
-    m_Blend.BlendFlags = 0;             ///必须为 0
-    m_Blend.AlphaFormat = AC_SRC_ALPHA; ///该成员控制源和目标位图被解释的方式。
-    UpdateAlpha();
-    UpdateTheme();
     UpdateTop();
     UpdateShadow();
     UpdateMenu();
@@ -147,7 +144,62 @@ void MissClockFrame::InitUI()
     AddPendingEvent(send);
 }
 
-void MissClockFrame::InitPlugin()
+void MissClockFrame::InitThemePlugin()
+{
+    wxString diraddr = wxGetCwd() + wxT("\\Theme\\") + m_pConfig->GetCThemeName() + wxT("\\");
+    if(LoadThemePlugin(diraddr + wxT("ClockTheme.dll")))
+    {
+        MissGlobal::g_ThemePlug.pPlugObj->InitDll(diraddr.wc_str());
+    }
+
+    UpdateAlpha();
+    UpdateTheme();
+}
+
+bool MissClockFrame::LoadThemePlugin(const wxString& strPath)
+{
+    MissGlobal::ThemePlug &pst = MissGlobal::g_ThemePlug;
+    if(pst.pDllHandle != NULL)
+    {
+        pst.pDllHandle->Unload();
+        delete pst.pDllHandle;
+        pst.pDllHandle = NULL;
+    }
+    if(pst.pPlugObj != NULL)
+    {
+        delete pst.pPlugObj;
+        pst.pPlugObj = NULL;
+    }
+    pst.pDllHandle = new wxDynamicLibrary(strPath);
+    while(1)
+    {
+        if ( !pst.pDllHandle->IsLoaded() )
+        {
+            break;
+        }
+
+        typedef bool (* PFN_CreatePlugObject)(void **, HWND);
+        PFN_CreatePlugObject pFun = (PFN_CreatePlugObject)(
+                        pst.pDllHandle->GetSymbol(wxT("CreateCThemePlug")));
+        if(!pFun)
+        {
+            pst.pDllHandle->Unload();
+            break;
+        }
+        if(!pFun((void **)&pst.pPlugObj, m_hWnd))
+        {
+            break;
+        }
+        return true;
+    }
+
+    delete pst.pDllHandle;
+    pst.pDllHandle = NULL;
+    std::wcout <<strPath.c_str()<< " failed to load..." << std::endl;
+    return false;
+}
+
+void MissClockFrame::InitTaskPlugin()
 {
     wxString diraddr = wxT("Plugin\\");
     wxDir dir(diraddr);
@@ -157,24 +209,15 @@ void MissClockFrame::InitPlugin()
         bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_FILES);
         while (cont)
         {
-            LoadPlugin(diraddr + filename);
+            LoadTaskPlugin(diraddr + filename);
             cont = dir.GetNext(&filename);
         }
     }
 }
 
-void MissClockFrame::InitDDE()
+void MissClockFrame::LoadTaskPlugin(const wxString& strPath)
 {
-    if(!m_pDdeServer->Create(wxT("MissClock")))
-    {
-        ///TODO:DDE监听出错。
-        assert(false);
-    }
-}
-
-void MissClockFrame::LoadPlugin(const wxString& strPath)
-{
-    MissGlobal::PLUG_ST pst;
+    MissGlobal::TaskPlug pst;
     pst.pDllHandle = new wxDynamicLibrary(strPath);
     if ( pst.pDllHandle->IsLoaded() )
     {
@@ -184,7 +227,7 @@ void MissClockFrame::LoadPlugin(const wxString& strPath)
         if(pFun)
         {
             pFun((void **)&pst.pPlugObj);
-            MissGlobal::g_vecPlug.push_back(pst);
+            MissGlobal::g_vecTaskPlug.push_back(pst);
         }
         else
         {
@@ -198,6 +241,15 @@ void MissClockFrame::LoadPlugin(const wxString& strPath)
     }
 }
 
+void MissClockFrame::InitDDE()
+{
+    if(!m_pDdeServer->Create(wxT("MissClock")))
+    {
+        ///TODO:DDE监听出错。
+        assert(false);
+    }
+}
+
 void MissClockFrame::UpdateMenu()
 {
     m_pmimPin->Check(m_pConfig->GetPin());
@@ -206,16 +258,11 @@ void MissClockFrame::UpdateMenu()
     m_pmimShow->Check(m_pConfig->GetShowClock());
 }
 
-void MissClockFrame::UpdateAlpha()
-{
-    ///指定用于整张源位图的Alpha透明度值。(0~255)
-    m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
-}
-
 void MissClockFrame::UpdateTheme()
 {
-    MissXML::LoadSkin(m_pSkin, m_pConfig->GetSkinName());
-    MissXML::LoadRemindSkin(&m_pConfig->GetCurrentRemindSkin(), m_pConfig->GetSkinName());
+    ///MissXML::LoadSkin(m_pSkin, m_pConfig->GetSkinName());
+    ///MissXML::LoadRemindSkin(&m_pConfig->GetCurrentRemindSkin(), m_pConfig->GetSkinName());
+    MissGlobal::g_ThemePlug.pPlugObj->LoadSkin();
     UpdateSize();
 }
 
@@ -262,8 +309,17 @@ void MissClockFrame::OnTaskBarIconLeftUP(wxEvent& event)
     Raise();
 }
 
+void MissClockFrame::UpdateAlpha()
+{
+    ///指定用于整张源位图的Alpha透明度值。(0~255)
+    //m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
+    MissGlobal::g_ThemePlug.pPlugObj->SetOpacity(m_pConfig->GetOpacity());
+}
+
 void MissClockFrame::UpdateSize()
 {
+    MissGlobal::g_ThemePlug.pPlugObj->SetScale(m_pConfig->GetZoom());
+    /*
     m_SizeWindow.cx = static_cast<int>(m_pSkin->GetBGBitmap().GetWidth() * m_pConfig->GetZoom());
     m_SizeWindow.cy = static_cast<int>(m_pSkin->GetBGBitmap().GetHeight() * m_pConfig->GetZoom());
     m_bpUI = wxBitmap(m_SizeWindow.cx, m_SizeWindow.cy, 32);
@@ -271,10 +327,13 @@ void MissClockFrame::UpdateSize()
     ::GetObject(static_cast<HBITMAP>(m_bpUI.GetHBITMAP()), sizeof(bm), &bm);
     m_nPixCount = bm.bmWidth * bm.bmHeight;
     m_pBitmap = static_cast<unsigned int*>(bm.bmBits);
+    */
 }
 
-bool MissClockFrame::UpdateClock()
+void MissClockFrame::UpdateClock()
 {
+    MissGlobal::g_ThemePlug.pPlugObj->TimeUpDrawClock(m_tmNow);
+    /*
     static HDC s_hdcScreen = GetDC(m_hWnd);
     static POINT s_ptSrc = {0, 0};
 
@@ -304,6 +363,7 @@ bool MissClockFrame::UpdateClock()
 
     return ::UpdateLayeredWindow(m_hWnd, s_hdcScreen, NULL, &m_SizeWindow, static_cast<HDC>(memdc.GetHDC()),
                           &s_ptSrc, 0, &m_Blend, ULW_ALPHA);
+    */
 }
 
 void MissClockFrame::LoadTask(int nNextMin)
@@ -384,7 +444,7 @@ void MissClockFrame::CheckTask()
                 default:    ///插件类型任务
                     {
                         std::cout<<"CT2"<<std::endl;
-                        MissPlugBase* pPlug = MissGlobal::FindPlugByGUID(itor->strPlugInGUID);
+                        MissTaskPlugBase* pPlug = MissGlobal::FindPlugByGUID(itor->strPlugInGUID);
                         if(pPlug != NULL)
                         {
                             std::cout<<"CT3"<<std::endl;
@@ -476,8 +536,8 @@ void MissClockFrame::OnmimTopSelected(wxCommandEvent& event)
 void MissClockFrame::OnmimOptionSelected(wxCommandEvent& event)
 {
     std::vector<std::pair<wxString, wxString> > vecMenu;
-    for(std::vector<MissGlobal::PLUG_ST>::iterator itor = MissGlobal::g_vecPlug.begin();
-        itor != MissGlobal::g_vecPlug.end(); ++itor)
+    for(std::vector<MissGlobal::TaskPlug>::iterator itor = MissGlobal::g_vecTaskPlug.begin();
+        itor != MissGlobal::g_vecTaskPlug.end(); ++itor)
     {
         if(itor->pPlugObj->HasShortcutMenu())
         {
@@ -626,7 +686,7 @@ void MissClockFrame::OnOptionUiEvent(wxCommandEvent& event)
         break;
     case MissGlobal::UE_SAVETHEME:
         {
-            MissXML::SaveSkin(m_pSkin);
+//            MissXML::SaveSkin(m_pSkin);
         }
         break;
     case MissGlobal::UE_ZOOMCHANGE:
@@ -658,7 +718,7 @@ void MissClockFrame::ReloadSkin()
     {
         m_pConfig->LoadIniFile();
         UpdateTheme();
-        m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
+        //m_Blend.SourceConstantAlpha = m_pConfig->GetOpacity();
         UpdateClock();
         m_bReloadSkin = false;
     }
@@ -733,7 +793,7 @@ void MissClockFrame::RunStartupTask(int nType)
                     break;
                 default:    ///插件类型任务
                     {
-                        MissPlugBase* pPlug = MissGlobal::FindPlugByGUID(itor->strPlugInGUID);
+                        MissTaskPlugBase* pPlug = MissGlobal::FindPlugByGUID(itor->strPlugInGUID);
                         if(pPlug != NULL)
                         {
                             pPlug->TimeUpRun(m_tmNow,itor->strTaskContent);

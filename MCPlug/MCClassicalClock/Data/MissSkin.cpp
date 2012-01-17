@@ -1,4 +1,4 @@
-#include "../StdAfx.h"
+//#include "../StdAfx.h"
 
 #include "MissSkin.h"
 #include <wx/bitmap.h>
