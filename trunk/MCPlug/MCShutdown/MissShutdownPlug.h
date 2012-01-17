@@ -1,9 +1,9 @@
 #ifndef MISSSHUTDOWNPLUG_H
 #define MISSSHUTDOWNPLUG_H
 
-#include "../Common/MissPlugBase.h"
+#include "../Common/MissTaskPlugBase.h"
 
-class MissShutdownPlug : public MissPlugBase
+class MissShutdownPlug : public MissTaskPlugBase
 {
     public:
         MissShutdownPlug();

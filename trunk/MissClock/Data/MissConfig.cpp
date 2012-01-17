@@ -2,8 +2,8 @@
 #include "MissConfig.h"
 #include <wx/fileconf.h>
 #include <wx/wfstream.h>
-#include "MissSkin.h"
-#include "MissRemindSkin.h"
+//#include "MissSkin.h"
+//#include "MissRemindSkin.h"
 
 class MissConfig::MissConfigImpl
 {
@@ -25,9 +25,10 @@ public:
     wxString m_NTP;                             ///NTP的地址
     wxString m_strPDateFormat;                  ///粘贴日期的格式
     wxString m_strPTimeFormat;                  ///粘贴时间的格式
-    wxString m_SkinName;                        ///当前使用的皮肤名称
-    MissSkin m_CurrentSkin;                     ///当前时钟皮肤
-    MissRemindSkin m_CurrentRemindSkin;         ///当前提醒皮肤
+    wxString m_strCThemeName;                   ///当前使用的时钟主题名称
+    wxString m_strTThemeName;                   ///当前使用的任务主题名称
+//    MissSkin m_CurrentSkin;                     ///当前时钟皮肤
+//    MissRemindSkin m_CurrentRemindSkin;         ///当前提醒皮肤
 
     wxString m_ConfigName;                      ///配置文件名
     shared_ptr<wxFileInputStream> m_pIStream;   ///文件流
@@ -57,17 +58,18 @@ MissConfig::~MissConfig()
 
 void MissConfig::LoadIniFile()
 {
-    m_pImpl->m_Pos.x        = m_pImpl->m_pConfigFile->Read(wxT("位置/X"),0l);
-    m_pImpl->m_Pos.y        = m_pImpl->m_pConfigFile->Read(wxT("位置/Y"),0l);
-    m_pImpl->m_Pin          = m_pImpl->m_pConfigFile->Read(wxT("选项/是否固定"),0l);
-    m_pImpl->m_Top          = m_pImpl->m_pConfigFile->Read(wxT("选项/是否置顶"),0l);
-    m_pImpl->m_ShowClock    = m_pImpl->m_pConfigFile->Read(wxT("选项/显示时钟"),1l);
-    m_pImpl->m_Shadow       = m_pImpl->m_pConfigFile->Read(wxT("选项/有影无形"),0l);
-    m_pImpl->m_AudioChimer  = m_pImpl->m_pConfigFile->Read(wxT("选项/整点报时"),1l);
-    m_pImpl->m_WeekDay      = m_pImpl->m_pConfigFile->Read(wxT("选项/工作日"),62l);
-    m_pImpl->m_SkinName     = m_pImpl->m_pConfigFile->Read(wxT("界面/主题"),wxT("Default"));
-    m_pImpl->m_NTP          = m_pImpl->m_pConfigFile->Read(wxT("选项/NTP"),wxT("203.129.68.14"));
-    m_pImpl->m_Opacity      = m_pImpl->m_pConfigFile->Read(wxT("界面/不透明度"),0xFFl);
+    m_pImpl->m_Pos.x          = m_pImpl->m_pConfigFile->Read(wxT("位置/X"),0l);
+    m_pImpl->m_Pos.y          = m_pImpl->m_pConfigFile->Read(wxT("位置/Y"),0l);
+    m_pImpl->m_Pin            = m_pImpl->m_pConfigFile->Read(wxT("选项/是否固定"),0l);
+    m_pImpl->m_Top            = m_pImpl->m_pConfigFile->Read(wxT("选项/是否置顶"),0l);
+    m_pImpl->m_ShowClock      = m_pImpl->m_pConfigFile->Read(wxT("选项/显示时钟"),1l);
+    m_pImpl->m_Shadow         = m_pImpl->m_pConfigFile->Read(wxT("选项/有影无形"),0l);
+    m_pImpl->m_AudioChimer    = m_pImpl->m_pConfigFile->Read(wxT("选项/整点报时"),1l);
+    m_pImpl->m_WeekDay        = m_pImpl->m_pConfigFile->Read(wxT("选项/工作日"),62l);
+    m_pImpl->m_strCThemeName  = m_pImpl->m_pConfigFile->Read(wxT("界面/时钟主题"),wxT("Default"));
+    m_pImpl->m_strTThemeName  = m_pImpl->m_pConfigFile->Read(wxT("界面/任务主题"),wxT("Default"));
+    m_pImpl->m_NTP            = m_pImpl->m_pConfigFile->Read(wxT("选项/NTP"),wxT("203.129.68.14"));
+    m_pImpl->m_Opacity        = m_pImpl->m_pConfigFile->Read(wxT("界面/不透明度"),0xFFl);
     m_pImpl->m_strPDateFormat = m_pImpl->m_pConfigFile->Read(wxT("选项/复制日期格式"),wxT("%Y-%m-%d"));
     m_pImpl->m_strPTimeFormat = m_pImpl->m_pConfigFile->Read(wxT("选项/复制时间格式"),wxT("%H:%M:%S"));
 
@@ -132,7 +134,8 @@ void MissConfig::SaveOption()
     m_pImpl->m_pConfigFile->Write(wxT("选项/复制日期格式"),m_pImpl->m_strPDateFormat);
     m_pImpl->m_pConfigFile->Write(wxT("选项/复制时间格式"),m_pImpl->m_strPTimeFormat);
 
-    m_pImpl->m_pConfigFile->Write(wxT("界面/主题"),m_pImpl->m_SkinName);
+    m_pImpl->m_pConfigFile->Write(wxT("界面/时钟主题"),m_pImpl->m_strCThemeName);
+    m_pImpl->m_pConfigFile->Write(wxT("界面/任务主题"),m_pImpl->m_strTThemeName);
     m_pImpl->m_pConfigFile->Write(wxT("选项/NTP"),m_pImpl->m_NTP);
     m_pImpl->m_pConfigFile->Write(wxT("界面/不透明度"),m_pImpl->m_Opacity);
     m_pImpl->m_pConfigFile->Write(wxT("界面/缩放大小"),m_pImpl->m_Zoom);
@@ -144,9 +147,14 @@ void MissConfig::SetPos(const wxPoint& ptPos)
     m_pImpl->m_Pos = ptPos;
 }
 
-void MissConfig::SetSkinName(const wxString& strName)
+void MissConfig::SetCThemeName(const wxString& strName)
 {
-    m_pImpl->m_SkinName = strName;
+    m_pImpl->m_strCThemeName = strName;
+}
+
+void MissConfig::SetTThemeName(const wxString& strName)
+{
+    m_pImpl->m_strTThemeName = strName;
 }
 
 void MissConfig::SetNTP(const wxString& strNTP)
@@ -209,9 +217,14 @@ bool MissConfig::GetAudioChimer()
     return m_pImpl->m_AudioChimer;
 }
 
-const wxString& MissConfig::GetSkinName()
+const wxString& MissConfig::GetCThemeName()
 {
-    return m_pImpl->m_SkinName;
+    return m_pImpl->m_strCThemeName;
+}
+
+const wxString& MissConfig::GetTThemeName()
+{
+    return m_pImpl->m_strTThemeName;
 }
 
 const wxString& MissConfig::GetNTP()
@@ -248,17 +261,17 @@ void MissConfig::SetOpacity(int nOpacity)
 {
     m_pImpl->m_Opacity = nOpacity;
 }
-
+/*
 MissSkin& MissConfig::GetCurrentSkin()
 {
-    return m_pImpl->m_CurrentSkin;
+//    return m_pImpl->m_CurrentSkin;
 }
 
 MissRemindSkin& MissConfig::GetCurrentRemindSkin()
 {
-    return m_pImpl->m_CurrentRemindSkin;
+//    return m_pImpl->m_CurrentRemindSkin;
 }
-
+*/
 void MissConfig::SetPDateFormat(const wxString& strFormat)
 {
     m_pImpl->m_strPDateFormat = strFormat;

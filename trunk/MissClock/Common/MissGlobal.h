@@ -1,7 +1,8 @@
 #ifndef MISSGLOBAL_H
 #define MISSGLOBAL_H
 
-class MissPlugBase;
+class MissTaskPlugBase;
+class MissCThemePlugBase;
 class wxDynamicLibrary;
 
 namespace MissGlobal
@@ -32,18 +33,22 @@ namespace MissGlobal
         wxString GetTDateDesc() const;
         wxString GetTTimeDesc() const;
         wxString GetTContentDesc() const;
-
     };
 
-    struct PLUG_ST
+    struct ThemePlug
     {
-        wxDynamicLibrary* pDllHandle;
-        MissPlugBase*     pPlugObj;
+        wxDynamicLibrary*    pDllHandle;
+        MissCThemePlugBase*   pPlugObj;
     };
+    extern ThemePlug g_ThemePlug;
 
-    extern std::vector<PLUG_ST> g_vecPlug;
-    MissPlugBase* FindPlugByGUID(const wxString& strGUID);
-
+    struct TaskPlug
+    {
+        wxDynamicLibrary*    pDllHandle;
+        MissTaskPlugBase*    pPlugObj;
+    };
+    extern std::vector<TaskPlug> g_vecTaskPlug;
+    MissTaskPlugBase* FindPlugByGUID(const wxString& strGUID);
 };
 
 BEGIN_DECLARE_EVENT_TYPES()

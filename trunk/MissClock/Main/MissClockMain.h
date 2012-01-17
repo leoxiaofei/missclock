@@ -12,11 +12,11 @@
 
 #include "../Generated/GUIFrame.h"
 #include <windef.h>
-#include <wingdi.h>
+
 
 class MissTaskBarIcon;
-class MissSkin;
-class MissRemindSkin;
+//class MissSkin;
+//class MissRemindSkin;
 class MissConfig;
 class MissOption;
 
@@ -42,14 +42,16 @@ class MissClockFrame: public GUIFrame
     protected:
         void InitUI();
         void InitEvent();
-        void InitPlugin();
+        void InitThemePlugin();
+        bool LoadThemePlugin(const wxString& strPath);
+        void InitTaskPlugin();
+        void LoadTaskPlugin(const wxString& strPath);
         void InitDDE();
-        void LoadPlugin(const wxString& strPath);
         void UpdateMenu();
         void UpdateSize();
         void UpdateAlpha();
         void UpdateTheme();
-        bool UpdateClock();
+        void UpdateClock();
         void CheckTask();
         void LoadTask(int nNextMin = 1);
         void LoadDayTask();
@@ -103,17 +105,15 @@ class MissClockFrame: public GUIFrame
         shared_ptr<MissTaskBarIcon>      m_pTaskBarIcon;
         shared_ptr<wxTimer>              m_pMainTimer;
         shared_ptr<MissDDE::MissServer>  m_pDdeServer;
-        MissSkin                        *m_pSkin;
+       // MissSkin                        *m_pSkin;
         MissConfig                      *m_pConfig;
         Slots                            sg_MinUp;
         HWND                             m_hWnd;
-        BLENDFUNCTION                    m_Blend;
-        SIZE                             m_SizeWindow;
+
+
         tm                              *m_tmNow;
         time_t                           m_ttNow;
-        wxBitmap                         m_bpUI;
-        unsigned int                    *m_pBitmap;
-        int                              m_nPixCount;
+
 //        bool                             m_bRightMenu;
         bool                             m_bReloadSkin;
         std::vector<MissGlobal::TaskData> m_vecMinData;

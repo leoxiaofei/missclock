@@ -42,7 +42,7 @@ public:
 protected:
 
 private:
-    shared_ptr<MissSkinImpl> m_pImpl;
+    std::tr1::shared_ptr<MissSkinImpl> m_pImpl;
 
 };
 

@@ -2,9 +2,12 @@
 #include <wx/fontdlg.h>
 #include <wx/colordlg.h>
 #include <wx/filedlg.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
+
 #include "../Data/MissSkin.h"
 #include "../Data/MissConfig.h"
-#include "../Common/MissGlobal.h"
+//#include "../Common/MissGlobal.h"
 
 MissTheme::MissTheme( wxWindow* parent )
 :
@@ -16,6 +19,9 @@ m_nThemeItem(-1)
 
 void MissTheme::OnInitDialog( wxInitDialogEvent& event )
 {
+    m_choSkin->Append(GetSkinNames());
+    m_choSkin->SetStringSelection(MissConfig::GetInstance().GetSkinName());
+
 // TODO: Implement OnInitDialog
     m_lstItem->InsertColumn(0, _T("ID"), wxLIST_FORMAT_LEFT, 40);
     m_lstItem->InsertColumn(1, _T("名称"), wxLIST_FORMAT_LEFT, 120);
@@ -30,8 +36,8 @@ void MissTheme::OnBtnBGPathClick( wxCommandEvent& event )
                           wxDefaultSize, _T("wxFileDialog"));
     if ( fdgBGPic.ShowModal() == wxID_OK )
     {
-        wxString bgPicAddr = wxString::Format(wxT("%s\\Skin\\%s\\"),wxGetCwd().c_str(),
-                                              MissConfig::GetInstance().GetSkinName().c_str());
+        wxString bgPicAddr = wxString::Format(wxT("%s\\Skin\\%s\\"),wxGetCwd().c_str(),"cs");
+//                                              MissConfig::GetInstance().GetSkinName().c_str());
 
         bgPicAddr<<fdgBGPic.GetFilename();
 
@@ -274,9 +280,30 @@ void MissTheme::UpdateEdtAlignText()
     }
 }
 
+wxArrayString MissTheme::GetSkinNames()
+{
+    wxArrayString ret;
+    wxString diraddr = MissConfig::GetInstance().GetConfigPath() + wxT("ClockSkin\\");
+    wxDir dir(diraddr);
+    if (dir.IsOpened())
+    {
+        wxString filename;
+        bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS);
+        while (cont)
+        {
+            if (wxFileName::FileExists(diraddr + filename + wxT("\\ClockSkin.xml")))
+            {
+                ret.Add(filename);
+            }
+            cont = dir.GetNext(&filename);
+        }
+    }
+    return ret;
+}
+
 void MissTheme::SendUpdateEvent()
 {
-    wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
-    send.SetInt(MissGlobal::UE_UPDATE);
-    GetParent()->GetEventHandler()->ProcessEvent(send);
+    //wxCommandEvent send(wxEVT_MCUI_EVENT,GetId());
+    //send.SetInt(MissGlobal::UE_UPDATE);
+    //GetParent()->GetEventHandler()->ProcessEvent(send);
 }

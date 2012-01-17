@@ -1,5 +1,5 @@
-#ifndef MISSPLUGBASE_H
-#define MISSPLUGBASE_H
+#ifndef MISSTASKPLUGBASE_H
+#define MISSTASKPLUGBASE_H
 
 #include <wx/string.h>
 
@@ -7,12 +7,12 @@ class wxWindow;
 class wxImage;
 class wxPanel;
 
-class MissPlugBase
+class MissTaskPlugBase
 {
     public:
-        MissPlugBase(const wxString &strPanelName, const wxString &strGUID):
+        MissTaskPlugBase(const wxString &strPanelName, const wxString &strGUID):
             m_strPanelName(strPanelName),m_strGUID(strGUID){};
-        virtual ~MissPlugBase(){};
+        virtual ~MissTaskPlugBase(){};
 
         virtual void GetIcon(wxImage& image) = 0;
         virtual void InitPanel(wxWindow* parent) = 0;
@@ -35,4 +35,4 @@ class MissPlugBase
 
 };
 
-#endif // MISSPLUGBASE_H
+#endif // MISSTASKPLUGBASE_H

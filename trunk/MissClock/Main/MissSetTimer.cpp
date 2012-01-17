@@ -4,7 +4,7 @@
 #include "../Common/MissTools.h"
 #include "../Data/MissWxSQLite3.h"
 #include "../Common/MissToolBook.h"
-#include "../../MCPlug/Common/MissPlugBase.h"
+#include "../../MCPlug/Common/MissTaskPlugBase.h"
 
 MissSetTimer::MissSetTimer( int nWeekDay, wxWindow* parent )
 :
@@ -29,10 +29,10 @@ m_nDefaultCount(m_tbRun->GetPageCount())
     int nWidth,nHeight;
     imageList->GetSize(0, nWidth, nHeight);
     wxImage tbRunImage;
-    MissPlugBase* pPlug(NULL);
-    for(unsigned int ix = 0; ix != MissGlobal::g_vecPlug.size(); ++ix)
+    MissTaskPlugBase* pPlug(NULL);
+    for(unsigned int ix = 0; ix != MissGlobal::g_vecTaskPlug.size(); ++ix)
     {
-        pPlug = MissGlobal::g_vecPlug[ix].pPlugObj;
+        pPlug = MissGlobal::g_vecTaskPlug[ix].pPlugObj;
 
         pPlug->InitPanel(m_tbRun);
         m_tbRun->AddPage(pPlug->GetPanel(),pPlug->GetPanelName());
@@ -112,7 +112,7 @@ void MissSetTimer::GetTaskData(MissGlobal::TaskData& data)
         break;
     default:   ///插件任务
         {
-            MissPlugBase* pPlug = MissGlobal::g_vecPlug[data.nTaskType - m_nDefaultCount].pPlugObj;
+            MissTaskPlugBase* pPlug = MissGlobal::g_vecTaskPlug[data.nTaskType - m_nDefaultCount].pPlugObj;
             data.nTaskType = 2;
             data.strPlugInGUID = pPlug->GetGUID();
             data.strTaskContent = pPlug->GetTaskContent();
@@ -255,10 +255,10 @@ void MissSetTimer::ImportTaskDataToModify(int nDataID, const MissGlobal::TaskDat
         break;
     default:    ///插件类型任务
         {
-            MissPlugBase* pPlug(NULL);
-            for(unsigned int ix = 0; ix != MissGlobal::g_vecPlug.size(); ++ix)
+            MissTaskPlugBase* pPlug(NULL);
+            for(unsigned int ix = 0; ix != MissGlobal::g_vecTaskPlug.size(); ++ix)
             {
-                pPlug = MissGlobal::g_vecPlug[ix].pPlugObj;
+                pPlug = MissGlobal::g_vecTaskPlug[ix].pPlugObj;
                 if(pPlug->GetGUID() == data.strPlugInGUID)
                 {
                     pPlug->InitData(data.strTaskContent);

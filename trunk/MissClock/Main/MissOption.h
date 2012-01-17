@@ -64,7 +64,7 @@ class MissOption : public MissOptionBase
         void OnToolTipEvent(wxCommandEvent& event);
 
     protected:
-        wxArrayString GetSkinsName();
+        wxArrayString GetCThemeNames();
         void SetZoomState(bool bEnable);
         void UpdataTimerSettingList(int nType, bool bClear = false);
         void InsertListData(wxListCtrl* plist, int nItemIndex,

@@ -40,6 +40,7 @@ class MissTheme : public MissThemeBase
         //void SetDataSrc(shared_ptr<MissSkin>& pSkin);
 
 	protected:
+	    wxArrayString GetSkinNames();
         void EnableItemSet(bool bEnable);
         void LoadThemeOption();
         void UpdateEdtAlignText();

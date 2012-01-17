@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="MCClassicalClock" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="..\..\bin\Debug\Theme\Default\ClockTheme" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-D__WXDEBUG__" />
+					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
+				</Compiler>
+				<Linker>
+					<Add library="user32" />
+					<Add library="libwxmsw28ud_core.a" />
+					<Add library="libwxbase28ud.a" />
+					<Add library="libwxmsw28ud_adv.a" />
+					<Add library="libtinyxml.a" />
+					<Add library="libwxpngd.a" />
+					<Add library="libwxzlibd.a" />
+					<Add directory="$(#wx)\lib\gcc_dll" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="..\..\bin\Release\Theme\Default\ClockTheme" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+					<Add directory="$(#wx)\lib\gcc_dll\mswu" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+					<Add directory="$(#wx)\lib\gcc_dll" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-pipe" />
+			<Add option="-mthreads" />
+			<Add option='[[if (PLATFORM == PLATFORM_MSW &amp;&amp; (GetCompilerFactory().GetCompilerVersionString(_T(&quot;gcc&quot;)) &gt;= _T(&quot;4.0.0&quot;))) print(_T(&quot;-Wno-attributes&quot;));]]' />
+			<Add option="-Winvalid-pch" />
+			<Add option='-include &quot;StdAfx.h&quot;' />
+			<Add option="-D__GNUWIN32__" />
+			<Add option="-D__WXMSW__" />
+			<Add option="-DWXUSINGDLL" />
+			<Add option="-DwxUSE_UNICODE" />
+			<Add option="-DUNICODE" />
+			<Add directory="$(#wx)\include" />
+			<Add directory="$(#wx)\contrib\include" />
+			<Add directory="$(#tinyxml)\include" />
+			<Add directory="$(#miss)\hpp" />
+		</Compiler>
+		<ResourceCompiler>
+			<Add directory="$(#wx)\include" />
+		</ResourceCompiler>
+		<Linker>
+			<Add library="libgdi32.a" />
+			<Add directory="$(#tinyxml)\lib" />
+		</Linker>
+		<Unit filename="Data\MissConfig.cpp" />
+		<Unit filename="Data\MissConfig.h" />
+		<Unit filename="Data\MissSkin.cpp" />
+		<Unit filename="Data\MissSkin.h" />
+		<Unit filename="Data\MissXML.cpp" />
+		<Unit filename="Data\MissXML.h" />
+		<Unit filename="Dialog\MissTheme.cpp" />
+		<Unit filename="Dialog\MissTheme.h" />
+		<Unit filename="Generated\GUIFrame.cpp" />
+		<Unit filename="Generated\GUIFrame.h" />
+		<Unit filename="MissClockThemePlug.cpp" />
+		<Unit filename="MissClockThemePlug.h" />
+		<Unit filename="StdAfx.h">
+			<Option compile="1" />
+			<Option weight="0" />
+		</Unit>
+		<Unit filename="WxWizFrame.fbp" />
+		<Unit filename="main.cpp" />
+		<Unit filename="main.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

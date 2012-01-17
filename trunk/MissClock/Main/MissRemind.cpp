@@ -2,8 +2,8 @@
 #include <wx/dcmemory.h>
 
 #include "../Data/MissConfig.h"
-#include "../Data/MissRemindSkin.h"
-#include "../Data/MissXML.h"
+//#include "../Data/MissRemindSkin.h"
+//#include "../Data/MissXML.h"
 
 #include <winuser.h>
 #include <wx/timer.h>
@@ -16,8 +16,8 @@ MissRemind::MissRemind(const std::vector<wxString> &vecContent, wxWindow* parent
 MissRemindBase( parent ),
 m_pTimer(new wxTimer(this))
 {
-    m_pRemindSkin = &MissConfig::GetInstance().GetCurrentRemindSkin();
-    m_pRemindSkin->TakeOrderWithNewline(vecContent);
+///    m_pRemindSkin = &MissConfig::GetInstance().GetCurrentRemindSkin();
+///    m_pRemindSkin->TakeOrderWithNewline(vecContent);
     m_hWnd = static_cast<HWND>(GetHandle());
 
     long exStyle = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
@@ -44,10 +44,10 @@ m_pTimer(new wxTimer(this))
 void MissRemind::OnDrawSkin()
 {
     //PatternInfo painfo;
-    m_pRemindSkin->LoadTempData();
+///    m_pRemindSkin->LoadTempData();
 
-    m_SizeWindow.cx = m_pRemindSkin->GetOverallWidth();
-    m_SizeWindow.cy = m_pRemindSkin->GetOverallHeight();
+///    m_SizeWindow.cx = m_pRemindSkin->GetOverallWidth();
+///    m_SizeWindow.cy = m_pRemindSkin->GetOverallHeight();
 
 
     m_bpUI = wxBitmap(m_SizeWindow.cx, m_SizeWindow.cy, 32);
@@ -70,9 +70,9 @@ void MissRemind::OnDrawSkin()
 
     wxMemoryDC memdc(m_bpUI);
     ///开始绘图
-    m_pRemindSkin->DrawSkin(memdc);
+    //m_pRemindSkin->DrawSkin(memdc);
 
-    m_pRemindSkin->ClearTempData();
+    //m_pRemindSkin->ClearTempData();
 
 
     nPixTemp = nPixCount;
@@ -128,10 +128,12 @@ void MissRemind::OnTimer(wxTimerEvent& event)
 
 void MissRemind::OnLeftDown(wxMouseEvent& event)
 {
+    /*
     if(m_pRemindSkin->PtInCloseBtn(event.GetPosition()))
     {
         Close();
     }
+    */
     ///移动窗口 Windows API
     ::PostMessage(m_hWnd, WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(event.GetX(), event.GetY()));
 }

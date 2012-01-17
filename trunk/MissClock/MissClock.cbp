@@ -27,7 +27,6 @@
 					<Add library="libwxpngd.a" />
 					<Add library="libwxzlibd.a" />
 					<Add library="libwxmsw28ud_adv.a" />
-					<Add library="libtinyxml.a" />
 					<Add library="libwxcode_msw28ud_wxsqlite3.a" />
 					<Add directory="$(#wx)\lib\gcc_dll" />
 				</Linker>
@@ -55,7 +54,6 @@
 					<Add library="libwxpng.a" />
 					<Add library="libwxzlib.a" />
 					<Add library="libwxmsw28u_adv.a" />
-					<Add library="libtinyxml.a" />
 					<Add library="libwxcode_msw28u_wxsqlite3.a" />
 					<Add directory="$(#wx)\lib\gcc_dll" />
 				</Linker>
@@ -109,16 +107,10 @@
 		<Unit filename="Data\MissConfig.h" />
 		<Unit filename="Data\MissDBL.cpp" />
 		<Unit filename="Data\MissDBL.h" />
-		<Unit filename="Data\MissRemindSkin.cpp" />
-		<Unit filename="Data\MissRemindSkin.h" />
 		<Unit filename="Data\MissRes.cpp" />
 		<Unit filename="Data\MissRes.h" />
-		<Unit filename="Data\MissSkin.cpp" />
-		<Unit filename="Data\MissSkin.h" />
 		<Unit filename="Data\MissWxSQLite3.cpp" />
 		<Unit filename="Data\MissWxSQLite3.h" />
-		<Unit filename="Data\MissXML.cpp" />
-		<Unit filename="Data\MissXML.h" />
 		<Unit filename="Generated\GUIFrame.cpp" />
 		<Unit filename="Generated\GUIFrame.h" />
 		<Unit filename="Main\MissAbout.cpp" />
@@ -141,8 +133,6 @@
 		<Unit filename="Main\MissSoundThread.h" />
 		<Unit filename="Main\MissTaskBarIcon.cpp" />
 		<Unit filename="Main\MissTaskBarIcon.h" />
-		<Unit filename="Main\MissTheme.cpp" />
-		<Unit filename="Main\MissTheme.h" />
 		<Unit filename="StdAfx.h">
 			<Option compile="1" />
 			<Option weight="0" />
